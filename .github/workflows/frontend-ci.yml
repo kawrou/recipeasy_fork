@@ -41,3 +41,7 @@ jobs:
     - name: Run Test	
       working-directory: ./frontend
       run: npm test
+
+    - name: List Frontend Directory
+      working-directory: ./frontend
+      run: ls -la
