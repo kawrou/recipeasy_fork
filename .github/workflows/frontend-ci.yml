@@ -23,12 +23,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - name: List Frontend Directory
-      working-directory: ./frontend
-      run: ls -la
-
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: List Root Directory
+      run: ls -la /home/runner/work/recipeasy_fork/recipeasy_fork
+      
+    - name: List Frontend Directory
+      working-directory: 
+      run: ls -la frontend
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
