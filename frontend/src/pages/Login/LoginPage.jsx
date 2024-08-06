@@ -3,7 +3,7 @@ import { useNavigate, NavLink, Link } from "react-router-dom";
 import { login } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
 
-//TODO: 
+//TODO:
 // A logged in user can still access this page by typing the route in the URL
 // It'll be better for UX if it were handled
 
@@ -31,21 +31,16 @@ export const LoginPage = ({ onLogin, setToken }) => {
       await performLogin(email, password);
       navigate("/");
     } catch (err) {
-      //TODO: Improve upon error handling
-      setError(err.message);
+      setError(`An error occured: ${err.message}`);
     }
     // }
   };
 
   const performLogin = async (email, password) => {
-    try {
-      const data = await login(email, password);
-      window.localStorage.setItem("token", data.token); //This is also redundant
-      setToken(data.token); //This is possibly redundant
-      onLogin(data.token);
-    } catch (error) {
-      throw error;
-    }
+    const data = await login(email, password);
+    window.localStorage.setItem("token", data.token); //This is also redundant
+    setToken(data.token); //This is possibly redundant
+    onLogin(data.token);
   };
 
   const handleEmailChange = (e) => {
