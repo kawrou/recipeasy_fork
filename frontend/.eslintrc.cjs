@@ -23,5 +23,6 @@ module.exports = {
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "no-console": "warn", 
+    "prettier/prettier": ["error"], 
   },
 };
