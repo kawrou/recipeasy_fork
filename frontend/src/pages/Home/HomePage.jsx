@@ -14,10 +14,7 @@ export const HomePage = ({
         <div className=" basis-2/5 ">
           {/* Delete the placeholder logo when we have a logo */}
           <div className="flex flex-auto flex-col items-center content-start pr-5 px-20 max-w-[500px]">
-            <img
-              src="../../../src/assets/recipeasyLogo.svg"
-              className="w-56 py-4"
-            />
+            <img src="/assets/recipeasyLogo.svg" className="w-56 py-4" />
             <h1 className="font-kanit font-extrabold text-primary-500 italic text-6xl pb-4">
               Recipeasy
             </h1>
@@ -44,7 +41,7 @@ export const HomePage = ({
           </div>
         </div>
         <div>
-          <img src="../../../src/assets/homepageImage.svg" className="p-20" />
+          <img src="/assets/homepageImage.svg" className="p-20" />
         </div>
       </div>
       <div className="text-xs justify-self-end">

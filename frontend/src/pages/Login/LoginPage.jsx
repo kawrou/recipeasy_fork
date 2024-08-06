@@ -68,7 +68,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
           >
             <img
               className="w-16 mb-1.5 -mr-0.5"
-              src="../../../src/assets/recipeasyLogo.svg"
+              src="/assets/recipeasyLogo.svg"
               alt="logo"
             />
             ecipeasy
