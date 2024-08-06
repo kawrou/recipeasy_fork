@@ -3,10 +3,9 @@ import { useNavigate, NavLink, Link } from "react-router-dom";
 
 import { signup } from "../../services/authentication";
 
-//TODO: 
+//TODO:
 // A logged in user can still access this page by typing the route in the URL
 // It'll be better for UX if it were handled
-
 
 // Match one or more alphanumeric characters, dots, underscores, or hyphens for the username part.
 // Match the "@" symbol.
@@ -15,7 +14,7 @@ import { signup } from "../../services/authentication";
 // Match the TLD, consisting of 2 to 4 alphabetical characters.
 const isValidEmail = (email) => {
   const emailTest = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(
-    email
+    email,
   );
   return emailTest;
 };
@@ -28,7 +27,7 @@ const isValidEmail = (email) => {
 const isValidPassword = (password) => {
   const passwordTest =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/.test(
-      password
+      password,
     );
   return passwordTest;
 };
@@ -64,7 +63,6 @@ export const SignupPage = () => {
 
     try {
       await signup(email, password, username);
-      console.log("redirecting...:");
       navigate("/login");
     } catch (err) {
       // catch if username or email is not unique and show error
@@ -72,7 +70,6 @@ export const SignupPage = () => {
         ...formErrors,
         username: "Username and Email must be unique.",
       });
-      console.error(err);
       navigate("/signup");
     }
   };
@@ -102,7 +99,7 @@ export const SignupPage = () => {
           >
             <img
               className="w-16 mb-1.5 -mr-0.5"
-              src="../../../src/assets/recipeasyLogo.svg"
+              src="/assets/recipeasyLogo.svg"
               alt="logo"
             />
             ecipeasy

@@ -2,6 +2,11 @@
 
 ## Intro
 
+---
+This is a fork of a project I completed with other members in order to make improvements to the tests and code base. 
+The original can be found [here](https://github.com/kawrou/RecipEasy-recipe-manager)
+---
+
 Over the course of 2 weeks (8 or 9 days), we are building a recipe
 manager web application. 
 We will be desigining the app by first finding problems with current

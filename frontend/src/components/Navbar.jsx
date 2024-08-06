@@ -9,24 +9,27 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
   };
 
   const isLoginPath = () => {
-    return pathname === "/login"
-  }
+    return pathname === "/login";
+  };
 
   const isSignUpPath = () => {
-    return pathname === "/signup"
-  }
+    return pathname === "/signup";
+  };
 
   //If the current path (page) is /login or /signup then the navbar isn't rendered
   if (isLoginPath() || isSignUpPath()) {
     return null;
   }
 
-
   return (
     <div className="relative flex justify-center items-center h-16 bg-white ">
       {/* Clickable logo link to Home Page */}
-      <NavLink className="absolute left-4" to="/" >
-        <img src="../../../src/assets/recipeasyLogo.svg" className="w-14" alt="Recipeasy Homepage Logo Link"/>
+      <NavLink className="absolute left-4" to="/">
+        <img
+          src="/assets/recipeasyLogo.svg"
+          className="w-14"
+          alt="Recipeasy Homepage Logo Link"
+        />
       </NavLink>
 
       {/* Home Page link is rendered on pages that aren't the Home Page  */}

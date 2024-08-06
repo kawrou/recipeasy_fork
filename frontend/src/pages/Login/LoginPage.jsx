@@ -3,7 +3,7 @@ import { useNavigate, NavLink, Link } from "react-router-dom";
 import { login } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
 
-//TODO: 
+//TODO:
 // A logged in user can still access this page by typing the route in the URL
 // It'll be better for UX if it were handled
 
@@ -11,41 +11,31 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [validationMsg, setValidationMsg] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const validationError = validateLoginForm(email, password);
-      if (validationError) {
-        setValidationMsg(validationError);
-        return;
-      }
-    } catch (error) {
-      setError("An unexpected error occured. Please try again");
+    setValidationMsg({}); 
+    const validationError = validateLoginForm(email, password);
+    if (validationError) {
+      setValidationMsg(validationError);
+      return;
     }
 
     try {
       await performLogin(email, password);
       navigate("/");
     } catch (err) {
-      //TODO: Improve upon error handling
-      setError(err.message);
+      setError(`${err.message}`);
     }
-    // }
   };
 
   const performLogin = async (email, password) => {
-    try {
-      const data = await login(email, password);
-      window.localStorage.setItem("token", data.token); //This is also redundant
-      setToken(data.token); //This is possibly redundant
-      onLogin(data.token);
-    } catch (error) {
-      throw error;
-    }
+    const data = await login(email, password);
+    window.localStorage.setItem("token", data.token); //This is also redundant
+    setToken(data.token); //This is possibly redundant
+    onLogin(data.token);
   };
 
   const handleEmailChange = (e) => {
@@ -68,7 +58,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
           >
             <img
               className="w-16 mb-1.5 -mr-0.5"
-              src="../../../src/assets/recipeasyLogo.svg"
+              src="/assets/recipeasyLogo.svg"
               alt="logo"
             />
             ecipeasy
@@ -115,7 +105,6 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
-                  {/* Maybe shouldn't have this feature */}
                   {validationMsg.password && (
                     <span className="text-red-500">
                       {validationMsg.password}.
@@ -129,6 +118,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
                   Log in
                 </button>
                 {error && <span className="text-red-500">{error}</span>}
+                {validationMsg.general && (
+                  <span className="text-red-500">{validationMsg.general}</span>
+                )}
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
                   <Link
