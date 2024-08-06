@@ -41,7 +41,7 @@ export const HomePage = ({
           </div>
         </div>
         <div>
-          <img src="/assets/homepageImage.svg" className="p-20" />
+          <img src="/assets/HomepageImage.svg" className="p-20" />
         </div>
       </div>
       <div className="text-xs justify-self-end">
