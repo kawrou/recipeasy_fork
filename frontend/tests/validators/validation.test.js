@@ -1,4 +1,4 @@
-import { expect } from "vitest";
+import { expect, describe, test } from "vitest";
 import { validateLoginForm } from "../../src/validators/validation";
 
 describe("Login form validation", () => {
@@ -34,14 +34,18 @@ describe("Login form validation", () => {
   });
 
   test("If email isn't a string, it throws an error", () => {
-    //You need to wrap the function call inside an anonymous function so that the testing library can catch the errors thrown
-    expect(() => validateLoginForm(1, "testPassword")).toThrow(
-      "Email and password must be strings"
-    );
+    const result = validateLoginForm(1, "abc");
+
+    expect(result).toEqual({
+      general: "Email and password must be string.",
+    });
   });
+
   test("If password isn't a string, it throws an error", () => {
-    expect(() => validateLoginForm("test@test.com", 1)).toThrow(
-      "Email and password must be strings"
-    );
+    const result = validateLoginForm("test@test.com", 1234);
+
+    expect(result).toEqual({
+      general: "Email and password must be string.",
+    });
   });
 });
