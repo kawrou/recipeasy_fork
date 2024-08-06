@@ -18,19 +18,18 @@ export const login = async (email, password) => {
   try {
     const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
 
-    if (response.ok) {
-      const data = await response.json();
-      //TODO: Still unsure that user_id: data.user_id is necessary. Seems to work without it
-      return { token: data.token, user_id: data.user_id };
-    } else {
-      let data = await response.json();
-      throw new Error(`${data.message}`);
+    if (!response.ok) {
+      throw new Error("Login failed, please check your credentials and try again.");
     }
+
+    const data = await response.json();
+    return { token: data.token, user_id: data.user_id };
+  
   } catch (error) {
-    if (error instanceof SyntaxError) {
-      throw new Error("Something is wrong with the server.");
+    if (error instanceof SyntaxError){
+      throw new Error("Server error. Please try again later.")
     }
-    throw new Error(`Login failed: ${error.message}`);
+    throw new Error(error.message); 
   }
 };
 

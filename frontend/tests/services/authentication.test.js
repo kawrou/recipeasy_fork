@@ -32,7 +32,7 @@ describe("authentication service", () => {
       expect(url).toEqual(`${BACKEND_URL}/tokens`);
       expect(options.method).toEqual("POST");
       expect(options.body).toEqual(
-        JSON.stringify({ email: testEmail, password: testPassword })
+        JSON.stringify({ email: testEmail, password: testPassword }),
       );
       expect(options.headers["Content-Type"]).toEqual("application/json");
     });
@@ -47,7 +47,7 @@ describe("authentication service", () => {
       });
 
       const token = await login(testEmail, testPassword);
-      expect(token).toEqual({token: "testToken"});
+      expect(token).toEqual({ token: "testToken" });
     });
 
     test("throws an error if the request failed", async () => {
@@ -62,7 +62,7 @@ describe("authentication service", () => {
         await login(testEmail, testPassword);
       } catch (err) {
         expect(err.message).toEqual(
-          "Wrong Password"
+          "Login failed, please check your credentials and try again.",
         );
       }
     });
@@ -87,7 +87,7 @@ describe("authentication service", () => {
       expect(url).toEqual(`${BACKEND_URL}/users`);
       expect(options.method).toEqual("POST");
       expect(options.body).toEqual(
-        JSON.stringify({ email: testEmail, password: testPassword })
+        JSON.stringify({ email: testEmail, password: testPassword }),
       );
       expect(options.headers["Content-Type"]).toEqual("application/json");
     });
@@ -112,14 +112,14 @@ describe("authentication service", () => {
         JSON.stringify({ message: "User already exists" }),
         {
           status: 400,
-        }
+        },
       );
 
       try {
         await signup(testEmail, testPassword);
       } catch (err) {
         expect(err.message).toEqual(
-          "Received status 400 when signing up. Expected 201"
+          "Received status 400 when signing up. Expected 201",
         );
       }
     });
@@ -130,7 +130,7 @@ describe("authentication service", () => {
       fetch.mockResponseOnce(
         JSON.stringify({
           status: 200,
-        })
+        }),
       );
       await checkToken("valid_token");
 
@@ -148,18 +148,18 @@ describe("authentication service", () => {
         status: 401,
       });
       await expect(checkToken("invalid_token")).rejects.toThrowError(
-        "Token not valid"
+        "Token not valid",
       );
     });
 
     test("handles error if request failed", async () => {
       fetch.mockRejectOnce(new Error("Internal Server Error"));
       await expect(checkToken("invalid_token")).rejects.toThrowError(
-        "Internal Server Error"
+        "Internal Server Error",
       );
     });
   });
   describe("logout", () => {
-    test.todo("Logs a user out")
-  })
+    test.todo("Logs a user out");
+  });
 });
