@@ -3,11 +3,11 @@ export const isEmpty = (value) => {
 };
 
 export const validateLoginForm = (email, password) => {
-  if (typeof email !== "string" || typeof password !== "string") {
-    throw new Error("Email and password must be strings");
-  }
-
   let validationErrMsg = {};
+
+  if (typeof email !== "string" || typeof password !== "string") {
+    validationErrMsg.general = "Email and password must be string.";
+  }
 
   if (isEmpty(email)) {
     validationErrMsg.email = "Email address is required";

@@ -17,14 +17,10 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const validationError = validateLoginForm(email, password);
-      if (validationError) {
-        setValidationMsg(validationError);
-        return;
-      }
-    } catch (error) {
-      setError("An unexpected error occured. Please try again");
+    const validationError = validateLoginForm(email, password);
+    if (validationError) {
+      setValidationMsg(validationError);
+      return;
     }
 
     try {
@@ -33,7 +29,6 @@ export const LoginPage = ({ onLogin, setToken }) => {
     } catch (err) {
       setError(`An error occured: ${err.message}`);
     }
-    // }
   };
 
   const performLogin = async (email, password) => {
