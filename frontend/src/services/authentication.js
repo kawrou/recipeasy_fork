@@ -14,7 +14,7 @@ export const login = async (email, password) => {
     },
     body: JSON.stringify(payload),
   };
-  //TODO: 
+  //TODO:
   //Refactor to use try/catch block
   //It's using /tokens route instead of /users/login
   //Refactor to better handle error messages
@@ -23,13 +23,11 @@ export const login = async (email, password) => {
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
     let data = await response.json();
-  //TODO: Still unsure that user_id: data.user_id is necessary. Seems to work without it
+    //TODO: Still unsure that user_id: data.user_id is necessary. Seems to work without it
     return { token: data.token, user_id: data.user_id };
   } else {
     let data = await response.json();
-    throw new Error(
-      `${data.message}`
-    );
+    throw new Error(`${data.message}`);
   }
 };
 
@@ -51,13 +49,13 @@ export const signup = async (email, password, username) => {
   //TODO:
   //Refactor to use try/catch block
   let response = await fetch(`${BACKEND_URL}/users`, requestOptions);
-  
+
   // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/201
   if (response.status === 201) {
     return;
   } else {
     throw new Error(
-      `Received status ${response.status} when signing up. Expected 201`
+      `Received status ${response.status} when signing up. Expected 201`,
     );
   }
 };
@@ -76,7 +74,7 @@ export const checkToken = async (token) => {
     },
   };
   //TODO:
-  //Refactor to use try/catch block 
+  //Refactor to use try/catch block
   // console.log(token)
   const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
   if (!response.ok) {
