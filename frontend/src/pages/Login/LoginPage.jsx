@@ -11,12 +11,12 @@ export const LoginPage = ({ onLogin, setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [validationMsg, setValidationMsg] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setValidationMsg({}); 
     const validationError = validateLoginForm(email, password);
     if (validationError) {
       setValidationMsg(validationError);
