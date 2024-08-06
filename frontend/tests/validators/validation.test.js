@@ -33,7 +33,7 @@ describe("Login form validation", () => {
     expect(result).toEqual(null);
   });
 
-  test("If email isn't a string, it throws an error", () => {
+  test("If email isn't a string, it returns an error message", () => {
     const result = validateLoginForm(1, "abc");
 
     expect(result).toEqual({
@@ -41,7 +41,7 @@ describe("Login form validation", () => {
     });
   });
 
-  test("If password isn't a string, it throws an error", () => {
+  test("If password isn't a string, it returns an error message", () => {
     const result = validateLoginForm("test@test.com", 1234);
 
     expect(result).toEqual({
