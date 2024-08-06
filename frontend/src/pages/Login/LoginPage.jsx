@@ -105,7 +105,6 @@ export const LoginPage = ({ onLogin, setToken }) => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
-                  {/* Maybe shouldn't have this feature */}
                   {validationMsg.password && (
                     <span className="text-red-500">
                       {validationMsg.password}.
@@ -119,6 +118,9 @@ export const LoginPage = ({ onLogin, setToken }) => {
                   Log in
                 </button>
                 {error && <span className="text-red-500">{error}</span>}
+                {validationMsg.general && (
+                  <span className="text-red-500">{validationMsg.general}</span>
+                )}
                 <p className="text-sm font-light text-gray-500">
                   Don’t have an account yet?{" "}
                   <Link
