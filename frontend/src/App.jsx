@@ -19,9 +19,8 @@ const App = () => {
   const [token, setToken] = useState("");
   //TODO: There might be an issue with this implementation of setState
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("token") !== null
+    localStorage.getItem("token") !== null,
   );
-
 
   const handleScrapeRecipe = async () => {
     try {
@@ -72,12 +71,7 @@ const App = () => {
           />
           <Route
             path="/login"
-            element={
-              <LoginPage
-                onLogin={handleLogin}
-                setToken={setToken}
-              />
-            }
+            element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route
