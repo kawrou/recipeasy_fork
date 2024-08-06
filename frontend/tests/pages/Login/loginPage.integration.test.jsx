@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { test, vi } from "vitest";
+import { test, vi, expect, describe, beforeEach } from "vitest";
 
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
@@ -55,7 +55,7 @@ describe("Login Page", () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   });
   describe("Login interactions:", () => {
@@ -68,7 +68,7 @@ describe("Login Page", () => {
       expect(heading).toBeVisible();
     });
 
-    test("doens't navigate if email cannot be found", async () => {
+    test("doesn't navigate if email cannot be found", async () => {
       login.mockRejectedValue(new Error("Email not found"));
 
       await completeLoginForm();
@@ -121,7 +121,7 @@ describe("Login Page", () => {
     });
   });
 
-  describe("When email/password fields are initially empty,then entered:", () => {
+  describe("When a user enters valid email/password after invalid input:", () => {
     test("email validation message should disappear", async () => {
       const submitButtonEl = screen.getByRole("button");
 
@@ -192,7 +192,7 @@ describe("Login Page", () => {
   });
 });
 
-//TODO: Maybe these could be used for SignupPage instead. 
+//TODO: Maybe these could be used for SignupPage instead.
 // All these tests aren't applicable anymore
 //This is an integration test
 //   test("If a user's email doesn't have an '@'", async () => {

@@ -27,7 +27,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
       await performLogin(email, password);
       navigate("/");
     } catch (err) {
-      setError(`An error occured: ${err.message}`);
+      setError(`${err.message}`);
     }
   };
 
