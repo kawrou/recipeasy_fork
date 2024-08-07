@@ -291,7 +291,7 @@ describe("Get Recipes tests", () => {
   describe("GET - all recipes - when token is present", () => {
     test("reponse code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
       const response = await request(app)
-        .get(`/recipes/myrecipes/${ownerId}`)
+        .get(`/recipes/`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
@@ -340,7 +340,7 @@ describe("Get Recipes tests", () => {
     });
     test("Doesn't return the wrong recipe for the userID", async () => {
       const response = await request(app)
-        .get(`/recipes/myrecipes/${ownerId}`)
+        .get(`/recipes`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
