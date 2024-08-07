@@ -156,8 +156,9 @@ function parseRecipeInstructionsData(recipeInstructions) {
     ) {
       return recipeInstructions;
     } else {
-      // Extract text from objects
-      return recipeInstructions.map((instruction) => instruction.text);
+      return recipeInstructions
+        .filter((instruction) => instruction["@type"] === "HowToStep")
+        .map((instruction) => instruction.text);
     }
   } else {
     // If it's not an array, return an empty array
