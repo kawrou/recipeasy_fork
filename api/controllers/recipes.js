@@ -4,7 +4,6 @@ const puppeteer = require("puppeteer");
 const { generateToken } = require("../lib/token");
 const Recipe = require("../models/recipe");
 const User = require("../models/user");
-const { response } = require("../app");
 const { extractRecipeInfo } = require("../utils/recipeUtils");
 
 const index = async (req, res) => {
@@ -233,11 +232,8 @@ const scrapeRecipeFromWebsite = async (req, res) => {
 
     //Once the recipe data has been scraped, we send it to the 'extractRecipeInfo' module to filter out only the data we need.
     const filteredRecipeData = extractRecipeInfo(recipeData);
-    console.log(filteredRecipeData);
     res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
-    // console.log(Object.keys(error));
-    // console.error("Error fetching URL:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
