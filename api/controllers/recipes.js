@@ -8,7 +8,7 @@ const { response } = require("../app");
 const { extractRecipeInfo } = require("../utils/recipeUtils");
 
 //This functions runs the main feature of our web app which is scraping recipe data from websites.
-const fetchRecipeData = async (req, res) => {
+const scrapeRecipeFromWebsite = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
   const newToken = generateToken(req.user_id);
 
@@ -140,7 +140,7 @@ const create = async (req, res) => {
   }
 };
 
-const updateRecipe = async (req, res) => {
+const update = async (req, res) => {
   try {
     const recipeId = req.params.recipe_id;
     const user = await User.findById(req.user_id);
@@ -188,7 +188,7 @@ const updateRecipe = async (req, res) => {
   }
 };
 
-const isFavourite = async (req, res) => {
+const markAsFavourite = async (req, res) => {
   try {
     const recipeId = req.params.recipe_id;
 
@@ -223,7 +223,7 @@ const isFavourite = async (req, res) => {
 
 //TODO:
 //Fix: There's no error handling. Use appropriate try/catch block.
-const getRecipeById = async (req, res) => {
+const show = async (req, res) => {
   const recipeId = req.params.recipe_id;
   const recipeData = await Recipe.findById(recipeId);
   const newToken = generateToken(req.user_id);
@@ -235,7 +235,7 @@ const getRecipeById = async (req, res) => {
     .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
 };
 
-const getAllRecipesByUserId = async (req, res) => {
+const index = async (req, res) => {
   try {
     const token = generateToken(req.user_id);
     const recipes = await Recipe.find({ ownerId: req.user_id });
@@ -246,12 +246,12 @@ const getAllRecipesByUserId = async (req, res) => {
 };
 
 const RecipesController = {
-  fetchRecipeData: fetchRecipeData,
-  create: create,
-  updateRecipe: updateRecipe,
-  isFavourite: isFavourite,
-  getRecipeById: getRecipeById,
-  getAllRecipesByUserId: getAllRecipesByUserId,
+  index,
+  show,
+  create,
+  update,
+  markAsFavourite,
+  scrapeRecipeFromWebsite,
 };
 
 module.exports = RecipesController;
