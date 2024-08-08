@@ -16,7 +16,7 @@ export const FavouriteButton = ({ recipeId, token, size }) => {
 
   useEffect(() => {
     const storedFavStatus = localStorage.getItem(
-      `favouritedByOwner_${recipeId}`
+      `favouritedByOwner_${recipeId}`,
     );
     if (storedFavStatus) {
       setFavStatus(JSON.parse(storedFavStatus));
@@ -34,7 +34,7 @@ export const FavouriteButton = ({ recipeId, token, size }) => {
       setFavStatus((prevStatus) => !prevStatus);
       localStorage.setItem(
         `favouritedByOwner_${recipeId}`,
-        JSON.stringify(!favStatus)
+        JSON.stringify(!favStatus),
       );
     } catch (error) {
       console.error("Failed to toggle Favourite button", error);

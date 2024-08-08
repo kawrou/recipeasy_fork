@@ -24,7 +24,7 @@ const RecipeCard = ({ recipe, token, setToken }) => {
       } finally {
         setIsLoading(false);
       }
-      return token
+      return token;
     };
 
     if (recipe._id) {
