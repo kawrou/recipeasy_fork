@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import * as recipeService from "../../src/services/recipes";
-import { vi, describe, test, expect } from "vitest";
+import { vi, describe, test, expect, beforeEach } from "vitest";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -72,14 +72,14 @@ describe("recipe service", () => {
   });
 
   describe("scrapeRecipe - GET req", () => {
-    //Reponse should be 200, should return scrapedRecipeData and a new token. 
+    //Reponse should be 200, should return scrapedRecipeData and a new token.
     test("request sent with correct URL, method, header, and body", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ recipeData: [], token: "newToken" }),
         {
           status: 200,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       await recipeService.scrapeRecipe(mockUrl, mockToken);
@@ -89,9 +89,7 @@ describe("recipe service", () => {
       const options = fetchArguments[1];
 
       expect(url).toEqual(
-        `${BACKEND_URL}/recipes/scrape-recipe?url=${encodeURIComponent(
-          mockUrl
-        )}`
+        `${BACKEND_URL}/recipes/scrape?url=${encodeURIComponent(mockUrl)}`,
       );
       expect(options).toEqual({
         method: "GET",
@@ -105,7 +103,7 @@ describe("recipe service", () => {
         {
           status: 200,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       const result = await recipeService.scrapeRecipe(mockUrl, mockToken);
@@ -120,10 +118,10 @@ describe("recipe service", () => {
         {
           status: 500,
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
       await expect(recipeService.scrapeRecipe(mockUrl)).rejects.toThrow(
-        "Unable to make GET request for fetch recipe"
+        "Unable to make GET request for fetch recipe",
       );
     });
   });
@@ -141,7 +139,7 @@ describe("recipe service", () => {
       const options = fetchArguments[1];
       const requestBody = JSON.parse(options.body);
 
-      expect(url).toEqual(`${BACKEND_URL}/recipes/`);
+      expect(url).toEqual(`${BACKEND_URL}/recipes`);
       expect(options.method).toEqual("POST");
       expect(options.headers).toEqual({
         Authorization: `Bearer ${mockToken}`,
@@ -159,7 +157,7 @@ describe("recipe service", () => {
         }),
         {
           status: 201,
-        }
+        },
       );
 
       const result = await recipeService.createRecipe(mockToken, ...recipeData);
@@ -170,11 +168,11 @@ describe("recipe service", () => {
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
-        { status: 500 }
+        { status: 500 },
       );
 
       await expect(
-        recipeService.createRecipe(mockToken, ...recipeData)
+        recipeService.createRecipe(mockToken, ...recipeData),
       ).rejects.toThrow("Error saving new recipe");
     });
   });
@@ -186,7 +184,7 @@ describe("recipe service", () => {
           message: "Recipe updated successfully",
           token: "newToken",
         }),
-        { response: 200 }
+        { response: 200 },
       );
 
       await recipeService.updateRecipe(mockToken, ...updateRecipeData);
@@ -211,12 +209,12 @@ describe("recipe service", () => {
           message: "Recipe updated successfully",
           token: "newToken",
         }),
-        { response: 200 }
+        { response: 200 },
       );
 
       const result = await recipeService.updateRecipe(
         mockToken,
-        ...updateRecipeData
+        ...updateRecipeData,
       );
       expect(result.message).toEqual("Recipe updated successfully");
       expect(result.token).toEqual("newToken");
@@ -225,10 +223,10 @@ describe("recipe service", () => {
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
-        { status: 500 }
+        { status: 500 },
       );
       await expect(
-        recipeService.updateRecipe(mockToken, ...updateRecipeData)
+        recipeService.updateRecipe(mockToken, ...updateRecipeData),
       ).rejects.toThrow("Error updating recipe");
     });
   });
@@ -240,7 +238,7 @@ describe("recipe service", () => {
           recipeData: responseDataMock,
           user_id: 1234,
           token: "newToken",
-        })
+        }),
       );
 
       await recipeService.getRecipeById(1234, mockToken);
@@ -260,7 +258,7 @@ describe("recipe service", () => {
           recipeData: responseDataMock,
           user_id: 1234,
           token: "newToken",
-        })
+        }),
       );
 
       const result = await recipeService.getRecipeById(1234, mockToken);
@@ -271,11 +269,11 @@ describe("recipe service", () => {
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
-        { status: 500 }
+        { status: 500 },
       );
 
       await expect(
-        recipeService.getRecipeById(1234, mockToken)
+        recipeService.getRecipeById(1234, mockToken),
       ).rejects.toThrow("Unable to get recipe. Does this recipe exist?");
     });
   });
@@ -286,8 +284,8 @@ describe("recipe service", () => {
       fetch.mockResponseOnce(
         JSON.stringify(
           { message: "Recipe favourited successfully", token: "newToken" },
-          { status: 200 }
-        )
+          { status: 200 },
+        ),
       );
 
       await recipeService.toggleFavourite(1234, mockToken);
@@ -296,7 +294,7 @@ describe("recipe service", () => {
       const url = fetchArguments[0];
       const options = fetchArguments[1];
 
-      expect(url).toEqual(`${BACKEND_URL}/recipes/favouritedByOwner/1234`);
+      expect(url).toEqual(`${BACKEND_URL}/recipes/1234/favourite`);
       expect(options.method).toEqual("PATCH");
       expect(options.headers).toEqual({
         Authorization: `Bearer ${mockToken}`,
@@ -308,8 +306,8 @@ describe("recipe service", () => {
       fetch.mockResponseOnce(
         JSON.stringify(
           { message: "Recipe favourited successfully", token: "newToken" },
-          { status: 200 }
-        )
+          { status: 200 },
+        ),
       );
 
       const result = await recipeService.toggleFavourite(1234, mockToken);
@@ -321,11 +319,11 @@ describe("recipe service", () => {
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Internal server error" }),
-        { status: 500 }
+        { status: 500 },
       );
 
       await expect(
-        recipeService.toggleFavourite(1234, mockToken)
+        recipeService.toggleFavourite(1234, mockToken),
       ).rejects.toThrow("Failed to toggle favourite button");
     });
   });
@@ -336,8 +334,8 @@ describe("recipe service", () => {
       fetch.mockResponseOnce(
         JSON.stringify(
           { recipes: [responseDataMock], token: "newToken" },
-          { status: 200 }
-        )
+          { status: 200 },
+        ),
       );
 
       await recipeService.getAllRecipes(mockToken);
@@ -355,8 +353,8 @@ describe("recipe service", () => {
       fetch.mockResponseOnce(
         JSON.stringify(
           { recipes: [responseDataMock], token: "newToken" },
-          { status: 200 }
-        )
+          { status: 200 },
+        ),
       );
 
       const result = await recipeService.getAllRecipes(mockToken);
@@ -368,11 +366,11 @@ describe("recipe service", () => {
     test("failed request throws an error", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ error: "Internal server error" }),
-        { status: 500 }
+        { status: 500 },
       );
 
       await expect(recipeService.getAllRecipes(mockToken)).rejects.toThrow(
-        "Unable to fetch recipes"
+        "Unable to fetch recipes",
       );
     });
   });
