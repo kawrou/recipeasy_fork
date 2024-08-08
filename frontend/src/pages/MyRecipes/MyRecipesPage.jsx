@@ -17,7 +17,7 @@ export const MyRecipesPage = ({
   //TODO: There might be a bug with useFetchRecipes
   const { recipes, loading, error, fetchRecipes } = useFetchRecipes(
     token,
-    setToken
+    setToken,
   );
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const MyRecipesPage = ({
     } else if (loading) {
       return <p aria-label="Loading message">Loading ...</p>;
     } else if (error) {
-      console.log("Error occured whilst retrieving recipe")
+      console.log("Error occured whilst retrieving recipe");
       navigate("/login");
       // return <p>Error: {error.message}</p>;
     } else if (
@@ -52,7 +52,7 @@ export const MyRecipesPage = ({
           <h1 className="flex items-center mb-6 text-5xl font-kanit font-bold italic text-primary-500">
             <img
               className="w-16 mb-1.5 -mr-0.5"
-              src="../../../src/assets/recipeasyLogo.svg"
+              src="../../../public/assets/recipeasyLogo.svg"
               alt="logo"
             />
             ecipeasy
@@ -82,7 +82,10 @@ export const MyRecipesPage = ({
           {" "}
           My Recipes
         </h2>
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 flex-wrap" role="feed">
+        <div
+          className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 flex-wrap"
+          role="feed"
+        >
           {renderPageContent()}
         </div>
       </div>
