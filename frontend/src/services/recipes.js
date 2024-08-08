@@ -9,7 +9,7 @@ export const scrapeRecipe = async (url, token) => {
   };
   try {
     const response = await fetch(
-      `${BACKEND_URL}/recipes/scrape-recipe?url=${encodeURIComponent(url)}`,
+      `${BACKEND_URL}/recipes/scrape?url=${encodeURIComponent(url)}`,
       requestOptions,
     );
 
@@ -61,7 +61,7 @@ export const createRecipe = async (
   };
 
   try {
-    const response = await fetch(`${BACKEND_URL}/recipes/`, requestOptions);
+    const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
 
     if (response.status !== 201) {
       throw new Error("Error saving new recipe");
@@ -166,7 +166,7 @@ export const toggleFavourite = async (recipeId, token) => {
 
   try {
     const response = await fetch(
-      `${BACKEND_URL}/recipes/favouritedByOwner/${recipeId}`,
+      `${BACKEND_URL}/recipes/${recipeId}/favourite`,
       requestOptions,
     );
 
