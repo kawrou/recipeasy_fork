@@ -10,7 +10,7 @@ export const scrapeRecipe = async (url, token) => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/scrape-recipe?url=${encodeURIComponent(url)}`,
-      requestOptions
+      requestOptions,
     );
 
     if (response.status !== 200) {
@@ -35,7 +35,7 @@ export const createRecipe = async (
   recipeIngredient,
   recipeInstructions,
   url,
-  image
+  image,
 ) => {
   const payload = {
     name: name,
@@ -86,7 +86,7 @@ export const updateRecipe = async (
   recipeIngredient,
   recipeInstructions,
   url,
-  image
+  image,
 ) => {
   const payload = {
     name: name,
@@ -114,7 +114,7 @@ export const updateRecipe = async (
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/${recipeId}`,
-      requestOptions
+      requestOptions,
     );
 
     if (response.status !== 200) {
@@ -140,7 +140,7 @@ export const getRecipeById = async (recipeId, token) => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/${recipeId}`,
-      requestOptions
+      requestOptions,
     );
 
     if (response.status !== 200) {
@@ -167,7 +167,7 @@ export const toggleFavourite = async (recipeId, token) => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/favouritedByOwner/${recipeId}`,
-      requestOptions
+      requestOptions,
     );
 
     if (response.status !== 200) {
