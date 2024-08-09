@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { generateToken, generateRefreshToken } = require("../lib/token");
+const JWT = require("jsonwebtoken");
 
 const createToken = async (req, res) => {
   const { username, password } = req.body;
@@ -34,10 +35,35 @@ const createToken = async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
-  res.status(201).json({ token: accessToken, message: "OK" });
+  res.status(201).json({ token: accessToken, message: "Login successful." });
 };
 
-const refresh = async (req, res) => {};
+const refresh = async (req, res) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
+
+  const refreshToken = cookies.jwt;
+
+  try {
+    const payload = JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const user = await User.findOne({ user_id: payload.user_id }).exec();
+    if (!user) return res.status(401).json({ message: "Unathorized" });
+
+    const accessToken = generateToken(user.id);
+    res
+      .status(201)
+      .json({ token: accessToken, message: "Access token issued" });
+  } catch (err) {
+    console.error(err);
+    if (err instanceof JWT.JsonWebTokenError) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 const logOut = async (req, res) => {};
 
@@ -55,8 +81,9 @@ const checkToken = async (req, res) => {
 };
 
 const AuthenticationController = {
-  createToken: createToken,
-  checkToken: checkToken,
+  createToken,
+  checkToken,
+  refresh,
 };
 
 module.exports = AuthenticationController;
