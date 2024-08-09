@@ -5,7 +5,7 @@ const AuthenticationController = require("../controllers/authentication");
 const tokenChecker = require("../middleware/tokenChecker");
 
 router.post("/", loginLimiter, AuthenticationController.createToken);
-router.get("/refresh", AuthenticationController.refreshToken); 
+router.get("/refresh", AuthenticationController.refresh); 
 router.post("/logout", AuthenticationController.logOut); 
 
 //TODO:I THINK UNECESSARY. Only used by RecipeScraper on frontend. But the route is already checked by a token checker!
