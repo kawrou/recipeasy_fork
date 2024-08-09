@@ -15,7 +15,9 @@ const RecipeScraper = ({
   const handleClick = async (manual) => {
     try {
       // Changed to props.token instead of window.localStorage.getItem()
+      // TODO: UNECESSARY
       await checkToken(token);
+      //
       if (!manual) {
         await handleScrapeRecipe();
       } else {
