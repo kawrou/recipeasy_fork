@@ -7,7 +7,7 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
  * token for a specific user.
  * JWTs in 100 Seconds: https://www.youtube.com/watch?v=UBUNrFtufWo
  */
-const generateToken = (user_id) => {
+const generateToken = (user_id) => { 
   return JWT.sign(
     {
       user_id: user_id,
@@ -22,7 +22,7 @@ const generateRefreshToken = (user_id) => {
   return JWT.sign(
     {
       user_id: user_id,
-      iat: Math.floow(Date.now() / 1000),
+      iat: Math.floor(Date.now() / 1000),
     },
     refreshTokenSecret,
     { expiresIn: "1d" }

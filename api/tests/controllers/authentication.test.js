@@ -11,11 +11,7 @@ describe("/tokens", () => {
       username: "someone",
     });
 
-    // We need to use `await` so that the "beforeAll" setup function waits for
-    // the asynchronous user.save() to be done before exiting.
-    // Otherwise, the tests belowc ould run without the user actyakkt being
-    // saved, causing tests to fail inconsistently.
-    await user.save();
+   await user.save();
   });
 
   afterAll(async () => {
@@ -30,7 +26,7 @@ describe("/tokens", () => {
 
     expect(response.status).toEqual(201);
     expect(response.body.token).not.toEqual(undefined);
-    expect(response.body.message).toEqual("OK");
+    expect(response.body.message).toEqual("Login successful.");
   });
 
   test("doesn't return a token when the user doesn't exist", async () => {
@@ -41,7 +37,7 @@ describe("/tokens", () => {
 
     expect(response.status).toEqual(401);
     expect(response.body.token).toEqual(undefined);
-    expect(response.body.message).toEqual("User not found");
+    expect(response.body.message).toEqual("Please check your login details.");
   });
 
   test("doesn't return a token when the wrong password is given", async () => {
@@ -52,6 +48,6 @@ describe("/tokens", () => {
 
     expect(response.status).toEqual(401);
     expect(response.body.token).toEqual(undefined);
-    expect(response.body.message).toEqual("Password incorrect");
+    expect(response.body.message).toEqual("Please check your login details.");
   });
 });
