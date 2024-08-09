@@ -1,22 +1,81 @@
 const User = require("../models/user");
-const { generateToken } = require("../lib/token");
+const { generateToken, generateRefreshToken } = require("../lib/token");
+const JWT = require("jsonwebtoken");
+const { default: mongoose } = require("mongoose");
 
 const createToken = async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { username, password } = req.body;
 
-  const user = await User.findOne({ email: email });
+  if (!username || !password) {
+    return res.status(400).json({ message: "All login fields are required." });
+  }
+
+  const user = await User.findOne({ username: username }).exec();
+
   if (!user) {
     console.log("Auth Error: User not found");
-    res.status(401).json({ message: "User not found" });
-  } else if (user.password !== password) {
+    return res
+      .status(401)
+      .json({ message: "Please check your login details." });
+  }
+
+  if (user.password !== password) {
     console.log("Auth Error: Passwords do not match");
-    res.status(401).json({ message: "Password incorrect" });
-  } else {
-    const token = generateToken(user.id);
-    res.status(201).json({ token: token, message: "OK" });
+    return res
+      .status(401)
+      .json({ message: "Please check your login details." });
+  }
+
+  const accessToken = generateToken(user.id);
+  const refreshToken = generateRefreshToken(user.id);
+
+  res.cookie("jwt", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({ token: accessToken, message: "Login successful." });
+};
+
+const refresh = async (req, res) => {
+  const cookies = req.cookies;
+
+  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
+
+  const refreshToken = cookies.jwt;
+
+  try {
+    const payload = JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const user = await User.findById(payload.user_id).exec();
+
+    const accessToken = generateToken(user.id);
+    res
+      .status(201)
+      .json({ token: accessToken, message: "Access token issued." });
+  } catch (err) {
+    if (err instanceof JWT.JsonWebTokenError) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (err instanceof mongoose.Error.CastError) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+const logOut = async (req, res) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.sendStatus(204);
+  res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
+  res.status(200).json({ message: "Cookie cleared" });
+};
+
+//I THINK THIS IS UNECESSARY
 //TODO: Needs a simple test for this
 // uses token checker to test if a token is valid
 const checkToken = async (req, res) => {
@@ -30,8 +89,10 @@ const checkToken = async (req, res) => {
 };
 
 const AuthenticationController = {
-  createToken: createToken,
-  checkToken: checkToken,
+  createToken,
+  refresh,
+  logOut,
+  checkToken,
 };
 
 module.exports = AuthenticationController;

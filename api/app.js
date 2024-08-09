@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const usersRouter = require("./routes/users");
@@ -16,6 +17,8 @@ app.use(cors());
 
 // Parse JSON request bodies, made available on `req.body`
 app.use(bodyParser.json());
+
+app.use(cookieParser()); 
 
 // API Routes
 app.use("/users", usersRouter);
