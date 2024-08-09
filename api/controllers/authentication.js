@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const { generateToken } = require("../lib/token");
+const { generateToken, generateRefreshToken } = require("../lib/token");
 
 const createToken = async (req, res) => {
   const { username, password } = req.body;
@@ -24,8 +24,17 @@ const createToken = async (req, res) => {
       .json({ message: "Please check your login details." });
   }
 
-  const token = generateToken(user.id);
-  res.status(201).json({ token: token, message: "OK" });
+  const accessToken = generateToken(user.id);
+  const refreshToken = generateRefreshToken(user.id);
+
+  res.cookie("jwt", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(201).json({ token: accessToken, message: "OK" });
 };
 
 const refresh = async (req, res) => {};

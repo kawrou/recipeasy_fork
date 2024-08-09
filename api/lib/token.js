@@ -18,7 +18,7 @@ const generateToken = (user_id) => {
   );
 };
 
-const refreshToken = (user_id) => {
+const generateRefreshToken = (user_id) => {
   return JWT.sign(
     {
       user_id: user_id,
@@ -33,4 +33,4 @@ const decodeToken = (token) => {
   return JWT.decode(token, secret);
 };
 
-module.exports = { generateToken, decodeToken };
+module.exports = { generateToken, generateRefreshToken, decodeToken };
