@@ -47,6 +47,7 @@ const login = async (req, res) => {
   }
 };
 
+//TODO: CAN DELETE as JWT implementation has changed
 const logout = (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 };
