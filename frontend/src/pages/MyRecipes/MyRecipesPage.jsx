@@ -52,7 +52,7 @@ export const MyRecipesPage = ({
           <h1 className="flex items-center mb-6 text-5xl font-kanit font-bold italic text-primary-500">
             <img
               className="w-16 mb-1.5 -mr-0.5"
-              src="../../../public/assets/recipeasyLogo.svg"
+              src="../../assets/recipeasyLogo.svg"
               alt="logo"
             />
             ecipeasy

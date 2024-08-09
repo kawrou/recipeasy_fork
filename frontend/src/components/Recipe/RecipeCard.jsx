@@ -54,7 +54,7 @@ const RecipeCard = ({ recipe, token, setToken }) => {
                 <div className="flex items-center font-kanit font-bold gap-0.5 text-secondary-500">
                   <img
                     className="size-8 mr-2"
-                    src="../../public/assets/timeTakenIcon.svg"
+                    src="../../assets/timeTakenIcon.svg"
                     alt="Timer Image"
                   />
                   <p>{recipe.totalTime}</p>
