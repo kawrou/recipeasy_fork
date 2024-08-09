@@ -1,5 +1,6 @@
 const JWT = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 /**
  * This function is used to generate a JWT authentication
@@ -12,8 +13,19 @@ const generateToken = (user_id) => {
       user_id: user_id,
       iat: Math.floor(Date.now() / 1000),
     },
-    secret, 
-    {expiresIn: '10m'}
+    secret,
+    { expiresIn: "10s" }
+  );
+};
+
+const refreshToken = (user_id) => {
+  return JWT.sign(
+    {
+      user_id: user_id,
+      iat: Math.floow(Date.now() / 1000),
+    },
+    refreshTokenSecret,
+    { expiresIn: "1d" }
   );
 };
 
