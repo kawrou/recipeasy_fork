@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const { generateToken, generateRefreshToken } = require("../lib/token");
 const JWT = require("jsonwebtoken");
+const { default: mongoose } = require("mongoose");
 
 const createToken = async (req, res) => {
   const { username, password } = req.body;
@@ -48,17 +49,19 @@ const refresh = async (req, res) => {
   try {
     const payload = JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-    const user = await User.findOne({ user_id: payload.user_id }).exec();
-    if (!user) return res.status(401).json({ message: "Unathorized" });
+    const user = await User.findById(payload.user_id).exec();
 
     const accessToken = generateToken(user.id);
     res
       .status(201)
-      .json({ token: accessToken, message: "Access token issued" });
+      .json({ token: accessToken, message: "Access token issued." });
   } catch (err) {
-    console.error(err);
     if (err instanceof JWT.JsonWebTokenError) {
       return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (err instanceof mongoose.Error.CastError) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     return res.status(500).json({ message: "Internal Server Error" });
@@ -88,7 +91,7 @@ const checkToken = async (req, res) => {
 const AuthenticationController = {
   createToken,
   refresh,
-  logOut, 
+  logOut,
   checkToken,
 };
 
