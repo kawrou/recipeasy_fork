@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import timeTakenIcon from "../../assets/timeTakenIcon.svg";
 import { getRecipeById } from "../../services/recipes";
 import { Link } from "react-router-dom";
 import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
 
 const RecipeCard = ({ recipe, token, setToken }) => {
-  const placeholderImage = "https://via.placeholder.com/300";
   const defaultName = "Recipe Name";
 
   const [isLoading, setIsLoading] = useState(false);
@@ -56,7 +54,7 @@ const RecipeCard = ({ recipe, token, setToken }) => {
                 <div className="flex items-center font-kanit font-bold gap-0.5 text-secondary-500">
                   <img
                     className="size-8 mr-2"
-                    src={timeTakenIcon}
+                    src="../../public/assets/timeTakenIcon.svg"
                     alt="Timer Image"
                   />
                   <p>{recipe.totalTime}</p>
