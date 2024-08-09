@@ -2,11 +2,14 @@
 
 ## Intro
 
----
-This is a fork of a project I completed with other members in order to make improvements to the tests and code base. 
+This is a fork of a project I completed with other members. 
 The original can be found [here](https://github.com/kawrou/RecipEasy-recipe-manager)
----
 
+As we created the app as a proof of concept in a short period, there were a lot of tests that needed fixing and improvements I wanted to make hence I created a separate respository. 
+
+Apart from fixing tests which I started on the original repo, you can see what enhancements I've worked on by checking out the closed issues above. I'm currently trying to enhance authentication and fix how JWT is handled on the frontend. 
+
+## Description
 Over the course of 2 weeks (8 or 9 days), we are building a recipe
 manager web application. 
 We will be desigining the app by first finding problems with current
@@ -24,6 +27,12 @@ A user can edit their saved recipe.
 A user can add their own recipe. 
 A user can search filter their recipes based on keywords / tags
 A user can see the nutritional value for each recipe. 
+
+## Video Presentation Link
+
+[![Watch the video](https://img.youtube.com/vi/FvwLQTpGBdE/0.jpg)](https://youtu.be/FvwLQTpGBdE)
+
+Clicking the link will open YouTube. 
 
 ## TechStack
 -MERN
