@@ -14,7 +14,7 @@ const generateToken = (user_id) => {
       iat: Math.floor(Date.now() / 1000),
     },
     secret,
-    { expiresIn: "10s" }
+    { expiresIn: "10m" }
   );
 };
 
