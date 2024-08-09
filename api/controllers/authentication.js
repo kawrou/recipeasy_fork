@@ -2,21 +2,37 @@ const User = require("../models/user");
 const { generateToken } = require("../lib/token");
 
 const createToken = async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { username, password } = req.body;
 
-  const user = await User.findOne({ email: email });
+  if (!username || !password) {
+    return res.status(400).json({ message: "All login fields are required." });
+  }
+
+  const user = await User.findOne({ username: username }).exec();
+
   if (!user) {
     console.log("Auth Error: User not found");
-    res.status(401).json({ message: "User not found" });
-  } else if (user.password !== password) {
-    console.log("Auth Error: Passwords do not match");
-    res.status(401).json({ message: "Password incorrect" });
-  } else {
-    const token = generateToken(user.id);
-    res.status(201).json({ token: token, message: "OK" });
+    return res
+      .status(401)
+      .json({ message: "Please check your login details." });
   }
+
+  if (user.password !== password) {
+    console.log("Auth Error: Passwords do not match");
+    return res
+      .status(401)
+      .json({ message: "Please check your login details." });
+  }
+
+  const token = generateToken(user.id);
+  res.status(201).json({ token: token, message: "OK" });
 };
+
+const refresh = async (req, res) => {};
+
+const logOut = async (req, res) => {};
+
+//I THINK THIS IS UNECESSARY
 //TODO: Needs a simple test for this
 // uses token checker to test if a token is valid
 const checkToken = async (req, res) => {
