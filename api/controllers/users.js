@@ -13,30 +13,28 @@ const create = async (req, res) => {
   }
 
   try {
-    const duplicateUsername = await User.findOne({username}).lean().exec();
-    const duplicateEmail = await User.findOne({email}).lean().exec();
-    if (duplicateUsername || duplicateEmail) {
-      return res.status(409).json({ message: "Username or  already exists." });
-    }
+    const hashedPassword = await bcrypt.hash(password, 10); //last parameter -> salt rounds
+
+    await User.create({
+      email,
+      password: hashedPassword,
+      username,
+    });
+
+    res.status(201).json({ message: `New user ${username} created.` });
   } catch (err) {
-    console.log(err);
+    if (err.name === "ValidationError") {
+      return res.status(400)({ message: "Invalid user data received." });
+    }
+
+    if (err.code === 11000) {
+      return res
+        .status(409)
+        .json({ message: "Username or email already exists." });
+    }
+
     return res.status(500).json({ message: "Internal server error." });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10); //last parameter -> salt rounds
-
-  const user = new User({ email, password: hashedPassword, username }); 
-
-  user
-    .save()
-    .then((user) => {
-      console.log("User created, id:", user._id.toString());
-      res.status(201).json({ message: "OK" });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(400).json({ message: "Something went wrong" });
-    });
 };
 
 //TODO: Implement
