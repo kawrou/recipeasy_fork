@@ -1,13 +1,23 @@
 const { generateToken } = require("../lib/token");
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
-//TODO: 
-//Password isn't hashed
-//Should probably rename this to signup instead of create
-const create = (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const username = req.body.username;
+// @desc Create new user
+// @route POST /users
+// @access Private
+const create = async (req, res) => {
+  const { email, password, username } = req.body;
+
+  if (!email || !password || !username) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const duplicateUsername = await User.findOne(username).lean().exec();
+  const duplicateEmail = await User.findOne(email).lean().exec();
+
+  if (duplicateUsername || duplicateEmail) {
+    return res.status(409).json({ message: "Username or  already exists" });
+  }
 
   const user = new User({ email, password, username });
   user
@@ -54,8 +64,9 @@ const logout = (req, res) => {
 
 const UsersController = {
   create: create,
-  login:login,
-  logout, logout
+  login: login,
+  logout,
+  logout,
 };
 
 module.exports = UsersController;
