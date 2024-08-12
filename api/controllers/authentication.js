@@ -2,6 +2,7 @@ const User = require("../models/user");
 const { generateToken, generateRefreshToken } = require("../lib/token");
 const JWT = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
+const bcrypt = require("bcrypt"); 
 
 const createToken = async (req, res) => {
   const { username, password } = req.body;
@@ -19,7 +20,9 @@ const createToken = async (req, res) => {
       .json({ message: "Please check your login details." });
   }
 
-  if (user.password !== password) {
+  const matchedPassword = await bcrypt.compare(password, user.password); 
+
+  if (!matchedPassword) {
     console.log("Auth Error: Passwords do not match");
     return res
       .status(401)
