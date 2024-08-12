@@ -9,17 +9,24 @@ const create = async (req, res) => {
   const { email, password, username } = req.body;
 
   if (!email || !password || !username) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "All fields are required." });
   }
 
-  const duplicateUsername = await User.findOne(username).lean().exec();
-  const duplicateEmail = await User.findOne(email).lean().exec();
-
-  if (duplicateUsername || duplicateEmail) {
-    return res.status(409).json({ message: "Username or  already exists" });
+  try {
+    const duplicateUsername = await User.findOne({username}).lean().exec();
+    const duplicateEmail = await User.findOne({email}).lean().exec();
+    if (duplicateUsername || duplicateEmail) {
+      return res.status(409).json({ message: "Username or  already exists." });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error." });
   }
 
-  const user = new User({ email, password, username });
+  const hashedPassword = await bcrypt.hash(password, 10); //last parameter -> salt rounds
+
+  const user = new User({ email, password: hashedPassword, username }); 
+
   user
     .save()
     .then((user) => {
