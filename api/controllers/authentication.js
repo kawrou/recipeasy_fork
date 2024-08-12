@@ -2,7 +2,7 @@ const User = require("../models/user");
 const { generateToken, generateRefreshToken } = require("../lib/token");
 const JWT = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
-const bcrypt = require("bcrypt"); 
+const bcrypt = require("bcrypt");
 
 const createToken = async (req, res) => {
   const { username, password } = req.body;
@@ -11,35 +11,39 @@ const createToken = async (req, res) => {
     return res.status(400).json({ message: "All login fields are required." });
   }
 
-  const user = await User.findOne({ username: username }).exec();
+  try {
+    const user = await User.findOne({ username: username }).exec();
 
-  if (!user) {
-    console.log("Auth Error: User not found");
-    return res
-      .status(401)
-      .json({ message: "Please check your login details." });
+    if (!user) {
+      // console.log("Auth Error: User not found");
+      return res
+        .status(401)
+        .json({ message: "Please check your login details." });
+    }
+
+    const matchedPassword = await bcrypt.compare(password, user.password);
+
+    if (!matchedPassword) {
+      // console.log("Auth Error: Passwords do not match");
+      return res
+        .status(401)
+        .json({ message: "Please check your login details." });
+    }
+
+    const accessToken = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({ token: accessToken, message: "Login successful." });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error." });
   }
-
-  const matchedPassword = await bcrypt.compare(password, user.password); 
-
-  if (!matchedPassword) {
-    console.log("Auth Error: Passwords do not match");
-    return res
-      .status(401)
-      .json({ message: "Please check your login details." });
-  }
-
-  const accessToken = generateToken(user.id);
-  const refreshToken = generateRefreshToken(user.id);
-
-  res.cookie("jwt", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "None",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
-
-  res.status(201).json({ token: accessToken, message: "Login successful." });
 };
 
 const refresh = async (req, res) => {
