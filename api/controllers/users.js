@@ -12,6 +12,14 @@ const create = async (req, res) => {
     return res.status(400).json({ message: "All fields are required." });
   }
 
+  if (
+    typeof email !== "string" ||
+    typeof password !== "string" ||
+    typeof username !== "string"
+  ) {
+    return res.status(400).json({ message: "Invalid user data received." });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10); //last parameter -> salt rounds
 
@@ -23,10 +31,6 @@ const create = async (req, res) => {
 
     res.status(201).json({ message: `New user ${username} created.` });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400)({ message: "Invalid user data received." });
-    }
-
     if (err.code === 11000) {
       return res
         .status(409)
