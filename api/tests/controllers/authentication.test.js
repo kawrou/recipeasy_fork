@@ -25,7 +25,6 @@ describe("/tokens", () => {
   });
   describe("createToken method:", () => {
     test("returns a token when credentials are valid", async () => {
-      // const testApp = supertest(app);
       const response = await testApp.post("/tokens").send({
         // email: "auth-test@test.com",
         password: "12345678",
@@ -38,11 +37,10 @@ describe("/tokens", () => {
     });
 
     test("doesn't return a token when the user doesn't exist", async () => {
-      // const testApp = supertest(app);
       const response = await testApp.post("/tokens").send({
         email: "non-existent@test.com",
-        password: "1234",
-        username: "someone",
+        password: "12345678",
+        username: "non-user",
       });
 
       expect(response.status).toEqual(401);
@@ -51,7 +49,6 @@ describe("/tokens", () => {
     });
 
     test("doesn't return a token when the wrong password is given", async () => {
-      // const testApp = supertest(app);
       const response = await testApp.post("/tokens").send({
         email: "auth-test@test.com",
         password: "1234",
@@ -66,7 +63,6 @@ describe("/tokens", () => {
 
   describe("refresh method:", () => {
     test("returns a token when 'refresh' token is valid", async () => {
-      // const testApp = supertest(app);
       const loginResponse = await testApp.post("/tokens").send({
         email: "auth-test@test.com",
         password: "12345678",
@@ -86,13 +82,6 @@ describe("/tokens", () => {
     });
 
     test("returns 401 when a cookie doesn't exist", async () => {
-      // const testApp = supertest(app);
-      // const loginResponse = await testApp.post("/tokens").send({
-      //   email: "auth-test@test.com",
-      //   password: "12345678",
-      //   username: "someone",
-      // });
-
       const response = await testApp.post("/tokens/refresh").send();
 
       expect(response.status).toEqual(401);
@@ -106,7 +95,6 @@ describe("/tokens", () => {
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "0s" }
       );
-      // const testApp = supertest(app);
 
       const response = await testApp
         .post("/tokens/refresh")
@@ -120,7 +108,6 @@ describe("/tokens", () => {
 
     test("returns 403 for invalid 'refresh' token", async () => {
       const invalidtoken = "invalid.token";
-      // const testApp = supertest(app);
 
       const response = await testApp
         .post("/tokens/refresh")
@@ -137,7 +124,6 @@ describe("/tokens", () => {
         { user_id: "nonUserId" },
         process.env.REFRESH_TOKEN_SECRET
       );
-      // const testApp = supertest(app);
 
       const response = await testApp
         .post("/tokens/refresh")
