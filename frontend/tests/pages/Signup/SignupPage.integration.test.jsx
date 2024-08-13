@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, vi } from "vitest";
+import { beforeEach, describe, vi, test, expect } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import * as authentication from "../../../src/services/authentication";
+import * as userService from "../../../src/services/user";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 import HomePage from "../../../src/pages/Home/HomePage";
 
-const signupSpy = vi.spyOn(authentication, "signup");
+const signupSpy = vi.spyOn(userService, "signUp");
 
 const completeSignupForm = async () => {
   const user = userEvent.setup();
@@ -35,7 +35,7 @@ describe("SignUp page integration test:", () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await completeSignupForm();
@@ -48,6 +48,7 @@ describe("SignUp page integration test:", () => {
     expect(emailInput).toBeVisible();
   });
 
+  //TODO: Rethink this test case
   test("navigates to /signup on unsuccessful signup", async () => {
     signupSpy.mockRejectedValue({ status: 400 });
     render(
@@ -56,7 +57,7 @@ describe("SignUp page integration test:", () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     await completeSignupForm();
@@ -80,7 +81,7 @@ describe("SignUp page integration test:", () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const logo = screen.getByRole("link", { name: "logo ecipeasy" });
@@ -98,7 +99,7 @@ describe("SignUp page integration test:", () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const loginLinkEl = screen.getByRole("link", { name: "Login here" });
@@ -112,7 +113,7 @@ describe("SignUp page integration test:", () => {
     expect(heading).toBeVisible();
     expect(emailInput).toBeVisible();
   });
-	
+
   test("navigates to home page when link is clicked", async () => {
     const user = userEvent.setup();
     render(
@@ -121,7 +122,7 @@ describe("SignUp page integration test:", () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     const homepageLinkEl = screen.getByRole("link", {

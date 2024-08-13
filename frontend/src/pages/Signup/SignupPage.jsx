@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 
-import { signup } from "../../services/authentication";
+import { signUp } from "../../services/user";
 
 //TODO:
 // A logged in user can still access this page by typing the route in the URL
@@ -62,9 +62,10 @@ export const SignupPage = () => {
     }
 
     try {
-      await signup(email, password, username);
+      await signUp(email, password, username);
       navigate("/login");
     } catch (err) {
+      //TODO: Better handling of errors
       // catch if username or email is not unique and show error
       setFormErrors({
         ...formErrors,
