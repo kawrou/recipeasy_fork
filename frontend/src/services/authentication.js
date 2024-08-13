@@ -33,6 +33,29 @@ export const login = async (username, password) => {
   }
 };
 
+export const refresh = async () => {
+  const requestOptions = {
+    method: "POST",
+    credentials: "include",
+  };
+
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/tokens/refresh`,
+      requestOptions,
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+    const data = await response.json();
+    return { token: data.token };
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 export const logOut = async () => {
   const requestOptions = {
     method: "POST",
