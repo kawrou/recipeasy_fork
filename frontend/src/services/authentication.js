@@ -2,6 +2,10 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const login = async (username, password) => {
+  if (!username || !password) {
+    throw new Error("Username and password are required.");
+  }
+
   const payload = {
     username: username,
     password: password,
