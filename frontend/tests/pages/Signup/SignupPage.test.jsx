@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
+import { vi, describe, beforeEach, test, expect } from "vitest";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../../src/services/authentication";
+import { signUp } from "../../../src/services/user";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 
-// Note: 
+// Note:
 // As 'react-router-dom' is mocked either for unit testing or TDDing purposes
 // it makes it difficult to test the functionality of the NavLink component as it won't render
 // A better approach might be an intergration style of test that won't require mocking 'react-router-dom'
@@ -14,7 +14,7 @@ import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 vi.mock("react-router-dom", () => {
   const navigateMock = vi.fn();
   // Wrap our navigateMock inside a wrapper. Actually it is a little unecessary.
-  const useNavigateMock = () => navigateMock; 
+  const useNavigateMock = () => navigateMock;
   const navLinkMock = vi.fn();
   const LinkMock = vi.fn();
   return {
@@ -25,9 +25,9 @@ vi.mock("react-router-dom", () => {
 });
 
 // Mocking the signup service
-vi.mock("../../../src/services/authentication", () => {
+vi.mock("../../../src/services/user", () => {
   const signupMock = vi.fn();
-  return { signup: signupMock };
+  return { signUp: signupMock };
 });
 
 // Reusable function for filling out signup form
@@ -55,7 +55,7 @@ describe("Signup Page", () => {
 
     await completeSignupForm();
 
-    expect(signup).toHaveBeenCalledWith("test@email.com", "Password1!", "Test");
+    expect(signUp).toHaveBeenCalledWith("test@email.com", "Password1!", "Test");
   });
 
   test("navigates to /login on successful signup", async () => {
@@ -72,7 +72,7 @@ describe("Signup Page", () => {
   test("navigates to /signup on unsuccessful signup", async () => {
     render(<SignupPage />);
 
-    signup.mockRejectedValue(new Error("Error signing up"));
+    signUp.mockRejectedValue(new Error("Error signing up"));
     const navigateMock = useNavigate();
 
     await completeSignupForm();
@@ -95,11 +95,13 @@ describe("Signup Page", () => {
     await user.type(usernameInputEl, "incorrect");
     await user.click(submitButtonEl);
 
-    await expect(screen.getByText("Enter a valid email address.")).toBeVisible();
+    await expect(
+      screen.getByText("Enter a valid email address."),
+    ).toBeVisible();
     await expect(
       screen.getByText(
-        "Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character."
-      )
+        "Password must be between 8 and 15 characters long with atleast 1 uppercase, 1 number, and 1 special character.",
+      ),
     ).toBeVisible();
   });
 });

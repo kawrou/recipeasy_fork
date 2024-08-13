@@ -1,5 +1,5 @@
 import createFetchMock from "vitest-fetch-mock";
-import { describe, vi, expect, test, beforeEach } from "vitest";
+import { describe, vi, expect, test } from "vitest";
 import { login, logOut, refresh } from "../../src/services/authentication";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
