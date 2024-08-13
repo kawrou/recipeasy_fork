@@ -1,6 +1,6 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test, beforeEach } from "vitest";
-import { login, logOut, checkToken } from "../../src/services/authentication";
+import { login, logOut, refresh } from "../../src/services/authentication";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -103,8 +103,73 @@ describe("authentication service", () => {
   //     );
   //   });
   // });
+  describe("refresh", () => {
+    test("calls the backend API with correct params", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ token: "testToken", message: "Access token issued." }),
+        {
+          status: 201,
+        },
+      );
+
+      await refresh();
+
+      // This is an array of the arguments that were last passed to fetch
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+
+      expect(url).toEqual(`${BACKEND_URL}/tokens/refresh`);
+      expect(options.method).toEqual("POST");
+      expect(options.credentials).toEqual("include");
+    });
+
+    test("returns an access token if the request was successful", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ token: "testToken", message: "Access token issued." }),
+        {
+          status: 201,
+        },
+      );
+
+      const response = await refresh();
+
+      expect(response).toEqual({ token: "testToken" });
+    });
+
+    test("throws an error if the request failed", async () => {
+      fetch.mockResponseOnce(JSON.stringify({ message: "Forbidden" }), {
+        status: 403,
+      });
+
+      try {
+        await refresh();
+      } catch (err) {
+        expect(err.message).toEqual("Forbidden");
+      }
+    });
+  });
 
   describe("logOut", () => {
+    test("calls the backend API with correct params", async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ token: "testToken", message: "Access token issued." }),
+        {
+          status: 201,
+        },
+      );
+
+      await logOut();
+
+      // This is an array of the arguments that were last passed to fetch
+      const fetchArguments = fetch.mock.lastCall;
+      const url = fetchArguments[0];
+      const options = fetchArguments[1];
+
+      expect(url).toEqual(`${BACKEND_URL}/tokens/logout`);
+      expect(options.method).toEqual("POST");
+      expect(options.credentials).toEqual("include");
+    });
     test("Logs a user out", async () => {
       fetch.mockResponseOnce(
         JSON.stringify({ message: "Logged out successfully. Cookie cleared." }),
@@ -130,6 +195,7 @@ describe("authentication service", () => {
       fetch.mockRejectOnce(
         new Error("Network error: Failed to connect to server"),
       );
+
       try {
         await logOut();
       } catch (err) {
