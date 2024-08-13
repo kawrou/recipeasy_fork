@@ -1,9 +1,9 @@
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const login = async (email, password) => {
+export const login = async (username, password) => {
   const payload = {
-    email: email,
+    username: username,
     password: password,
   };
 
@@ -19,27 +19,49 @@ export const login = async (email, password) => {
     const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
 
     if (!response.ok) {
-      throw new Error("Login failed, please check your credentials and try again.");
+      const error = await response.json();
+      throw new Error(error.message);
     }
 
     const data = await response.json();
-    return { token: data.token, user_id: data.user_id };
-  
+    return { token: data.token };
   } catch (error) {
-    if (error instanceof SyntaxError){
-      throw new Error("Server error. Please try again later.")
+    if (error instanceof SyntaxError) {
+      throw new Error("Server error. Please try again later.");
     }
-    throw new Error(error.message); 
+    throw new Error(error.message);
   }
 };
 
+export const logOut = async () => {
+  const requestOptions = {
+    method: "POST",
+    credentials: "include",
+  };
 
-export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.clear();
-  // console.log(localStorage);
+  try {
+    const response = await fetch(
+      `${BACKEND_URL}/tokens/logout`,
+      requestOptions,
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+
+    if (response.status === 204) {
+      return { message: "Logged out successfully." };
+    }
+
+    const data = await response.json();
+    return { message: data.message };
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };
 
+//TODO: Possibly unecessary method:
 export const checkToken = async (token) => {
   const requestOptions = {
     method: "GET",

@@ -79,7 +79,7 @@ const logOut = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204);
   res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
-  res.status(200).json({ message: "Cookie cleared" });
+  res.status(200).json({ message: "Logged out successfully. Cookie cleared." });
 };
 
 //I THINK THIS IS UNECESSARY
