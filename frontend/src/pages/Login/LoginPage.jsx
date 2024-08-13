@@ -16,7 +16,7 @@ export const LoginPage = ({ onLogin, setToken }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setValidationMsg({}); 
+    setValidationMsg({});
     const validationError = validateLoginForm(email, password);
     if (validationError) {
       setValidationMsg(validationError);

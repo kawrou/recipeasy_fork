@@ -33,7 +33,7 @@ describe("authentication service", () => {
     });
 
     test("returns the token if the request was a success", async () => {
-      const testEmail = "test@testEmail.com";
+      const testUsername = "testUser";
       const testPassword = "12345678";
 
       fetch.mockResponseOnce(
@@ -43,14 +43,14 @@ describe("authentication service", () => {
         },
       );
 
-      const response = await login(testEmail, testPassword);
+      const response = await login(testUsername, testPassword);
       expect(response).toEqual({
         token: "testToken",
       });
     });
 
     test("throws an error if the request failed", async () => {
-      const testEmail = "test@testEmail.com";
+      const testUsername = "testUser";
       const testPassword = "12345678";
 
       fetch.mockResponseOnce(
@@ -60,11 +60,15 @@ describe("authentication service", () => {
         },
       );
 
-      try {
-        await login(testEmail, testPassword);
-      } catch (err) {
-        expect(err.message).toEqual("Please check your login details.");
-      }
+      await expect(login(testUsername, testPassword)).rejects.toThrow(
+        "Please check your login details.",
+      );
+    });
+
+    test("throws an error if no username or password was provided", async () => {
+      await expect(login()).rejects.toThrow(
+        "Username and password are required.",
+      );
     });
   });
 
@@ -138,15 +142,11 @@ describe("authentication service", () => {
     });
 
     test("throws an error if the request failed", async () => {
-      fetch.mockResponseOnce(JSON.stringify({ message: "Forbidden" }), {
+      fetch.mockResponseOnce(JSON.stringify({ message: "Forbidden." }), {
         status: 403,
       });
 
-      try {
-        await refresh();
-      } catch (err) {
-        expect(err.message).toEqual("Forbidden");
-      }
+      await expect(refresh()).rejects.toThrow("Forbidden.");
     });
   });
 
@@ -193,16 +193,12 @@ describe("authentication service", () => {
     });
     test("throws an error for network errors", async () => {
       fetch.mockRejectOnce(
-        new Error("Network error: Failed to connect to server"),
+        new Error("Network error: Failed to connect to server."),
       );
 
-      try {
-        await logOut();
-      } catch (err) {
-        expect(err.message).toEqual(
-          "Network error: Failed to connect to server",
-        );
-      }
+      await expect(refresh()).rejects.toThrow(
+        "Network error: Failed to connect to server.",
+      );
     });
   });
 });
