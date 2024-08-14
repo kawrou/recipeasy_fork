@@ -44,7 +44,7 @@ describe("SignUp page integration test:", () => {
     const heading = screen.getByRole("heading", {
       name: "Log in to your account",
     });
-    const emailInput = screen.getByRole("textbox", { name: "Your email" });
+    const emailInput = screen.getByRole("textbox", { name: "Your username" });
     expect(heading).toBeVisible();
     expect(emailInput).toBeVisible();
   });
@@ -104,7 +104,7 @@ describe("SignUp page integration test:", () => {
     const heading = screen.getByRole("heading", {
       name: "Log in to your account",
     });
-    const emailInput = screen.getByRole("textbox", { name: "Your email" });
+    const emailInput = screen.getByRole("textbox", { name: "Your username" });
 
     expect(heading).toBeVisible();
     expect(emailInput).toBeVisible();

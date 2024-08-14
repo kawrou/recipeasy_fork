@@ -20,18 +20,18 @@ const user = userEvent.setup();
 
 // Reusable function for filling out login form
 const completeLoginForm = async () => {
-  const emailInputEl = screen.getByLabelText("Your email");
+  const usernameInputEl = screen.getByLabelText("Your username");
   const passwordInputEl = screen.getByLabelText("Password");
   const submitButtonEl = screen.getByRole("button");
 
-  await user.type(emailInputEl, "test@email.com");
+  await user.type(usernameInputEl, "testuser");
   await user.type(passwordInputEl, "1234");
   await user.click(submitButtonEl, "button");
 };
 
-const typeEmailInput = async (value) => {
-  const emailInputEl = screen.getByLabelText("Your email");
-  await user.type(emailInputEl, value);
+const typeusernameInput = async (value) => {
+  const usernameInputEl = screen.getByLabelText("Your username");
+  await user.type(usernameInputEl, value);
 };
 
 const typePasswordInput = async (value) => {
@@ -66,19 +66,19 @@ describe("Login Page", () => {
       expect(heading).toBeVisible();
     });
 
-    test("doesn't navigate if email cannot be found", async () => {
-      login.mockRejectedValue(new Error("Email not found"));
+    test("doesn't navigate if username cannot be found", async () => {
+      login.mockRejectedValue(new Error("username not found"));
 
       await completeLoginForm();
 
-      const errorMsg = screen.getByText("Email not found");
+      const errorMsg = screen.getByText("username not found");
       expect(errorMsg).toBeVisible();
 
       const heading = screen.queryByRole("heading", { name: "Recipeasy" });
       expect(heading).not.toBeInTheDocument();
     });
 
-    test("doesn't navigate if email is incorrect", async () => {
+    test("doesn't navigate if username is incorrect", async () => {
       login.mockRejectedValue(new Error("Password is incorrect"));
 
       await completeLoginForm();
@@ -92,14 +92,16 @@ describe("Login Page", () => {
   });
 
   describe("Form validation msg should appear and doesn't navigate to HomePage", () => {
-    test("when email field is empty on submit", async () => {
+    test("when username field is empty on submit", async () => {
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const emailValidationMsg = screen.getByText("Email address is required.");
+      const usernameValidationMsg = screen.getByText(
+        "Username address is required.",
+      );
 
-      expect(emailValidationMsg).toBeVisible();
+      expect(usernameValidationMsg).toBeVisible();
 
       const heading = screen.queryByRole("heading", { name: "Recipeasy" });
       expect(heading).not.toBeInTheDocument();
@@ -119,20 +121,22 @@ describe("Login Page", () => {
     });
   });
 
-  describe("When a user enters valid email/password after invalid input:", () => {
-    test("email validation message should disappear", async () => {
+  describe("When a user enters valid username/password after invalid input:", () => {
+    test("username validation message should disappear", async () => {
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const emailValidationMsg = screen.getByText("Email address is required.");
+      const usernameValidationMsg = screen.getByText(
+        "Username address is required.",
+      );
 
-      expect(emailValidationMsg).toBeVisible();
+      expect(usernameValidationMsg).toBeVisible();
 
-      await typeEmailInput("test@test.com");
+      await typeusernameInput("test@test.com");
       await user.click(submitButtonEl);
 
-      await expect(emailValidationMsg).not.toBeVisible();
+      await expect(usernameValidationMsg).not.toBeVisible();
     });
     test("password validation message should disapear", async () => {
       const submitButtonEl = screen.getByRole("button");
@@ -154,7 +158,7 @@ describe("Login Page", () => {
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
 
-      await typeEmailInput("test@test.com");
+      await typeusernameInput("test@test.com");
       await typePasswordInput("testPassword");
       await user.click(submitButtonEl);
 
@@ -193,54 +197,54 @@ describe("Login Page", () => {
 //TODO: Maybe these could be used for SignupPage instead.
 // All these tests aren't applicable anymore
 //This is an integration test
-//   test("If a user's email doesn't have an '@'", async () => {
+//   test("If a user's username doesn't have an '@'", async () => {
 //     validateForm.mockReturnValue({
-//       email: "Email is invalid. Please include an @",
+//       username: "username is invalid. Please include an @",
 //     });
 
-//     await typeEmailInput("test");
+//     await typeusernameInput("test");
 
-//     const emailValidationMsg = screen.getByText(
-//       "Email is invalid. Please include an @."
+//     const usernameValidationMsg = screen.getByText(
+//       "username is invalid. Please include an @."
 //     );
 
-//     expect(emailValidationMsg).toBeVisible();
+//     expect(usernameValidationMsg).toBeVisible();
 
 //     // await waitFor(() => {
-//     //   const emailValidationMsg = screen.getByText(
-//     //     "Email is invalid. Please include an @."
+//     //   const usernameValidationMsg = screen.getByText(
+//     //     "username is invalid. Please include an @."
 //     //   );
 
-//     //   expect(emailValidationMsg).toBeVisible();
+//     //   expect(usernameValidationMsg).toBeVisible();
 //     // });
 //   });
 //   //This is an integration test
-//   test("If a user's email doesn't have a domain extentension", async () => {
+//   test("If a user's username doesn't have a domain extentension", async () => {
 //     validateForm.mockReturnValue({
-//       email: "Email is invalid. Please include a domain name in your email",
+//       username: "username is invalid. Please include a domain name in your username",
 //     });
 
-//     await typeEmailInput("test@");
+//     await typeusernameInput("test@");
 
-//     const emailValidationMsg = screen.getByText(
-//       "Email is invalid. Please include a domain name in your email."
+//     const usernameValidationMsg = screen.getByText(
+//       "username is invalid. Please include a domain name in your username."
 //     );
 
-//     expect(emailValidationMsg).toBeVisible();
+//     expect(usernameValidationMsg).toBeVisible();
 
 //     // await waitFor(() => {
-//     //   const emailValidationMsg = screen.getByText(
-//     //     "Email is invalid. Please include a domain name in your email."
+//     //   const usernameValidationMsg = screen.getByText(
+//     //     "username is invalid. Please include a domain name in your username."
 //     //   );
 
-//     //   expect(emailValidationMsg).toBeVisible();
+//     //   expect(usernameValidationMsg).toBeVisible();
 //     // });
 //   });
 
-//   test("If a user's email is invalid, it shouldn't navigate", async () => {
-//     validateForm.mockReturnValue({ email: "invalid" });
+//   test("If a user's username is invalid, it shouldn't navigate", async () => {
+//     validateForm.mockReturnValue({ username: "invalid" });
 
-//     await typeEmailInput("test");
+//     await typeusernameInput("test");
 //     const submitButtonEl = screen.getByRole("button");
 //     await user.click(submitButtonEl);
 
@@ -325,9 +329,9 @@ describe("Login Page", () => {
 //   });
 
 //   test("If a user's password is invalid, it shouldn't navigate", async () => {
-//     validateForm.mockReturnValue({ email: "invalid" });
+//     validateForm.mockReturnValue({ username: "invalid" });
 
-//     await typeEmailInput("test");
+//     await typeusernameInput("test");
 //     const submitButtonEl = screen.getByRole("button");
 //     await user.click(submitButtonEl);
 

@@ -1,15 +1,15 @@
 export const isEmpty = (value) => !value.trim();
 
-export const validateLoginForm = (email, password) => {
+export const validateLoginForm = (username, password) => {
   let validationErrMsg = {};
 
-  if (typeof email !== "string" || typeof password !== "string") {
-    validationErrMsg.general = "Email and password must be string.";
+  if (typeof username !== "string" || typeof password !== "string") {
+    validationErrMsg.general = "Username and password must be string.";
     return validationErrMsg;
   }
 
-  if (isEmpty(email)) {
-    validationErrMsg.email = "Email address is required";
+  if (isEmpty(username)) {
+    validationErrMsg.username = "Username address is required";
   }
 
   if (isEmpty(password)) {
