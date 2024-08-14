@@ -19,7 +19,6 @@ export const SignupPage = () => {
     event.preventDefault();
     const errors = validateSignUpForm(email, password, username);
 
-    // if there are errors stop signup submission
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -33,7 +32,6 @@ export const SignupPage = () => {
         ...formErrors,
         general: err.message,
       });
-      navigate("/signup");
     }
   };
 

@@ -69,7 +69,7 @@ describe("Signup Page", () => {
     expect(navigateMock).toHaveBeenCalledWith("/login");
   });
 
-  test("navigates to /signup on unsuccessful signup", async () => {
+  test("doesn't navigate to /login on unsuccessful signup", async () => {
     render(<SignupPage />);
 
     signUp.mockRejectedValue(new Error("Error signing up"));
@@ -77,7 +77,7 @@ describe("Signup Page", () => {
 
     await completeSignupForm();
 
-    expect(navigateMock).toHaveBeenCalledWith("/signup");
+    expect(navigateMock).not.toHaveBeenCalledWith("/login");
   });
 
   test("error message shown when invalid password and email is input", async () => {
