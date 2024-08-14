@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { test, vi } from "vitest";
+import { test, vi, describe, beforeEach, expect, it } from "vitest";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../src/services/authentication";
@@ -13,13 +13,12 @@ vi.mock("react-router-dom", () => {
   const useNavigateMock = () => navigateMock; // Mock useNavigate to return a function
   return {
     useNavigate: useNavigateMock,
-    NavLink: () => null, // Mock NavLink react-router-dom component
-    Link: () => null, // Mock Link react-router-dom component
+    NavLink: () => {}, // Mock NavLink react-router-dom component
+    Link: () => {}, // Mock Link react-router-dom component
   };
 });
 
-const onLoginMock = vi.fn();
-const setTokenMock = vi.fn();
+const handleLoginMock = vi.fn();
 
 // Mocking the login service
 vi.mock("../../../src/services/authentication", () => {
@@ -34,7 +33,6 @@ vi.mock("../../../src/validators/validation", () => {
 
 // Reusable function for filling out login form
 const user = userEvent.setup();
-const navigateMock = useNavigate();
 
 const completeLoginForm = async () => {
   const emailInputEl = screen.getByLabelText("Your email");
@@ -46,27 +44,18 @@ const completeLoginForm = async () => {
   await user.click(submitButtonEl, "button");
 };
 
-const typeEmailInput = async (value) => {
-  const emailInputEl = screen.getByLabelText("Your email");
-  await user.type(emailInputEl, value);
-};
-
-const typePasswordInput = async (value) => {
-  const pwInputEl = screen.getByLabelText("Password");
-  await user.type(pwInputEl, value);
-};
-
-describe("Login Page", () => {
+describe.only("Login Page", () => {
+  const navigateMock = useNavigate();
   beforeEach(() => {
     vi.resetAllMocks();
   });
   describe("When a user clicks login button", () => {
     beforeEach(() => {
-      render(<LoginPage onLogin={onLoginMock} setToken={setTokenMock} />);
+      render(<LoginPage handleLogin={handleLoginMock} />);
     });
 
     test("a login request is made", async () => {
-      validateLoginForm.mockReturnValue(null);
+      validateLoginForm.mockReturnValue({});
 
       await completeLoginForm();
 
@@ -74,7 +63,7 @@ describe("Login Page", () => {
     });
 
     it("navigates to home page on successful login", async () => {
-      validateLoginForm.mockReturnValue(null);
+      validateLoginForm.mockReturnValue({});
       login.mockResolvedValue("secrettoken123");
 
       await completeLoginForm();
@@ -83,7 +72,7 @@ describe("Login Page", () => {
     });
 
     it("doens't navigate if error logging in", async () => {
-      validateLoginForm.mockReturnValue(null);
+      validateLoginForm.mockReturnValue({});
 
       login.mockRejectedValue(new Error("Login failed. Please try again"));
 
@@ -93,7 +82,7 @@ describe("Login Page", () => {
     });
 
     test("error messages is handled correctly", async () => {
-      validateLoginForm.mockReturnValue(null);
+      validateLoginForm.mockReturnValue({});
       login.mockRejectedValue(new Error("Login failed. Please try again"));
 
       await completeLoginForm();
@@ -119,7 +108,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const emailValidationMsg = screen.getByText(
-        "Email address field was empty. Please enter an email address."
+        "Email address field was empty. Please enter an email address.",
       );
 
       expect(emailValidationMsg).toBeVisible();
@@ -135,7 +124,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const passwordValidationMsg = screen.getByText(
-        "Password field was empty. Please enter your password."
+        "Password field was empty. Please enter your password.",
       );
 
       expect(passwordValidationMsg).toBeVisible();
@@ -164,70 +153,5 @@ describe("Login Page", () => {
       expect(login).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
-
-    //TODO: Maybe can use these tests for the SignUp page where it makes more sense
-    //Maybe shouldn't have this feature.
-    //Instead just check that it isn't an empty field
-    // test("should display email validation error message", async () => {
-    //   validateForm.mockReturnValue({
-    //     email: "Email is invalid. Please include an @",
-    //   });
-
-    //   await typeEmailInput("test");
-
-    //   const emailValidationMsg = screen.getByText(
-    //     "Email is invalid. Please include an @."
-    //   );
-
-    //   expect(emailValidationMsg).toBeVisible();
-
-    // await waitFor(() => {
-    //   const emailValidationMsg = screen.getByText(
-    //     "Email is invalid. Please include an @."
-    //   );
-
-    //   expect(emailValidationMsg).toBeVisible();
-    // });
-    // });
-
-    //Maybe shouldn't have this feature.
-    //Instead just check that it isn't an empty field
-    // test("should display password validation error message", async () => {
-    //   validateForm.mockReturnValue({
-    //     password: "Password must contain a capital letter",
-    //   });
-
-    //   await typePasswordInput("password");
-
-    //   await waitFor(() => {
-    //     const passwordValidationMsg = screen.getByText(
-    //       "Password must contain a capital letter."
-    //     );
-
-    //     expect(passwordValidationMsg).toBeVisible();
-    //   });
-    // });
-
-    // test("shouldn't navigate upon invalid email", async () => {
-    //   validateForm.mockReturnValue({ email: "invalid" });
-
-    //   await typeEmailInput("test");
-    //   const submitButtonEl = screen.getByRole("button");
-    //   await user.click(submitButtonEl);
-
-    //   expect(login).not.toHaveBeenCalled();
-    //   expect(navigateMock).not.toHaveBeenCalled();
-    // });
-
-    // test("shouldn't navigate upon invalid password", async () => {
-    //   validateForm.mockReturnValue({ email: "invalid" });
-
-    //   await typeEmailInput("test");
-    //   const submitButtonEl = screen.getByRole("button");
-    //   await user.click(submitButtonEl);
-
-    //   expect(login).not.toHaveBeenCalled();
-    //   expect(navigateMock).not.toHaveBeenCalled();
-    // });
   });
 });

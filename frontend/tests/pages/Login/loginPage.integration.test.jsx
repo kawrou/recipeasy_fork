@@ -8,8 +8,7 @@ import { LoginPage } from "../../../src/pages/Login/LoginPage";
 import HomePage from "../../../src/pages/Home/HomePage";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 
-const onLoginMock = vi.fn();
-const setTokenMock = vi.fn();
+const handleLoginMock = vi.fn();
 
 // Mocking the login service
 vi.mock("../../../src/services/authentication", () => {
@@ -48,9 +47,7 @@ describe("Login Page", () => {
         <Routes>
           <Route
             path="/login"
-            element={
-              <LoginPage onLogin={onLoginMock} setToken={setTokenMock} />
-            }
+            element={<LoginPage handleLogin={handleLoginMock} />}
           />
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -58,6 +55,7 @@ describe("Login Page", () => {
       </MemoryRouter>,
     );
   });
+
   describe("Login interactions:", () => {
     test("navigates to home page on successful login", async () => {
       login.mockResolvedValue("secrettoken123");
