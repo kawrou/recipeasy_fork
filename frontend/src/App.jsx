@@ -71,7 +71,9 @@ const App = () => {
           />
           <Route
             path="/login"
-            element={<LoginPage onLogin={handleLogin} setToken={setToken} />}
+            element={
+              <LoginPage handleLogin={handleLogin} setToken={setToken} />
+            }
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route
