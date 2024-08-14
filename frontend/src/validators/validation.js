@@ -24,7 +24,7 @@ export const validateLoginForm = (email, password) => {
 // Match one or more alphanumeric characters, dots, or hyphens for the domain name.
 // Match a period (dot), which separates the domain name and top-level domain (TLD).
 // Match the TLD, consisting of 2 to 4 alphabetical characters.
-export const validateEmail = (email) => {
+const validateEmail = (email) => {
   return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email);
 };
 
@@ -33,13 +33,13 @@ export const validateEmail = (email) => {
 // At least one number
 // At least one special character
 // Length must be in the range 8-15
-export const validatePassword = (password) => {
+const validatePassword = (password) => {
   return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/.test(
     password,
   );
 };
 
-export const validateSignUpForm = (username, email, password) => {
+export const validateSignUpForm = (email, password, username) => {
   let validationErrMsg = {};
 
   if (!username || !email || !password) {
