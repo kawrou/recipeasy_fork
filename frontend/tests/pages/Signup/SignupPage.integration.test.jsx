@@ -49,8 +49,7 @@ describe("SignUp page integration test:", () => {
     expect(emailInput).toBeVisible();
   });
 
-  //TODO: Rethink this test case
-  test("navigates to /signup on unsuccessful signup", async () => {
+  test("doesn't navigate to /login on unsuccessful signup", async () => {
     signupSpy.mockRejectedValue({ status: 400 });
     render(
       <MemoryRouter initialEntries={["/signup"]}>
@@ -63,15 +62,11 @@ describe("SignUp page integration test:", () => {
 
     await completeSignupForm();
 
-    const emailInputEl = screen.getByLabelText("Your email");
-    const passwordInputEl = screen.getByLabelText("Password");
-    const usernameInputEl = screen.getByLabelText("Username");
-    const submitButtonEl = screen.getByRole("submit-button");
+    const heading = screen.queryByRole("heading", {
+      name: "Log in to your account",
+    });
 
-    expect(emailInputEl).toBeVisible();
-    expect(passwordInputEl).toBeVisible();
-    expect(usernameInputEl).toBeVisible();
-    expect(submitButtonEl).toBeVisible();
+    expect(heading).not.toBeInTheDocument();
   });
 
   test("navigates to home page when logo is clicked", async () => {
