@@ -16,7 +16,7 @@ export const validateLoginForm = (email, password) => {
     validationErrMsg.password = "Password is required";
   }
 
-  return Object.keys(validationErrMsg).length === 0 ? null : validationErrMsg;
+  return validationErrMsg;
 };
 
 // Match one or more alphanumeric characters, dots, underscores, or hyphens for the username part.
