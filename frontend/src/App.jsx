@@ -11,7 +11,7 @@ import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
 import RecipeScraper from "./components/RecipeScraper";
 import { useState } from "react";
-import { logout } from "./services/authentication";
+import { logOut } from "./services/authentication";
 
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
@@ -37,7 +37,7 @@ const App = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    await logOut();
     setIsLoggedIn(false);
     setToken(null);
     if (window.location.pathname === "/") {
