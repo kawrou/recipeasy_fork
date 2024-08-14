@@ -7,35 +7,32 @@ import { validateLoginForm } from "../../validators/validation";
 // A logged in user can still access this page by typing the route in the URL
 // It'll be better for UX if it were handled
 
-export const LoginPage = ({ onLogin, setToken }) => {
+export const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [validationMsg, setValidationMsg] = useState({});
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setValidationMsg({});
-    const validationError = validateLoginForm(email, password);
-    if (validationError) {
-      setValidationMsg(validationError);
+    const validationErrors = validateLoginForm(email, password);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setValidationMsg(validationErrors);
       return;
     }
 
     try {
-      await performLogin(email, password);
+      const data = await login(email, password);
+
+      handleLogin(data.token);
       navigate("/");
     } catch (err) {
       setError(`${err.message}`);
     }
-  };
-
-  const performLogin = async (email, password) => {
-    const data = await login(email, password);
-    window.localStorage.setItem("token", data.token); //This is also redundant
-    setToken(data.token); //This is possibly redundant
-    onLogin(data.token);
   };
 
   const handleEmailChange = (e) => {
