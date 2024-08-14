@@ -44,7 +44,7 @@ const completeLoginForm = async () => {
   await user.click(submitButtonEl, "button");
 };
 
-describe.only("Login Page", () => {
+describe("Login Page", () => {
   const navigateMock = useNavigate();
   beforeEach(() => {
     vi.resetAllMocks();
