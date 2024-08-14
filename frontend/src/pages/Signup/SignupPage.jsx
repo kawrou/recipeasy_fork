@@ -29,11 +29,9 @@ export const SignupPage = () => {
       await signUp(email, password, username);
       navigate("/login");
     } catch (err) {
-      //TODO: Better handling of errors
-      // catch if username or email is not unique and show error
       setFormErrors({
         ...formErrors,
-        username: "Username and Email must be unique.",
+        general: err.message,
       });
       navigate("/signup");
     }
@@ -137,7 +135,9 @@ export const SignupPage = () => {
                     <div className="text-red-500">{formErrors.password}</div>
                   )}
                 </div>
-
+                {formErrors.general && (
+                  <div className="text-red-500">{formErrors.general}</div>
+                )}
                 <button
                   type="submit"
                   role="submit-button"

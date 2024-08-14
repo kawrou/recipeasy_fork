@@ -29,6 +29,7 @@ describe("SignUp page integration test:", () => {
   });
 
   test("navigates to /login on successful signup", async () => {
+    signupSpy.mockResolvedValue({ status: 201 });
     render(
       <MemoryRouter initialEntries={["/signup"]}>
         <Routes>
