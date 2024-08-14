@@ -35,11 +35,11 @@ vi.mock("../../../src/validators/validation", () => {
 const user = userEvent.setup();
 
 const completeLoginForm = async () => {
-  const emailInputEl = screen.getByLabelText("Your email");
+  const usernameInputEl = screen.getByLabelText("Your username");
   const passwordInputEl = screen.getByLabelText("Password");
   const submitButtonEl = screen.getByRole("button");
 
-  await user.type(emailInputEl, "test@email.com");
+  await user.type(usernameInputEl, "testuser");
   await user.type(passwordInputEl, "1234");
   await user.click(submitButtonEl, "button");
 };
@@ -59,7 +59,7 @@ describe.only("Login Page", () => {
 
       await completeLoginForm();
 
-      expect(login).toHaveBeenCalledWith("test@email.com", "1234");
+      expect(login).toHaveBeenCalledWith("testuser", "1234");
     });
 
     it("navigates to home page on successful login", async () => {
@@ -93,25 +93,25 @@ describe.only("Login Page", () => {
     });
   });
 
-  describe("When email and/or password fields are empty:", () => {
+  describe("When username and/or password fields are empty:", () => {
     beforeEach(() => {
       render(<LoginPage />);
     });
 
-    it("should display email validation error message", async () => {
+    it("should display username validation error message", async () => {
       validateLoginForm.mockReturnValue({
-        email: "Email address field was empty. Please enter an email address",
+        username: "username address field was empty. Please enter an username address",
       });
 
       const submitButtonEl = screen.getByRole("button");
 
       await user.click(submitButtonEl);
 
-      const emailValidationMsg = screen.getByText(
-        "Email address field was empty. Please enter an email address.",
+      const usernameValidationMsg = screen.getByText(
+        "username address field was empty. Please enter an username address.",
       );
 
-      expect(emailValidationMsg).toBeVisible();
+      expect(usernameValidationMsg).toBeVisible();
     });
 
     it("should display password validation error message", async () => {
@@ -130,9 +130,9 @@ describe.only("Login Page", () => {
       expect(passwordValidationMsg).toBeVisible();
     });
 
-    it("shouldn't navigate upon invalid email", async () => {
+    it("shouldn't navigate upon invalid username", async () => {
       validateLoginForm.mockReturnValue({
-        email: "Email address field was empty. Please enter an email address",
+        username: "username address field was empty. Please enter an username address",
       });
 
       const submitButtonEl = screen.getByRole("button");

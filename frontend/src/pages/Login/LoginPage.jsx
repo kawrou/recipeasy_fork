@@ -8,7 +8,7 @@ import { validateLoginForm } from "../../validators/validation";
 // It'll be better for UX if it were handled
 
 export const LoginPage = ({ handleLogin }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [validationMsg, setValidationMsg] = useState({});
@@ -18,7 +18,7 @@ export const LoginPage = ({ handleLogin }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setValidationMsg({});
-    const validationErrors = validateLoginForm(email, password);
+    const validationErrors = validateLoginForm(username, password);
 
     if (Object.keys(validationErrors).length > 0) {
       setValidationMsg(validationErrors);
@@ -26,7 +26,7 @@ export const LoginPage = ({ handleLogin }) => {
     }
 
     try {
-      const data = await login(email, password);
+      const data = await login(username, password);
 
       handleLogin(data.token);
       navigate("/");
@@ -35,9 +35,9 @@ export const LoginPage = ({ handleLogin }) => {
     }
   };
 
-  const handleEmailChange = (e) => {
+  const handleusernameChange = (e) => {
     e.preventDefault();
-    setEmail(e.target.value);
+    setUsername(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -68,22 +68,24 @@ export const LoginPage = ({ handleLogin }) => {
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="block mb-2 text-sm text-left font-light text-gray-600"
                   >
-                    Your email
+                    Your username
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    id="email"
+                    type="username"
+                    name="username"
+                    id="username"
                     className="outline-none focus:ring-1 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5"
                     placeholder="name@domain.com"
-                    value={email}
-                    onChange={handleEmailChange}
+                    value={username}
+                    onChange={handleusernameChange}
                   />
-                  {validationMsg.email && (
-                    <span className="text-red-500">{validationMsg.email}.</span>
+                  {validationMsg.username && (
+                    <span className="text-red-500">
+                      {validationMsg.username}.
+                    </span>
                   )}
                 </div>
                 <div>
