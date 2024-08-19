@@ -35,7 +35,7 @@ describe("apiClient tests", () => {
       {
         status: 200,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const testUrl = "backend/url";
@@ -64,11 +64,11 @@ describe("apiClient tests", () => {
     };
 
     await expect(apiClient(testUrl, requestOptions)).rejects.toThrow(
-      "error message"
+      "error message",
     );
   });
 
-  it.only("handles authentication", async () => {
+  it("handles authentication", async () => {
     fetch
       .mockResponseOnce(
         JSON.stringify({
