@@ -7,19 +7,24 @@ const apiClient = async (url, options = {}) => {
   try {
     let response = await fetch(url, options);
 
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+
     if (response.status === 401) {
-      try {
-        const refreshResponse = await fetch(`${BACKEND_URL}/tokens/refresh`, {
+      const refreshResponse = await errorHandler(
+        fetch(`${BACKEND_URL}/tokens/refresh`, {
           method: "POST",
           credentials: "include",
-        });
+        }),
+      );
 
-        const access = await refreshResponse.json();
-
-        token = access.token;
-      } catch (error) {
-        throw new Error(error.message);
+      if (refreshResponse.success === false) {
+        throw new Error(refreshResponse.error);
       }
+
+      token = refreshResponse.data.token;
     }
 
     const requestOptions = {
@@ -29,9 +34,13 @@ const apiClient = async (url, options = {}) => {
       },
     };
 
-    response = await fetch(url, requestOptions);
+    response = await errorHandler(fetch(url, requestOptions));
 
-    const data = await response.json();
+    if (response.success === false) {
+      throw new Error(response.error);
+    }
+
+    const data = await response.data.json();
     return data;
   } catch (error) {
     throw new Error(error.message);
