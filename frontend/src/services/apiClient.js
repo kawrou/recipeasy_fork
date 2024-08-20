@@ -3,7 +3,6 @@ import { errorHandler } from "./errorHandler";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const apiClient = async (url, options = {}) => {
-  let token;
   try {
     let response = await fetch(url, options);
 
@@ -24,24 +23,19 @@ const apiClient = async (url, options = {}) => {
         throw new Error(refreshResponse.error);
       }
 
-      token = refreshResponse.data.token;
-    }
-
-    const requestOptions = {
-      method: "GET",
-      headers: {
+      const token = refreshResponse.data.token;
+      options.headers = {
+        ...options.headers,
         Authorization: `Bearer ${token}`,
-      },
-    };
+      };
+      response = await errorHandler(fetch(url, options));
 
-    response = await errorHandler(fetch(url, requestOptions));
+      if (response.success === false) {
+        throw new Error(response.error);
+      }
 
-    if (response.success === false) {
-      throw new Error(response.error);
+      return await response.data.json();
     }
-
-    const data = await response.data.json();
-    return data;
   } catch (error) {
     throw new Error(error.message);
   }
