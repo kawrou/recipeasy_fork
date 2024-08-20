@@ -1,15 +1,15 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { logIn } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
-import AuthContext from "../../context/AuthProvider";
+import useAuth from "../../hooks/useAuth";
 
 //TODO:
 // A logged in user can still access this page by typing the route in the URL
 // It'll be better for UX if it were handled
 
 export const LoginPage = ({ handleLogin }) => {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
