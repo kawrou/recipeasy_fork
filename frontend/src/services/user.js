@@ -54,7 +54,6 @@ export const signUp = async (email, password, username) => {
     }
 
     if (error.response?.status === 409) {
-      console.log(error);
       throw new Error(error.response.data.message);
     }
     throw error;
