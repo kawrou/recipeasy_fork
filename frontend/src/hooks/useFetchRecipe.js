@@ -1,34 +1,28 @@
-import { useState, useEffect, useCallback } from "react";
-import { getAllRecipes } from "../services/recipes";
+import { useState, useCallback } from "react";
+import useAxiosPrivate from "./useAxiosPrivate";
 
-export const useFetchRecipes = (token, setToken) => {
+export const useFetchRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
 
   const fetchRecipes = useCallback(async () => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const data = await getAllRecipes(token);
-      setRecipes(data.recipes);
+      const response = await axiosPrivate.get("/recipes");
+      setRecipes(response.data.recipes);
       setLoading(false);
-      setToken(data.token);
     } catch (err) {
-      console.log(err);
-      setError(err);
+      if (!err?.response) {
+        setError("No Server Response");
+      }
       setLoading(false);
+      setError(true);
     }
-  }, [token, setToken]);
-
-  useEffect(() => {
-    fetchRecipes();
-  }, [fetchRecipes]);
+  }, [axiosPrivate]);
 
   return { recipes, loading, error, fetchRecipes };
 };

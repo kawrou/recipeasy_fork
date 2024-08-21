@@ -6,43 +6,36 @@ import RecipeScraper from "../../components/RecipeScraper";
 
 export const MyRecipesPage = ({
   handleScrapeRecipe,
-  token,
-  setToken,
   url,
   setUrl,
   handleUrlChange,
   setRecipeData,
 }) => {
   const navigate = useNavigate();
-  //TODO: There might be a bug with useFetchRecipes
-  const { recipes, loading, error, fetchRecipes } = useFetchRecipes(
-    token,
-    setToken,
-  );
+  const { recipes, loading, error, fetchRecipes } = useFetchRecipes();
 
   useEffect(() => {
-    fetchRecipes(); // Fetch recipes when the component mounts or when the token changes
+    fetchRecipes();
   }, [fetchRecipes]);
 
   const renderPageContent = () => {
-    if (!loading && !token) {
-      navigate("/login");
-    } else if (loading) {
+    if (loading) {
       return <p aria-label="Loading message">Loading ...</p>;
-    } else if (error) {
-      console.log("Error occured whilst retrieving recipe");
-      navigate("/login");
-      // return <p>Error: {error.message}</p>;
-    } else if (
-      (!loading && !error && recipes === undefined) ||
-      recipes.length === 0
-    ) {
-      return <p aria-label="Empty Recipes"> No recipes found.</p>;
-    } else {
-      return recipes.map((recipe) => (
-        <RecipeCard recipe={recipe} key={recipe._id} />
-      ));
     }
+
+    if (error) {
+      console.log("Error occured whilst retrieving recipe");
+      // return <p>Error: {error.message}</p>;
+      navigate("/login");
+    }
+
+    if ((!loading && !error && recipes === undefined) || recipes.length === 0) {
+      return <p aria-label="Empty Recipes"> Start saving recipes!</p>;
+    }
+
+    return recipes.map((recipe, index) => {
+      return <RecipeCard recipe={recipe} key={index} />;
+    });
   };
 
   return (
@@ -67,7 +60,6 @@ export const MyRecipesPage = ({
             anytime, anywhere.
           </p>
           <RecipeScraper
-            token={token}
             url={url}
             setUrl={setUrl}
             handleUrlChange={handleUrlChange}
