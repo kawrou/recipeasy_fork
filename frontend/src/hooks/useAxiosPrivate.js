@@ -4,6 +4,7 @@ import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 const useAxiosPrivate = () => {
+  //TODO: being called twice when going to MyRecipesPage
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
@@ -27,6 +28,7 @@ const useAxiosPrivate = () => {
         if (error?.response.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
+          console.log(newAccessToken);
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }
