@@ -54,7 +54,7 @@ const App = () => {
   return (
     <div className="flex flex-col w-screen min-h-screen">
       <BrowserRouter>
-        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <Navbar />
         <Routes>
           <Route
             path="/"
