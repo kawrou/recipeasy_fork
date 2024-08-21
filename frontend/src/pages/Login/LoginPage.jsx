@@ -30,7 +30,7 @@ export const LoginPage = () => {
 
     try {
       const accessToken = await logIn(username, password);
-      setAuth(accessToken);
+      setAuth({ token: accessToken });
       navigate("/");
     } catch (err) {
       setError(`${err.message}`);
