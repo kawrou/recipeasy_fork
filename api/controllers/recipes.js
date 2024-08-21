@@ -8,9 +8,8 @@ const { extractRecipeInfo } = require("../utils/recipeUtils");
 
 const index = async (req, res) => {
   try {
-    const token = generateToken(req.user_id);
     const recipes = await Recipe.find({ ownerId: req.user_id });
-    res.status(200).json({ recipes: recipes, token: token });
+    res.status(200).json({ recipes: recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
