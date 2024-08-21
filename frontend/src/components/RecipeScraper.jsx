@@ -1,22 +1,23 @@
 // import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkToken } from "../services/authentication";
+import useAuth from "../hooks/useAuth";
 
 const RecipeScraper = ({
-  token, 
   url,
   setUrl,
   handleUrlChange,
   handleScrapeRecipe,
   setRecipeData,
 }) => {
+  const { auth } = useAuth();
   const navigate = useNavigate();
   // What is this 'manual' parameter?
   const handleClick = async (manual) => {
     try {
       // Changed to props.token instead of window.localStorage.getItem()
       // TODO: UNECESSARY
-      await checkToken(token);
+      await checkToken(auth.token);
       //
       if (!manual) {
         await handleScrapeRecipe();
