@@ -1,4 +1,5 @@
-import axios from "../api/axios";
+import { axiosPublic } from "../api/axios";
+import { authStore } from "../api/authStore";
 
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -17,9 +18,10 @@ export const logIn = async (username, password) => {
   };
 
   try {
-    const response = await axios.post(`${LOGIN_URL}`, data, config);
-
-    return response?.data?.token;
+    const response = await axiosPublic.post(`${LOGIN_URL}`, data, config);
+    authStore.setAccessToken(response?.data?.token);
+    console.log(authStore.getAccessToken());
+    // return response?.data?.token;
   } catch (err) {
     if (!err?.response) {
       throw new Error("No Server Response");
@@ -105,16 +107,20 @@ export const logOut = async () => {
 
     if (!response.ok) {
       const error = await response.json();
+      console.log(error.message);
       throw new Error(error.message);
     }
 
     if (response.status === 204) {
+      console.log("Logged out successfull.");
       return { message: "Logged out successfully." };
     }
 
     const data = await response.json();
+    console.log(data.message);
     return { message: data.message };
   } catch (err) {
+    console.log(err);
     throw new Error(err.message);
   }
 };

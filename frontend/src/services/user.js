@@ -1,5 +1,5 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-import axios from "../api/axios";
+import { axiosPublic } from "../api/axios";
 
 // export const signUp = async (email, password, username) => {
 //   if (!email || !password || !username) {
@@ -47,7 +47,7 @@ export const signUp = async (email, password, username) => {
       withCredentials: true,
     };
 
-    await axios.post("/users", data, config);
+    await axiosPublic.post("/users", data, config);
   } catch (error) {
     if (!error?.response) {
       throw new Error("No Server Response");
