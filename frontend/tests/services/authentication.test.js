@@ -1,73 +1,57 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test } from "vitest";
-import { login, logOut, refresh } from "../../src/services/authentication";
+import { logIn, logOut, refresh } from "../../src/services/authentication";
+import { axiosPublic } from "../../src/api/axios";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Mock fetch function
 createFetchMock(vi).enableMocks();
 
-describe("authentication service", () => {
-  describe("login", () => {
-    test("calls the backend API with correct parameters", async () => {
-      const testUsername = "testUser";
-      const testPassword = "12345678";
+vi.mock("../../src/api/axios");
 
-      fetch.mockResponseOnce(JSON.stringify({ token: "testToken" }), {
+const TEST_USERNAME = "testUser";
+const TEST_PASSWORD = "12345678";
+
+describe("authentication service", () => {
+  describe("logIn", () => {
+    test("calls the backend API with correct params", async () => {
+      axiosPublic.post.mockResolvedValue({
+        data: { token: "testToken" },
         status: 201,
       });
 
-      await login(testUsername, testPassword);
+      const response = await logIn(TEST_USERNAME, TEST_PASSWORD);
 
-      // This is an array of the arguments that were last passed to fetch
-      const fetchArguments = fetch.mock.lastCall;
-      const url = fetchArguments[0];
-      const options = fetchArguments[1];
-
-      expect(url).toEqual(`${BACKEND_URL}/tokens`);
-      expect(options.method).toEqual("POST");
-      expect(options.body).toEqual(
-        JSON.stringify({ username: testUsername, password: testPassword }),
-      );
-      expect(options.headers["Content-Type"]).toEqual("application/json");
-    });
-
-    test("returns the token if the request was a success", async () => {
-      const testUsername = "testUser";
-      const testPassword = "12345678";
-
-      fetch.mockResponseOnce(
-        JSON.stringify({ token: "testToken", message: "Login successful." }),
+      expect(axiosPublic.post).toHaveBeenCalledOnce();
+      expect(axiosPublic.post).toHaveBeenCalledWith(
+        "/tokens",
+        { username: TEST_USERNAME, password: TEST_PASSWORD },
         {
-          status: 201,
-        },
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
       );
 
-      const response = await login(testUsername, testPassword);
-      expect(response).toEqual({
-        token: "testToken",
-      });
+      expect(response).toEqual("testToken");
     });
 
     test("throws an error if the request failed", async () => {
-      const testUsername = "testUser";
-      const testPassword = "12345678";
-
-      fetch.mockResponseOnce(
-        JSON.stringify({ message: "Please check your login details." }),
-        {
+      axiosPublic.post.mockRejectedValue({
+        response: {
+          data: { message: "Please check your login details." },
           status: 401,
         },
-      );
+      });
 
-      await expect(login(testUsername, testPassword)).rejects.toThrow(
-        "Please check your login details.",
+      await expect(logIn(TEST_USERNAME, TEST_PASSWORD)).rejects.toThrow(
+        "Please check your login details."
       );
     });
 
     test("throws an error if no username or password was provided", async () => {
-      await expect(login()).rejects.toThrow(
-        "Username and password are required.",
+      await expect(logIn()).rejects.toThrow(
+        "Username and password are required."
       );
     });
   });
@@ -113,7 +97,7 @@ describe("authentication service", () => {
         JSON.stringify({ token: "testToken", message: "Access token issued." }),
         {
           status: 201,
-        },
+        }
       );
 
       await refresh();
@@ -133,7 +117,7 @@ describe("authentication service", () => {
         JSON.stringify({ token: "testToken", message: "Access token issued." }),
         {
           status: 201,
-        },
+        }
       );
 
       const response = await refresh();
@@ -156,7 +140,7 @@ describe("authentication service", () => {
         JSON.stringify({ token: "testToken", message: "Access token issued." }),
         {
           status: 201,
-        },
+        }
       );
 
       await logOut();
@@ -175,12 +159,12 @@ describe("authentication service", () => {
         JSON.stringify({ message: "Logged out successfully. Cookie cleared." }),
         {
           status: 200,
-        },
+        }
       );
 
       const response = await logOut();
       expect(response.message).toEqual(
-        "Logged out successfully. Cookie cleared.",
+        "Logged out successfully. Cookie cleared."
       );
     });
     test("handles 204 status by returning a message", async () => {
@@ -193,11 +177,11 @@ describe("authentication service", () => {
     });
     test("throws an error for network errors", async () => {
       fetch.mockRejectOnce(
-        new Error("Network error: Failed to connect to server."),
+        new Error("Network error: Failed to connect to server.")
       );
 
       await expect(refresh()).rejects.toThrow(
-        "Network error: Failed to connect to server.",
+        "Network error: Failed to connect to server."
       );
     });
   });
