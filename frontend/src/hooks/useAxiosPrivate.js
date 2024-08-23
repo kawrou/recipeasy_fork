@@ -4,10 +4,9 @@ import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 const useAxiosPrivate = () => {
-  //TODO: being called twice when going to MyRecipesPage
   const refresh = useRefreshToken();
   const { auth } = useAuth();
-
+  console.log("useAxiosPrivate");
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
