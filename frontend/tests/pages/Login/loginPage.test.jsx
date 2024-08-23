@@ -45,7 +45,7 @@ const completeLoginForm = async () => {
   await user.click(submitButtonEl, "button");
 };
 
-describe("Login Page", () => {
+describe.only("Login Page", () => {
   const navigateMock = useNavigate();
   beforeEach(() => {
     vi.resetAllMocks();
@@ -55,7 +55,7 @@ describe("Login Page", () => {
       render(
         <AuthProvider>
           <LoginPage handleLogin={handleLoginMock} />
-        </AuthProvider>,
+        </AuthProvider>
       );
     });
 
@@ -100,7 +100,11 @@ describe("Login Page", () => {
 
   describe("When username and/or password fields are empty:", () => {
     beforeEach(() => {
-      render(<LoginPage />);
+      render(
+        <AuthProvider>
+          <LoginPage handleLogin={handleLoginMock} />
+        </AuthProvider>
+      );
     });
 
     it("should display username validation error message", async () => {
