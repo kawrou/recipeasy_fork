@@ -15,10 +15,6 @@ const RecipeScraper = ({
   // What is this 'manual' parameter?
   const handleClick = async (manual) => {
     try {
-      // Changed to props.token instead of window.localStorage.getItem()
-      // TODO: UNECESSARY
-      await checkToken(auth.token);
-      //
       if (!manual) {
         await handleScrapeRecipe();
       } else {
@@ -37,7 +33,7 @@ const RecipeScraper = ({
   };
 
   return (
-    <div className="w-full pt-5" aria-label="Recipe Url Form">
+    <form className="w-full pt-5" aria-label="Recipe Url Form">
       <input
         type="text"
         value={url}
@@ -67,7 +63,7 @@ const RecipeScraper = ({
           Enter Manually
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
