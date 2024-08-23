@@ -3,17 +3,18 @@ import userEvent from "@testing-library/user-event";
 import { test, vi, expect, describe, beforeEach } from "vitest";
 
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import { login } from "../../../src/services/authentication";
+import { logIn } from "../../../src/services/authentication";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 import HomePage from "../../../src/pages/Home/HomePage";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
+import { AuthProvider } from "../../../src/context/AuthProvider";
 
 const handleLoginMock = vi.fn();
 
 // Mocking the login service
 vi.mock("../../../src/services/authentication", () => {
   const loginMock = vi.fn();
-  return { login: loginMock };
+  return { logIn: loginMock };
 });
 
 const user = userEvent.setup();
@@ -44,21 +45,23 @@ describe("Login Page", () => {
     vi.resetAllMocks();
     render(
       <MemoryRouter initialEntries={["/login"]}>
-        <Routes>
-          <Route
-            path="/login"
-            element={<LoginPage handleLogin={handleLoginMock} />}
-          />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route
+              path="/login"
+              element={<LoginPage handleLogin={handleLoginMock} />}
+            />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
   });
 
   describe("Login interactions:", () => {
     test("navigates to home page on successful login", async () => {
-      login.mockResolvedValue("secrettoken123");
+      logIn.mockResolvedValue("secrettoken123");
 
       await completeLoginForm();
 
@@ -67,7 +70,7 @@ describe("Login Page", () => {
     });
 
     test("doesn't navigate if username cannot be found", async () => {
-      login.mockRejectedValue(new Error("username not found"));
+      logIn.mockRejectedValue(new Error("username not found"));
 
       await completeLoginForm();
 
@@ -79,7 +82,7 @@ describe("Login Page", () => {
     });
 
     test("doesn't navigate if username is incorrect", async () => {
-      login.mockRejectedValue(new Error("Password is incorrect"));
+      logIn.mockRejectedValue(new Error("Password is incorrect"));
 
       await completeLoginForm();
 
@@ -98,7 +101,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "Username address is required.",
+        "Username address is required."
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -128,7 +131,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "Username address is required.",
+        "Username address is required."
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -153,7 +156,7 @@ describe("Login Page", () => {
       await expect(passwordValidationMsg).not.toBeVisible();
     });
     test("validation messages should disappear and navigate to Home Page", async () => {
-      login.mockResolvedValue("secrettoken123");
+      logIn.mockResolvedValue("secrettoken123");
 
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
