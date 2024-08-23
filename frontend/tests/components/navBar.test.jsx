@@ -1,13 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { describe, test, vi } from "vitest";
+import { describe, test, vi, beforeEach } from "vitest";
 import Navbar from "../../src/components/Navbar";
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
 import { expect } from "vitest";
 import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
+import { AuthProvider } from "../../src/context/AuthProvider";
 
 const user = userEvent.setup();
 
@@ -28,12 +29,14 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/"]}>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Routes>
+          <AuthProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -73,11 +76,13 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/"]}>
-          <Navbar isLoggedIn={true} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/myrecipes" element={<MyRecipesPage />} />
-          </Routes>
+          <AuthProvider initialAuth={{ token: "token" }}>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/myrecipes" element={<MyRecipesPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -112,10 +117,12 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/signup"]}>
-          <Navbar />
-          <Routes>
-            <Route path="/signup" element={<SignupPage />} />
-          </Routes>
+          <AuthProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/signup" element={<SignupPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -133,11 +140,13 @@ describe("Navbar", () => {
   describe("When a user is on the Log In page:", () => {
     beforeEach(() => {
       render(
-        <MemoryRouter initialEntries={["/login"]}>
-          <Navbar />
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+        <MemoryRouter initialEntries={["/signup"]}>
+          <AuthProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/signup" element={<SignupPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -156,18 +165,15 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/myrecipes"]}>
-          <Navbar isLoggedIn={true} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route
-              path="/myrecipes"
-              element={
-                <MyRecipesPage token={"testToken"} setToken={setTokenMock} />
-              }
-            />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </MemoryRouter>
+          <AuthProvider initialAuth={{ token: "token" }}>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/myrecipes" element={<MyRecipesPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </AuthProvider>
+        </MemoryRouter>,
       );
     });
 
