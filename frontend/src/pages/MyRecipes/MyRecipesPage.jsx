@@ -15,7 +15,6 @@ export const MyRecipesPage = ({
   const { recipes, loading, error, fetchRecipes } = useFetchRecipes();
 
   useEffect(() => {
-    console.log("MyRecipesPage");
     fetchRecipes();
   }, [fetchRecipes]);
 

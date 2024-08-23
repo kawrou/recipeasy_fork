@@ -3,7 +3,6 @@ import { useState, useCallback } from "react";
 import useAxiosPrivate from "./useAxiosPrivate";
 
 export const useFetchRecipes = () => {
-  console.log("useFetchRecipes");
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +12,6 @@ export const useFetchRecipes = () => {
     setLoading(true);
     try {
       const response = await axiosPrivate.get("/recipes");
-      console.log(response.data.recipes);
       setRecipes(response.data.recipes);
       setLoading(false);
     } catch (err) {
