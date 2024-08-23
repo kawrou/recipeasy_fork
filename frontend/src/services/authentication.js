@@ -1,5 +1,4 @@
 import { axiosPublic } from "../api/axios";
-import { authStore } from "../api/authStore";
 
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -19,9 +18,7 @@ export const logIn = async (username, password) => {
 
   try {
     const response = await axiosPublic.post(`${LOGIN_URL}`, data, config);
-    authStore.setAccessToken(response?.data?.token);
-    console.log(authStore.getAccessToken());
-    // return response?.data?.token;
+    return response?.data?.token;
   } catch (err) {
     if (!err?.response) {
       throw new Error("No Server Response");
