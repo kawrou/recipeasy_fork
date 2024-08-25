@@ -1,8 +1,7 @@
 import createFetchMock from "vitest-fetch-mock";
-import { describe, vi, expect, test, it } from "vitest";
+import { describe, vi, expect, test, it, beforeEach } from "vitest";
 import apiClient from "../../src/services/apiClient";
 import { errorHandler } from "../../src/services/errorHandler";
-// import { refresh } from "../../../api/controllers/authentication";
 
 createFetchMock(vi).enableMocks();
 
@@ -14,6 +13,10 @@ vi.mock("../../src/services/errorHandler", () => {
 });
 
 describe("apiClient tests", () => {
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
+
   test("calls the backend API with correct parameters", async () => {
     fetch.mockResponseOnce(JSON.stringify({ message: "success" }), {
       status: 201,
