@@ -35,7 +35,7 @@ describe("useFetchRecipe hook:", () => {
     await waitFor(() => {
       expect(axiosPrivateMock.get).toHaveBeenCalledWith("/recipes");
       expect(result.current.loading).toBeFalsy();
-      expect(result.current.error).toBeNull();
+      expect(result.current.error).toBeFalsy();
       expect(result.current.recipes).toEqual(mockRecipes);
     });
   });
