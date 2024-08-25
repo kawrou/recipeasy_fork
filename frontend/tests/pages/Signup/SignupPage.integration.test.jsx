@@ -6,6 +6,7 @@ import * as userService from "../../../src/services/user";
 import { SignupPage } from "../../../src/pages/Signup/SignupPage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 import HomePage from "../../../src/pages/Home/HomePage";
+import { AuthProvider } from "../../../src/context/AuthProvider";
 
 const signupSpy = vi.spyOn(userService, "signUp");
 
@@ -32,10 +33,12 @@ describe("SignUp page integration test:", () => {
     signupSpy.mockResolvedValue({ status: 201 });
     render(
       <MemoryRouter initialEntries={["/signup"]}>
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
 
@@ -53,10 +56,12 @@ describe("SignUp page integration test:", () => {
     signupSpy.mockRejectedValue({ status: 400 });
     render(
       <MemoryRouter initialEntries={["/signup"]}>
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
 
@@ -73,10 +78,12 @@ describe("SignUp page integration test:", () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter initialEntries={["/signup"]}>
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/" element={<HomePage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
 
@@ -91,10 +98,12 @@ describe("SignUp page integration test:", () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter initialEntries={["/signup"]}>
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
 
@@ -114,10 +123,12 @@ describe("SignUp page integration test:", () => {
     const user = userEvent.setup();
     render(
       <MemoryRouter initialEntries={["/signup"]}>
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/" element={<HomePage />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </AuthProvider>
       </MemoryRouter>,
     );
 
