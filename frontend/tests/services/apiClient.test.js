@@ -1,9 +1,17 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test, it } from "vitest";
 import apiClient from "../../src/services/apiClient";
+import { errorHandler } from "../../src/services/errorHandler";
 // import { refresh } from "../../../api/controllers/authentication";
 
 createFetchMock(vi).enableMocks();
+
+vi.mock("../../src/services/errorHandler", () => {
+  const errorHandlerMock = vi.fn();
+  return {
+    errorHandler: errorHandlerMock,
+  };
+});
 
 describe("apiClient tests", () => {
   test("calls the backend API with correct parameters", async () => {
@@ -69,32 +77,29 @@ describe("apiClient tests", () => {
   });
 
   it("handles authentication", async () => {
-    fetch
-      .mockResponseOnce(
-        JSON.stringify({
-          message: "unauthorized",
-        }),
-        {
-          status: 401,
+    const errorHandlerMock = errorHandler;
+    errorHandlerMock
+      .mockResolvedValueOnce({
+        success: true,
+        data: {
+          json: async () => ({ token: "newAccessToken" }),
         },
-      )
-      .mockResponseOnce(
-        JSON.stringify({
-          token: "accessToken",
-          message: "Access token issued.",
-        }),
-        {
-          status: 201,
-          headers: { "Content-Type": "application/json" },
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        data: {
+          json: async () => ({ recipeData: ["recipe"], message: "success" }),
         },
-      )
-      .mockResponseOnce(
-        JSON.stringify({ recipeData: ["recipe"], message: "success" }),
-        {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      });
+
+    fetch.mockResponseOnce(
+      JSON.stringify({
+        message: "unauthorized",
+      }),
+      {
+        status: 401,
+      },
+    );
 
     const testUrl = "backend/url";
     const requestOptions = {
