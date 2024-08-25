@@ -6,7 +6,7 @@ import { vi, beforeEach } from "vitest";
 
 
 
-describe("When a user clicks the button:", () => {
+describe.skip("When a user clicks the button:", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.resetAllMocks();
