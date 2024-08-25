@@ -1,7 +1,7 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test, it } from "vitest";
 import apiClient from "../../src/services/apiClient";
-import { refresh } from "../../../api/controllers/authentication";
+// import { refresh } from "../../../api/controllers/authentication";
 
 createFetchMock(vi).enableMocks();
 

@@ -8,6 +8,7 @@ const apiClient = async (url, options = {}) => {
 
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       return data;
     }
 
@@ -23,7 +24,8 @@ const apiClient = async (url, options = {}) => {
         throw new Error(refreshResponse.error);
       }
 
-      const token = refreshResponse.data.token;
+      const data = await refreshResponse.data.json();
+      const token = data.token;
       options.headers = {
         ...options.headers,
         Authorization: `Bearer ${token}`,
