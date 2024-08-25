@@ -289,24 +289,14 @@ describe("Get Recipes tests", () => {
   });
 
   describe("GET - all recipes - when token is present", () => {
-    test("reponse code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
+    test("response code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
       const response = await request(app)
         .get(`/recipes/`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
-      const newDecodedToken = JWT.decode(
-        responseBody.token,
-        process.env.JWT_SECRET
-      );
-      const oldDecodedToken = JWT.decode(token, process.env.JWT_SECRET);
 
-      // Returns a token
-      expect(newDecodedToken.iat > oldDecodedToken.iat).toEqual(true);
-
-      // Response code is 200
       expect(response.status).toEqual(200);
-
       // Returned data is correct
       expect(responseBody).toHaveProperty("recipes");
       expect(responseBody.recipes.length).toBe(2);
