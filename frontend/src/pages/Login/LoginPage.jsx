@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { logIn } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
-import useAuth from "../../hooks/useAuth";
 import AuthContext from "../../context/AuthContext";
 
 //TODO:
@@ -10,7 +9,6 @@ import AuthContext from "../../context/AuthContext";
 // It'll be better for UX if it were handled
 
 export const LoginPage = () => {
-  // const { setAuth } = useAuth();
   const { setIsLoggedIn } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
