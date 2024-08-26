@@ -3,9 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { test, vi, describe, beforeEach, expect, it } from "vitest";
 
 import { useNavigate } from "react-router-dom";
-import { login } from "../../../src/services/authentication";
+import { logIn } from "../../../src/services/authentication";
 import { validateLoginForm } from "../../../src/validators/validation";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
+import { AuthProvider } from "../../../src/context/AuthContext";
 
 // Mocking React Router's useNavigate function and NavLink component
 vi.mock("react-router-dom", () => {
@@ -23,7 +24,7 @@ const handleLoginMock = vi.fn();
 // Mocking the login service
 vi.mock("../../../src/services/authentication", () => {
   const loginMock = vi.fn();
-  return { login: loginMock };
+  return { logIn: loginMock };
 });
 
 vi.mock("../../../src/validators/validation", () => {
@@ -46,12 +47,18 @@ const completeLoginForm = async () => {
 
 describe("Login Page", () => {
   const navigateMock = useNavigate();
+
   beforeEach(() => {
     vi.resetAllMocks();
   });
+
   describe("When a user clicks login button", () => {
     beforeEach(() => {
-      render(<LoginPage handleLogin={handleLoginMock} />);
+      render(
+        <AuthProvider>
+          <LoginPage />
+        </AuthProvider>,
+      );
     });
 
     test("a login request is made", async () => {
@@ -59,12 +66,11 @@ describe("Login Page", () => {
 
       await completeLoginForm();
 
-      expect(login).toHaveBeenCalledWith("testuser", "1234");
+      expect(logIn).toHaveBeenCalledWith("testuser", "1234");
     });
 
     it("navigates to home page on successful login", async () => {
       validateLoginForm.mockReturnValue({});
-      login.mockResolvedValue("secrettoken123");
 
       await completeLoginForm();
 
@@ -74,7 +80,7 @@ describe("Login Page", () => {
     it("doens't navigate if error logging in", async () => {
       validateLoginForm.mockReturnValue({});
 
-      login.mockRejectedValue(new Error("Login failed. Please try again"));
+      logIn.mockRejectedValue(new Error("Login failed. Please try again"));
 
       await completeLoginForm();
 
@@ -83,7 +89,7 @@ describe("Login Page", () => {
 
     test("error messages is handled correctly", async () => {
       validateLoginForm.mockReturnValue({});
-      login.mockRejectedValue(new Error("Login failed. Please try again"));
+      logIn.mockRejectedValue(new Error("Login failed. Please try again"));
 
       await completeLoginForm();
 
@@ -95,12 +101,17 @@ describe("Login Page", () => {
 
   describe("When username and/or password fields are empty:", () => {
     beforeEach(() => {
-      render(<LoginPage />);
+      render(
+        <AuthProvider>
+          <LoginPage />
+        </AuthProvider>,
+      );
     });
 
     it("should display username validation error message", async () => {
       validateLoginForm.mockReturnValue({
-        username: "username address field was empty. Please enter an username address",
+        username:
+          "username address field was empty. Please enter an username address",
       });
 
       const submitButtonEl = screen.getByRole("button");
@@ -108,7 +119,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "username address field was empty. Please enter an username address.",
+        "username address field was empty. Please enter an username address."
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -124,7 +135,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const passwordValidationMsg = screen.getByText(
-        "Password field was empty. Please enter your password.",
+        "Password field was empty. Please enter your password."
       );
 
       expect(passwordValidationMsg).toBeVisible();
@@ -132,13 +143,14 @@ describe("Login Page", () => {
 
     it("shouldn't navigate upon invalid username", async () => {
       validateLoginForm.mockReturnValue({
-        username: "username address field was empty. Please enter an username address",
+        username:
+          "username address field was empty. Please enter an username address",
       });
 
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
 
-      expect(login).not.toHaveBeenCalled();
+      expect(logIn).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
@@ -150,7 +162,7 @@ describe("Login Page", () => {
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
 
-      expect(login).not.toHaveBeenCalled();
+      expect(logIn).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
   });

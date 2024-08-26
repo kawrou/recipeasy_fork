@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { logIn } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
@@ -31,9 +31,8 @@ export const LoginPage = () => {
     }
 
     try {
-      const accessToken = await logIn(username, password);
+      await logIn(username, password);
       setIsLoggedIn(true);
-      // setAuth({ token: accessToken });
       navigate("/");
     } catch (err) {
       setError(`${err.message}`);
