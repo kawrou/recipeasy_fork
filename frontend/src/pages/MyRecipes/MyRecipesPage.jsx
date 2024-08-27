@@ -23,9 +23,15 @@ export const MyRecipesPage = ({
       return <p aria-label="Loading message">Loading ...</p>;
     }
 
-    if (error) {
-      console.log("Error occured whilst retrieving recipe");
-      // return <p>Error: {error.message}</p>;
+    if (
+      error.type === "no-server-response" ||
+      error.type === "unexpected-error"
+    ) {
+      return <p>{`${error.message}`}</p>;
+    }
+
+    if (error.type === "auth-error") {
+      console.log(error.message);
       navigate("/login");
     }
 
