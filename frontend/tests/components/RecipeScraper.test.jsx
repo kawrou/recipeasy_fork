@@ -77,7 +77,7 @@ describe("Unit Test: RecipeScraper", () => {
   describe("Generate Recipe button", () => {
     test("when token is valid, url is inputted, it navigates to create page", async () => {
       // handleClick -> checkToken -> handleScrapeRecipe -> navigate("/recipes/create")
-      vi.spyOn(authenticationServices, "checkToken").mockResolvedValue(true);
+    
       const navigateMock = useNavigate();
       render(
         <RecipeScraper
@@ -155,12 +155,8 @@ describe("Unit Test: RecipeScraper", () => {
     //The following test would print "auth-error" to the terminal as our handleclick
     //function catches errors and prints them.
     test("If token is invalid, it navigates to login page", async () => {
-      const tokenValidationError = new Error("auth-error");
-      tokenValidationError.response = { status: 401 };
-      vi.spyOn(authenticationServices, "checkToken").mockRejectedValue(
-        tokenValidationError
-      );
       const navigateMock = useNavigate();
+      handleScrapeRecipeMock.mockRejectedValue({ response: { status: 401 } });
 
       render(
         <RecipeScraper
@@ -169,14 +165,13 @@ describe("Unit Test: RecipeScraper", () => {
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
           setRecipeData={setRecipeDataMock}
-        />
+        />,
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
       });
       await userEvent.click(generateRecipeBtn);
 
-      expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
       expect(navigateMock).toHaveBeenCalledWith("/login");
     });
   });
