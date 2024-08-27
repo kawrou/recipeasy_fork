@@ -1,15 +1,22 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
-import { describe, test, vi } from "vitest";
+import { describe, test, vi, beforeEach } from "vitest";
 import Navbar from "../../src/components/Navbar";
 import { SignupPage } from "../../src/pages/Signup/SignupPage";
 import { HomePage } from "../../src/pages/Home/HomePage";
 import { LoginPage } from "../../src/pages/Login/LoginPage";
 import { expect } from "vitest";
 import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
+import { AuthProvider } from "../../src/context/AuthContext";
 
 const user = userEvent.setup();
+
+vi.mock("../../src/services/authentication", () => {
+  const logOutMock = vi.fn().mockResolvedValue();
+
+  return { logOut: logOutMock };
+});
 
 vi.mock("../../src/hooks/useFetchRecipe", () => {
   const useFetchRecipesMock = vi.fn().mockReturnValue({
@@ -28,12 +35,14 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/"]}>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-          </Routes>
+          <AuthProvider initialAuth={false}>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -73,11 +82,13 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/"]}>
-          <Navbar isLoggedIn={true} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/myrecipes" element={<MyRecipesPage />} />
-          </Routes>
+          <AuthProvider initialAuth={true}>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/myrecipes" element={<MyRecipesPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
@@ -156,17 +167,19 @@ describe("Navbar", () => {
     beforeEach(() => {
       render(
         <MemoryRouter initialEntries={["/myrecipes"]}>
-          <Navbar isLoggedIn={true} />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route
-              path="/myrecipes"
-              element={
-                <MyRecipesPage token={"testToken"} setToken={setTokenMock} />
-              }
-            />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+          <AuthProvider initialAuth={true}>
+            <Navbar isLoggedIn={true} />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/myrecipes"
+                element={
+                  <MyRecipesPage token={"testToken"} setToken={setTokenMock} />
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </AuthProvider>
         </MemoryRouter>
       );
     });
