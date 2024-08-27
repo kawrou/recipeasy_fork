@@ -18,7 +18,7 @@ vi.mock("../../src/api/axios", () => {
 
 describe("useFetchRecipe hook:", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
   it("fetches recipes from DB when token is present", async () => {
     const mockRecipes = {

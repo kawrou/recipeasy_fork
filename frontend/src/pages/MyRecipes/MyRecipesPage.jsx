@@ -27,7 +27,7 @@ export const MyRecipesPage = ({
       error.type === "no-server-response" ||
       error.type === "unexpected-error"
     ) {
-      return <p>{`${error.message}`}</p>;
+      return <p aria-label="error message">{`${error.message}`}</p>;
     }
 
     if (error.type === "auth-error") {
@@ -35,7 +35,11 @@ export const MyRecipesPage = ({
       navigate("/login");
     }
 
-    if ((!loading && !error && recipes === undefined) || recipes.length === 0) {
+    if (
+      !loading &&
+      Object.keys(error).length === 0 &&
+      (!recipes || recipes.length === 0)
+    ) {
       return <p aria-label="Empty Recipes"> Start saving recipes!</p>;
     }
 

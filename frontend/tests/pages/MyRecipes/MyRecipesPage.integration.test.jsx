@@ -1,34 +1,41 @@
 import { act, render, screen } from "@testing-library/react";
-import { vi } from "vitest";
+import { vi, describe, test, expect, it, beforeEach } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+
 import { MyRecipesPage } from "../../../src/pages/MyRecipes/MyRecipesPage";
 import { CreateRecipePage } from "../../../src/pages/RecipePage/CreateRecipePage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { useFetchRecipes } from "../../../src/hooks/useFetchRecipe";
-import { getAllRecipes, getRecipeById } from "../../../src/services/recipes";
-import { checkToken } from "../../../src/services/authentication";
-import userEvent from "@testing-library/user-event";
 import { SingleRecipePage } from "../../../src/pages/RecipePage/SingleRecipePage";
+import { axiosPrivate } from "../../../src/api/axios";
 
-vi.mock("../../../src/services/recipes");
-vi.mock("../../../src/services/authentication");
+vi.mock("../../../src/api/axios", () => {
+  const axiosPrivateMock = {
+    get: vi.fn(),
+  };
+  return { axiosPrivate: axiosPrivateMock };
+});
 
-const setTokenMock = vi.fn();
 const handleScrapeRecipeMock = vi.fn();
 const setRecipeDataMock = vi.fn();
 const setUrlMock = vi.fn();
-const testToken = "testToken";
+const handleUrlChangeMock = vi.fn();
+
 const user = userEvent.setup();
 
 describe("When My Recipes Page is first rendered", () => {
-  //TODO: This test failes because RecipeCard is making another FETCH request which overides the mock below
-  test.todo("renders fetched recipes", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: [
-        { _id: 1, name: "test recipe 1", totalTime: 45, image: "test_url" },
-        { _id: 2, name: "test recipe 2", totalTime: 30, image: "test_url" },
-      ],
-      token: "returned token",
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("renders fetched recipes", async () => {
+    axiosPrivate.get.mockResolvedValue({
+      data: {
+        recipes: [
+          { _id: 1, name: "test recipe 1", totalTime: 45, image: "test_url" },
+          { _id: 2, name: "test recipe 2", totalTime: 30, image: "test_url" },
+        ],
+      },
     });
 
     await act(async () => {
@@ -39,14 +46,15 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -56,11 +64,9 @@ describe("When My Recipes Page is first rendered", () => {
     expect(recipeTitles[1]).toHaveTextContent("test recipe 1");
     expect(recipeTitles[2]).toHaveTextContent("test recipe 2");
   });
-  test("shows a message when recipes is undefined", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: undefined,
-      token: "returned token",
-    });
+
+  it("shows a message when recipes is undefined", async () => {
+    axiosPrivate.get.mockReturnValue({ data: { recipes: undefined } });
 
     await act(async () => {
       render(
@@ -70,27 +76,25 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
     const recipeMsg = screen.getByLabelText("Empty Recipes");
-    expect(recipeMsg).toHaveTextContent("No recipes found.");
+    expect(recipeMsg).toHaveTextContent("Start saving recipes!");
     expect(recipeMsg).toBeVisible();
   });
 
-  test("shows a message when recipes is an empty array", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: [],
-      token: "returned token",
-    });
+  it("shows a message when recipes is an empty array", async () => {
+    axiosPrivate.get.mockReturnValue({ data: { recipes: [] } });
 
     await act(async () => {
       render(
@@ -100,23 +104,26 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
     const recipeMsg = screen.getByLabelText("Empty Recipes");
-    expect(recipeMsg).toHaveTextContent("No recipes found.");
+    expect(recipeMsg).toHaveTextContent("Start saving recipes!");
     expect(recipeMsg).toBeVisible();
   });
 
-  test("navigates to login if no token is present", async () => {
+  it("navigates to login if request returns a 401 or 403", async () => {
+    axiosPrivate.get.mockRejectedValue({ response: { status: 401 } });
+
     await act(async () => {
       render(
         <MemoryRouter initialEntries={["/myrecipes"]}>
@@ -125,15 +132,16 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={""}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
     const myRecipesH2El = screen.queryByRole("heading", {
@@ -146,8 +154,8 @@ describe("When My Recipes Page is first rendered", () => {
     expect(loginPageH1El).toBeVisible();
   });
 
-  test("shows loading message if loading", async () => {
-    getAllRecipes.mockImplementation(() => {
+  it("shows loading message if loading", async () => {
+    axiosPrivate.get.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({
@@ -169,14 +177,15 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -185,9 +194,7 @@ describe("When My Recipes Page is first rendered", () => {
     expect(loadingMsg).toHaveTextContent("Loading ...");
   });
 
-  test("navigates to /login when there is an error", async () => {
-    getAllRecipes.mockRejectedValue(new Error("Error retrieving recipe"));
-
+  it("shows error message for no server response", async () => {
     await act(async () => {
       render(
         <MemoryRouter initialEntries={["/myrecipes"]}>
@@ -196,34 +203,58 @@ describe("When My Recipes Page is first rendered", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
-    const myRecipesH2El = screen.queryByRole("heading", {
-      level: 2,
-      name: "My Recipes",
-    });
-    expect(myRecipesH2El).not.toBeInTheDocument();
+    const errMessage = screen.getByLabelText("error message");
+    expect(errMessage).toBeVisible();
+  });
 
-    const loginPageH1El = screen.getByRole("heading", { level: 1 });
-    expect(loginPageH1El).toBeVisible();
+  it("shows error message for response codes that aren't 401 or 43", async () => {
+    axiosPrivate.get.mockRejectedValue({ response: { status: 500 } });
+
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={["/myrecipes"]}>
+          <Routes>
+            <Route
+              path="/myrecipes"
+              element={
+                <MyRecipesPage
+                  handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
+                />
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+    });
+
+    const errMessage = screen.getByLabelText("error message");
+    expect(errMessage).toBeVisible();
   });
 });
 
 describe("When a user clicks on:", () => {
   test("generate recipe btn, it navigates to recipe page", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: [],
-      token: "returned token",
+    axiosPrivate.get.mockResolvedValue({
+      data: {
+        recipes: [],
+      },
     });
 
     await act(async () => {
@@ -234,15 +265,16 @@ describe("When a user clicks on:", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
+                  url={""}
+                  setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
                 />
               }
             />
             <Route path="/recipes/create" element={<CreateRecipePage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -259,9 +291,10 @@ describe("When a user clicks on:", () => {
   });
 
   test("enter Manually btn, it navigates to recipe page", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: [],
-      token: "returned token",
+    axiosPrivate.get.mockResolvedValue({
+      data: {
+        recipes: [],
+      },
     });
 
     await act(async () => {
@@ -272,17 +305,17 @@ describe("When a user clicks on:", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
-                  setRecipeData={setRecipeDataMock}
+                  url={""}
                   setUrl={setUrlMock}
+                  handleUrlChange={handleUrlChangeMock}
+                  setRecipeData={setRecipeDataMock}
                 />
               }
             />
             <Route path="/recipes/create" element={<CreateRecipePage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -300,9 +333,13 @@ describe("When a user clicks on:", () => {
 
   //TODO: Research how to check URL, otherwise I'll need to mock getRecipeById. Or there might be a way to check if the Link was called with the correct URL
   test.todo("a recipe card, it navigates to that recipe's page", async () => {
-    getAllRecipes.mockReturnValue({
-      recipes: [{ _id: 1, name: "test recipe", totalTime: 60 }],
-      token: "returned token",
+    axiosPrivate.get.mockResolvedValue({
+      data: {
+        recipes: [
+          { _id: 1, name: "test recipe 1", totalTime: 45, image: "test_url" },
+          { _id: 2, name: "test recipe 2", totalTime: 30, image: "test_url" },
+        ],
+      },
     });
 
     await act(async () => {
@@ -313,8 +350,6 @@ describe("When a user clicks on:", () => {
               path="/myrecipes"
               element={
                 <MyRecipesPage
-                  token={testToken}
-                  setToken={setTokenMock}
                   handleScrapeRecipe={handleScrapeRecipeMock}
                   setRecipeData={setRecipeDataMock}
                   setUrl={setUrlMock}
@@ -323,12 +358,12 @@ describe("When a user clicks on:", () => {
             />
             <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
     const recipeCardLink = screen.getAllByRole("link");
     await user.click(recipeCardLink[0]);
-    // screen.debug();
+    screen.debug();
   });
 });
