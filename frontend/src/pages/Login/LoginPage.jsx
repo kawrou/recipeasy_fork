@@ -1,8 +1,7 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { logIn } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
-import AuthContext from "../../context/AuthContext";
 
 //TODO:
 // A logged in user can still access this page by typing the route in the URL
