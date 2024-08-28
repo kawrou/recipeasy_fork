@@ -2,12 +2,9 @@ import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { logOut } from "../services/authentication";
 import useAuth from "../hooks/useAuth";
-import { useContext } from "react";
-import AuthContext from "../context/AuthContext";
 
 const Navbar = () => {
-  // const { auth, setAuth } = useAuth();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useAuth();
   const { pathname } = useLocation();
 
   const handleLogout = async () => {
