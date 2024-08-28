@@ -9,8 +9,6 @@ import AuthContext from "../../context/AuthContext";
 // It'll be better for UX if it were handled
 
 export const LoginPage = () => {
-  const { setIsLoggedIn } = useContext(AuthContext);
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,7 +28,6 @@ export const LoginPage = () => {
 
     try {
       await logIn(username, password);
-      setIsLoggedIn(true);
       navigate("/");
     } catch (err) {
       setError(`${err.message}`);

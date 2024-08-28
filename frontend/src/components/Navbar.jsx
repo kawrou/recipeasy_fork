@@ -7,14 +7,12 @@ import AuthContext from "../context/AuthContext";
 
 const Navbar = () => {
   // const { auth, setAuth } = useAuth();
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
       await logOut();
-      // setAuth({});
-      setIsLoggedIn(false);
     } catch (err) {
       console.log(err);
     }
