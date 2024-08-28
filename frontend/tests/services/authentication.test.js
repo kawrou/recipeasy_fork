@@ -1,5 +1,5 @@
 import createFetchMock from "vitest-fetch-mock";
-import { describe, vi, expect, test } from "vitest";
+import { describe, vi, expect, test, beforeEach } from "vitest";
 import { logIn, logOut, refresh } from "../../src/services/authentication";
 import { axiosPublic } from "../../src/api/axios";
 import { authStore } from "../../src/api/authStore";
@@ -19,6 +19,10 @@ vi.mock("../../src/api/axios", () => {
 });
 
 describe("authentication service", () => {
+  // beforeEach(() => {
+  //   vi.resetAllMocks();
+  // });
+
   describe("login", () => {
     test("calls the backend API with correct parameters", async () => {
       const testUsername = "testUser";
@@ -80,6 +84,42 @@ describe("authentication service", () => {
     });
   });
 
+  describe("logOut", () => {
+    test("calls the backend API with correct params", async () => {
+      axiosPublic.post.mockResolvedValue({
+        data: { message: "Log out successful" },
+      });
+
+      await logOut();
+
+      // This is an array of the arguments that were last passed to fetch
+      const fetchArguments = axiosPublic.post.mock.lastCall;
+      const url = fetchArguments[0];
+      const config = fetchArguments[2];
+
+      expect(axiosPublic.post).toHaveBeenCalled();
+      expect(url).toEqual("/tokens/logout");
+      expect(config).toEqual({
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+    });
+
+    test("Logs a user out", async () => {
+      axiosPublic.post.mockResolvedValue({
+        data: { message: "Logged out successfully." },
+      });
+
+      const response = await logOut();
+      expect(authStore.clearAccessToken).toHaveBeenCalled();
+      expect(response).toEqual("Logged out successfully.");
+    });
+
+    test("throws an error for network errors", async () => {
+      axiosPublic.post.mockRejectedValue();
+      await expect(logOut()).rejects.toThrow("No Server Response");
+    });
+  });
   // describe("checkToken", () => {
   //   //res.json({ message: 'Token is valid' });
   //   test("sends the correct request to backend url", async () => {
@@ -155,58 +195,6 @@ describe("authentication service", () => {
       });
 
       await expect(refresh()).rejects.toThrow("Forbidden.");
-    });
-  });
-
-  describe("logOut", () => {
-    test("calls the backend API with correct params", async () => {
-      fetch.mockResponseOnce(
-        JSON.stringify({ token: "testToken", message: "Access token issued." }),
-        {
-          status: 201,
-        },
-      );
-
-      await logOut();
-
-      // This is an array of the arguments that were last passed to fetch
-      const fetchArguments = fetch.mock.lastCall;
-      const url = fetchArguments[0];
-      const options = fetchArguments[1];
-
-      expect(url).toEqual(`${BACKEND_URL}/tokens/logout`);
-      expect(options.method).toEqual("POST");
-      expect(options.credentials).toEqual("include");
-    });
-    test("Logs a user out", async () => {
-      fetch.mockResponseOnce(
-        JSON.stringify({ message: "Logged out successfully. Cookie cleared." }),
-        {
-          status: 200,
-        },
-      );
-
-      const response = await logOut();
-      expect(response.message).toEqual(
-        "Logged out successfully. Cookie cleared.",
-      );
-    });
-    test("handles 204 status by returning a message", async () => {
-      fetch.mockResponseOnce(null, {
-        status: 204,
-      });
-
-      const response = await logOut();
-      expect(response.message).toEqual("Logged out successfully.");
-    });
-    test("throws an error for network errors", async () => {
-      fetch.mockRejectOnce(
-        new Error("Network error: Failed to connect to server."),
-      );
-
-      await expect(refresh()).rejects.toThrow(
-        "Network error: Failed to connect to server.",
-      );
     });
   });
 });

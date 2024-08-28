@@ -4,7 +4,7 @@ import { authStore } from "../api/authStore";
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const LOGIN_URL = "/tokens";
-
+const LOGOUT_URL = "/tokens/logout";
 export const logIn = async (username, password) => {
   if (!username || !password) {
     throw new Error("Username and password are required.");
@@ -20,8 +20,6 @@ export const logIn = async (username, password) => {
   try {
     const response = await axiosPublic.post(`${LOGIN_URL}`, data, config);
     authStore.setAccessToken(response?.data?.token);
-    // console.log(authStore.getAccessToken());
-    // return response?.data?.token;
   } catch (err) {
     if (!err?.response) {
       throw new Error("No Server Response");
@@ -34,41 +32,24 @@ export const logIn = async (username, password) => {
   }
 };
 
-// export const login = async (username, password) => {
-//   if (!username || !password) {
-//     throw new Error("Username and password are required.");
-//   }
+export const logOut = async () => {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
+  };
 
-//   const payload = {
-//     username: username,
-//     password: password,
-//   };
-
-//   const requestOptions = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(payload),
-//   };
-
-//   try {
-//     const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
-
-//     if (!response.ok) {
-//       const error = await response.json();
-//       throw new Error(error.message);
-//     }
-
-//     const data = await response.json();
-//     return { token: data.token };
-//   } catch (error) {
-//     if (error instanceof SyntaxError) {
-//       throw new Error("Server error. Please try again later.");
-//     }
-//     throw new Error(error.message);
-//   }
-// };
+  try {
+    const response = await axiosPublic.post(LOGOUT_URL, {}, config);
+    authStore.clearAccessToken();
+    console.log(response.data.message);
+    return response.data.message;
+  } catch (err) {
+    if (!err?.response) {
+      throw new Error("No Server Response");
+    }
+    throw err;
+  }
+};
 
 export const refresh = async () => {
   const requestOptions = {
@@ -79,7 +60,7 @@ export const refresh = async () => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/tokens/refresh`,
-      requestOptions
+      requestOptions,
     );
 
     if (!response.ok) {
@@ -89,38 +70,6 @@ export const refresh = async () => {
     const data = await response.json();
     return { token: data.token };
   } catch (err) {
-    throw new Error(err.message);
-  }
-};
-
-export const logOut = async () => {
-  const requestOptions = {
-    method: "POST",
-    credentials: "include",
-  };
-
-  try {
-    const response = await fetch(
-      `${BACKEND_URL}/tokens/logout`,
-      requestOptions
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.log(error.message);
-      throw new Error(error.message);
-    }
-
-    if (response.status === 204) {
-      console.log("Logged out successfull.");
-      return { message: "Logged out successfully." };
-    }
-
-    const data = await response.json();
-    console.log(data.message);
-    return { message: data.message };
-  } catch (err) {
-    console.log(err);
     throw new Error(err.message);
   }
 };
