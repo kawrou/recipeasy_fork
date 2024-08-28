@@ -9,8 +9,33 @@ import { LoginPage } from "../../src/pages/Login/LoginPage";
 import { expect } from "vitest";
 import { MyRecipesPage } from "../../src/pages/MyRecipes/MyRecipesPage";
 import { AuthProvider } from "../../src/context/AuthContext";
+import { useFetchRecipes } from "../../src/hooks/useFetchRecipe";
 
 const user = userEvent.setup();
+
+// vi.mock("../../src/hooks/useFetchRecipe", () => {
+//   const useFetchRecipesMock = vi.fn().mockReturnValue({
+//     recipes: [
+//       { _id: "12345", title: "Recipe 1", duration: "45" },
+//       { _id: "23456", title: "Recipe 2", duration: "60" },
+//     ],
+//     loading: false,
+//     error: {},
+//     fetchRecipes: vi.fn(),
+//   });
+//   return { useFetchRecipes: useFetchRecipesMock };
+// });
+
+vi.mock("../../src/hooks/useFetchRecipe");
+useFetchRecipes.mockReturnValue({
+  recipes: [
+    { _id: "12345", title: "Recipe 1", duration: "45" },
+    { _id: "23456", title: "Recipe 2", duration: "60" },
+  ],
+  loading: false,
+  error: {},
+  fetchRecipes: vi.fn(),
+});
 
 vi.mock("../../src/services/authentication", () => {
   const logOutMock = vi.fn().mockResolvedValue();
@@ -43,7 +68,7 @@ describe("Navbar", () => {
               <Route path="/signup" element={<SignupPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -89,7 +114,7 @@ describe("Navbar", () => {
               <Route path="/myrecipes" element={<MyRecipesPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
     test("'logo' navigates to Home Page", async () => {
@@ -99,11 +124,12 @@ describe("Navbar", () => {
       const headingEl = screen.getByRole("heading", { name: "Recipeasy" });
       expect(headingEl).toBeVisible();
     });
+
     test("'My Recipes' button navigates to My Recipes page", async () => {
       const myRecipesBtn = screen.getByRole("link", { name: "My Recipes" });
       await user.click(myRecipesBtn);
 
-      const h2El = screen.getByRole("heading", { level: 2 });
+      const h2El = screen.getByRole("heading", { name: "My Recipes" });
       expect(h2El).toBeVisible();
     });
     test("'Log Out' button is visible and navigates to Home Page", async () => {
@@ -127,7 +153,7 @@ describe("Navbar", () => {
           <Routes>
             <Route path="/signup" element={<SignupPage />} />
           </Routes>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
     test("Navbar elements aren't rendered", () => {

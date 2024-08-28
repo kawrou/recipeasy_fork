@@ -18,6 +18,13 @@ export const MyRecipesPage = ({
     fetchRecipes();
   }, [fetchRecipes]);
 
+  useEffect(() => {
+    if (error.type === "auth-error") {
+      console.log(error.message);
+      navigate("/login");
+    }
+  }, [error, navigate]);
+
   const renderPageContent = () => {
     if (loading) {
       return <p aria-label="Loading message">Loading ...</p>;
@@ -28,11 +35,6 @@ export const MyRecipesPage = ({
       error.type === "unexpected-error"
     ) {
       return <p aria-label="error message">{`${error.message}`}</p>;
-    }
-
-    if (error.type === "auth-error") {
-      console.log(error.message);
-      navigate("/login");
     }
 
     if (
