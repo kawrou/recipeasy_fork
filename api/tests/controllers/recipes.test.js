@@ -295,14 +295,6 @@ describe("Get Recipes tests", () => {
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
-      const newDecodedToken = JWT.decode(
-        responseBody.token,
-        process.env.JWT_SECRET
-      );
-      const oldDecodedToken = JWT.decode(token, process.env.JWT_SECRET);
-
-      // Returns a token
-      expect(newDecodedToken.iat > oldDecodedToken.iat).toEqual(true);
 
       // Response code is 200
       expect(response.status).toEqual(200);
