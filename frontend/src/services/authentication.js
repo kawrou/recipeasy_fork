@@ -20,7 +20,7 @@ export const logIn = async (username, password) => {
   try {
     const response = await axiosPublic.post(`${LOGIN_URL}`, data, config);
     authStore.setAccessToken(response?.data?.token);
-    console.log(authStore.getAccessToken());
+    // console.log(authStore.getAccessToken());
     // return response?.data?.token;
   } catch (err) {
     if (!err?.response) {

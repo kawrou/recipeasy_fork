@@ -1,11 +1,22 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test } from "vitest";
-import { login, logOut, refresh } from "../../src/services/authentication";
+import { logIn, logOut, refresh } from "../../src/services/authentication";
+import { axiosPublic } from "../../src/api/axios";
+import { authStore } from "../../src/api/authStore";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Mock fetch function
 createFetchMock(vi).enableMocks();
+
+vi.mock("../../src/api/authStore");
+
+vi.mock("../../src/api/axios", () => {
+  const axiosPublicMock = {
+    post: vi.fn(),
+  };
+  return { axiosPublic: axiosPublicMock };
+});
 
 describe("authentication service", () => {
   describe("login", () => {
@@ -13,60 +24,57 @@ describe("authentication service", () => {
       const testUsername = "testUser";
       const testPassword = "12345678";
 
-      fetch.mockResponseOnce(JSON.stringify({ token: "testToken" }), {
-        status: 201,
-      });
+      axiosPublic.post.mockResolvedValue({ data: { token: "test token" } });
 
-      await login(testUsername, testPassword);
+      await logIn(testUsername, testPassword);
 
       // This is an array of the arguments that were last passed to fetch
-      const fetchArguments = fetch.mock.lastCall;
+      const fetchArguments = axiosPublic.post.mock.lastCall;
       const url = fetchArguments[0];
-      const options = fetchArguments[1];
+      const data = fetchArguments[1];
+      const config = fetchArguments[2];
 
-      expect(url).toEqual(`${BACKEND_URL}/tokens`);
-      expect(options.method).toEqual("POST");
-      expect(options.body).toEqual(
-        JSON.stringify({ username: testUsername, password: testPassword }),
-      );
-      expect(options.headers["Content-Type"]).toEqual("application/json");
+      expect(url).toEqual("/tokens");
+      expect(axiosPublic.post).toHaveBeenCalled();
+      expect(data).toEqual({
+        username: testUsername,
+        password: testPassword,
+      });
+      expect(config).toEqual({
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
     });
 
-    test("returns the token if the request was a success", async () => {
+    test("returns a token if the request was a success", async () => {
       const testUsername = "testUser";
       const testPassword = "12345678";
 
-      fetch.mockResponseOnce(
-        JSON.stringify({ token: "testToken", message: "Login successful." }),
-        {
-          status: 201,
-        },
-      );
+      axiosPublic.post.mockResolvedValue({ data: { token: "test token" } });
 
-      const response = await login(testUsername, testPassword);
-      expect(response).toEqual({
-        token: "testToken",
-      });
+      await logIn(testUsername, testPassword);
+
+      expect(authStore.setAccessToken).toHaveBeenCalledWith("test token");
     });
 
     test("throws an error if the request failed", async () => {
       const testUsername = "testUser";
       const testPassword = "12345678";
 
-      fetch.mockResponseOnce(
-        JSON.stringify({ message: "Please check your login details." }),
-        {
+      axiosPublic.post.mockRejectedValue({
+        response: {
+          data: { message: "Please check your login details." },
           status: 401,
         },
-      );
+      });
 
-      await expect(login(testUsername, testPassword)).rejects.toThrow(
+      await expect(logIn(testUsername, testPassword)).rejects.toThrow(
         "Please check your login details.",
       );
     });
 
     test("throws an error if no username or password was provided", async () => {
-      await expect(login()).rejects.toThrow(
+      await expect(logIn()).rejects.toThrow(
         "Username and password are required.",
       );
     });
