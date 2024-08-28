@@ -15,20 +15,14 @@ vi.mock("react-router-dom", () => {
 vi.mock("../../../src/hooks/useFetchRecipe");
 
 // Mocking RecipeCard
-vi.mock(
-  "../../../src/components/Recipe/RecipeCard",
-  () => (
-    console.log("MyRecipesPage- Unit Test: RecipeCard mock called"),
-    {
-      default: ({ recipe }) => (
-        <div>
-          <h2>{recipe.title}</h2>
-          <p data-testid="recipe duration">{recipe.duration}</p>
-        </div>
-      ),
-    }
+vi.mock("../../../src/components/Recipe/RecipeCard", () => ({
+  default: ({ recipe }) => (
+    <div>
+      <h2>{recipe.title}</h2>
+      <p data-testid="recipe duration">{recipe.duration}</p>
+    </div>
   ),
-);
+}));
 
 describe("My Recipes Page", () => {
   beforeEach(() => {

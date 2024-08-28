@@ -7,6 +7,7 @@ export const scrapeRecipe = async (url, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/scrape?url=${encodeURIComponent(url)}`,
@@ -20,7 +21,7 @@ export const scrapeRecipe = async (url, token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error scraping recipe from webpage:", error);
+    // console.error("Error scraping recipe from webpage:", error);
     throw error;
   }
 };
@@ -60,6 +61,7 @@ export const createRecipe = async (
     body: JSON.stringify(payload),
   };
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
 
@@ -70,7 +72,7 @@ export const createRecipe = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error saving recipe:", error);
+    // console.error("Error saving recipe:", error);
     throw error;
   }
 };
@@ -111,6 +113,7 @@ export const updateRecipe = async (
     body: JSON.stringify(payload),
   };
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/${recipeId}`,
@@ -124,7 +127,7 @@ export const updateRecipe = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error updating recipe:", error);
+    // console.error("Error updating recipe:", error);
     throw error;
   }
 };
@@ -137,6 +140,7 @@ export const getRecipeById = async (recipeId, token) => {
     },
   };
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/${recipeId}`,
@@ -150,7 +154,7 @@ export const getRecipeById = async (recipeId, token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error getting recipe by ID:", error);
+    // console.error("Error getting recipe by ID:", error);
     throw error;
   }
 };
@@ -164,6 +168,7 @@ export const toggleFavourite = async (recipeId, token) => {
     },
   };
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(
       `${BACKEND_URL}/recipes/${recipeId}/favourite`,
@@ -177,7 +182,7 @@ export const toggleFavourite = async (recipeId, token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error favouriting recipe:", error);
+    // console.error("Error favouriting recipe:", error);
     throw error;
   }
 };
@@ -190,6 +195,7 @@ export const getAllRecipes = async (token) => {
     },
   };
 
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await fetch(`${BACKEND_URL}/recipes`, requestOptions);
 
@@ -200,7 +206,7 @@ export const getAllRecipes = async (token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error retrieving all recipes:", error);
+    // console.error("Error retrieving all recipes:", error);
     throw error;
   }
 };

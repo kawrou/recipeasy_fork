@@ -75,12 +75,12 @@ describe("Home Page renders:", () => {
       "Simply paste the URL of your favourite recipe page, " +
         "or manually input your cherished recipes, and watch as " +
         "Recipeasy effortlessly generates neatly organised recipes " +
-        "for you to store and access anytime, anywhere."
+        "for you to store and access anytime, anywhere.",
     );
   });
 
   test("url input correctly", () => {
-    render(<HomePage url={"test-url"} />);
+    render(<HomePage url={"test-url"} handleUrlChange={vi.fn()} />);
     const searchbar = screen.getByRole("textbox");
     expect(searchbar.value).toBe("test-url");
   });
@@ -90,7 +90,7 @@ describe("When a user is logged in and:", () => {
     render(
       <BrowserRouter>
         <HomePage />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     const user = userEvent.setup();
     const searchbar = screen.getByRole("textbox");

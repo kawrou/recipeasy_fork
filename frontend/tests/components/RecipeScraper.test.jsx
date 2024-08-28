@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { vi, describe, it, test, beforeEach } from "vitest";
 import { expect } from "vitest";
@@ -30,12 +30,12 @@ describe("Unit Test: RecipeScraper", () => {
           url={""}
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
-        />
+        />,
       );
 
       const scrapeInputElement = screen.getByRole("textbox");
       const scrapeInputElementText = screen.getByPlaceholderText(
-        "Enter your recipe url..."
+        "Enter your recipe url...",
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -51,7 +51,12 @@ describe("Unit Test: RecipeScraper", () => {
     //I was confused how you would test onChange, but realized it isn't this components
     //responsiblity to handle the state. That should be tested in the parent component. \
     test("url prop is rendered correctly", () => {
-      render(<RecipeScraper url={"test-url"} />);
+      render(
+        <RecipeScraper
+          url={"test-url"}
+          handleUrlChange={handleUrlChangeMock}
+        />,
+      );
 
       const searchbar = screen.getByRole("textbox");
       expect(searchbar.value).toEqual("test-url");
@@ -65,7 +70,7 @@ describe("Unit Test: RecipeScraper", () => {
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
           setRecipeData={setRecipeDataMock}
-        />
+        />,
       );
 
       const searchbar = screen.getByRole("textbox");
@@ -77,14 +82,14 @@ describe("Unit Test: RecipeScraper", () => {
   describe("Generate Recipe button", () => {
     test("when token is valid, url is inputted, it navigates to create page", async () => {
       // handleClick -> checkToken -> handleScrapeRecipe -> navigate("/recipes/create")
-    
+
       const navigateMock = useNavigate();
       render(
         <RecipeScraper
           url="test-url"
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
-        />
+        />,
       );
 
       const generateRecipeBtn = screen.getByRole("button", {
@@ -111,7 +116,7 @@ describe("Unit Test: RecipeScraper", () => {
           url={""}
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
-        />
+        />,
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -140,7 +145,7 @@ describe("Unit Test: RecipeScraper", () => {
           handleUrlChange={handleUrlChangeMock}
           handleScrapeRecipe={handleScrapeRecipeMock}
           setRecipeData={setRecipeDataMock}
-        />
+        />,
       );
 
       const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
