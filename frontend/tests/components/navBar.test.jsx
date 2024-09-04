@@ -14,15 +14,13 @@ const user = userEvent.setup();
 
 vi.mock("../../src/hooks/useFetchRecipe", () => {
   const useFetchRecipesMock = vi.fn().mockReturnValue({
-    recipes: [],
+    data: [],
     loading: true,
-    error: null,
+    error: {},
     fetchRecipes: vi.fn(),
   });
   return { useFetchRecipes: useFetchRecipesMock };
 });
-
-const setTokenMock = vi.fn();
 
 describe("Navbar", () => {
   describe("When a user is not logged in and on the Home Page:", () => {
@@ -37,7 +35,7 @@ describe("Navbar", () => {
               <Route path="/signup" element={<SignupPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 

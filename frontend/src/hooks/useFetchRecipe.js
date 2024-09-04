@@ -4,7 +4,7 @@ import useAxiosPrivate from "./useAxiosPrivate";
 export const useFetchRecipes = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({});
   const axiosPrivate = useAxiosPrivate();
 
   const fetchRecipes = useCallback(

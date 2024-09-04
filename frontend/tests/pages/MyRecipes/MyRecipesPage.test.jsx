@@ -38,19 +38,19 @@ describe("My Recipes Page", () => {
 
   test("renders collection and recipes from db", async () => {
     useFetchRecipes.mockReturnValue({
-      recipes: [
+      data: [
         { _id: "12345", title: "Recipe 1", duration: "45" },
         { _id: "23456", title: "Recipe 2", duration: "60" },
       ],
       loading: false,
-      error: null,
+      error: {},
       fetchRecipes: vi.fn(),
     });
 
     render(
       <AuthProvider>
         <MyRecipesPage />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     const recipeTitles = screen.getAllByRole("heading", { level: 2 });
@@ -66,14 +66,14 @@ describe("My Recipes Page", () => {
     useFetchRecipes.mockReturnValue({
       recipes: undefined,
       loading: false,
-      error: null,
+      error: {},
       fetchRecipes: vi.fn(),
     });
 
     render(
       <AuthProvider>
         <MyRecipesPage />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByLabelText("Empty Recipes")).toBeVisible();
@@ -83,14 +83,14 @@ describe("My Recipes Page", () => {
     useFetchRecipes.mockReturnValue({
       recipes: [],
       loading: false,
-      error: null,
+      error: {},
       fetchRecipes: vi.fn(),
     });
 
     render(
       <AuthProvider>
         <MyRecipesPage />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByLabelText("Empty Recipes")).toBeVisible();
@@ -100,14 +100,14 @@ describe("My Recipes Page", () => {
     useFetchRecipes.mockReturnValue({
       recipes: [],
       loading: true,
-      error: null,
+      error: {},
       fetchRecipes: vi.fn(),
     });
 
     render(
       <AuthProvider>
         <MyRecipesPage />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getByLabelText("Loading message")).toBeVisible();

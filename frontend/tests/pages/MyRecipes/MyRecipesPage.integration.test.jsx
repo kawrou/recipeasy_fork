@@ -1,12 +1,8 @@
 import { act, render, screen } from "@testing-library/react";
 import { vi, describe, test, expect } from "vitest";
 import { MyRecipesPage } from "../../../src/pages/MyRecipes/MyRecipesPage";
-import { CreateRecipePage } from "../../../src/pages/RecipePage/CreateRecipePage";
 import { LoginPage } from "../../../src/pages/Login/LoginPage";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { useFetchRecipes } from "../../../src/hooks/useFetchRecipe";
-import { getAllRecipes, getRecipeById } from "../../../src/services/recipes";
-import { checkToken } from "../../../src/services/authentication";
 import userEvent from "@testing-library/user-event";
 import { SingleRecipePage } from "../../../src/pages/RecipePage/SingleRecipePage";
 import { AuthProvider } from "../../../src/context/AuthProvider";
@@ -24,11 +20,10 @@ const testToken = "testToken";
 const user = userEvent.setup();
 
 describe("When My Recipes Page is first rendered", () => {
-  //TODO: This test failes because RecipeCard is making another FETCH request which overides the mock below
   test("renders fetched recipes", async () => {
     axiosPrivate.get.mockResolvedValue({
       data: {
-        recipes: [
+        data: [
           { _id: 1, name: "test recipe 1", totalTime: 45, image: "test_url" },
           { _id: 2, name: "test recipe 2", totalTime: 30, image: "test_url" },
         ],
@@ -52,7 +47,7 @@ describe("When My Recipes Page is first rendered", () => {
               />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -66,7 +61,7 @@ describe("When My Recipes Page is first rendered", () => {
   test("shows a message when recipes is undefined", async () => {
     axiosPrivate.get.mockResolvedValue({
       data: {
-        recipes: undefined,
+        data: undefined,
       },
     });
 
@@ -83,7 +78,7 @@ describe("When My Recipes Page is first rendered", () => {
               />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -115,7 +110,7 @@ describe("When My Recipes Page is first rendered", () => {
               />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -126,7 +121,7 @@ describe("When My Recipes Page is first rendered", () => {
   test("navigates to login if error during HTTP request", async () => {
     axiosPrivate.get.mockRejectedValue({
       response: {
-        data: { message: "" },
+        status: 401,
       },
     });
 
@@ -148,7 +143,7 @@ describe("When My Recipes Page is first rendered", () => {
               <Route path="/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
     const myRecipesH2El = screen.queryByRole("heading", {
@@ -192,7 +187,7 @@ describe("When My Recipes Page is first rendered", () => {
               <Route path="/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -218,7 +213,7 @@ describe("When My Recipes Page is first rendered", () => {
               <Route path="/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
@@ -340,7 +335,7 @@ describe("When a user clicks on:", () => {
               />
             </Routes>
           </AuthProvider>
-        </MemoryRouter>
+        </MemoryRouter>,
       );
     });
 
