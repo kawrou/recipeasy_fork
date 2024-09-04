@@ -12,7 +12,7 @@ export const MyRecipesPage = ({
   setRecipeData,
 }) => {
   const navigate = useNavigate();
-  const { recipes, loading, error, fetchRecipes } = useFetchRecipes();
+  const { data, loading, error, fetchRecipes } = useFetchRecipes();
 
   useEffect(() => {
     fetchRecipes("/recipes");
@@ -40,12 +40,12 @@ export const MyRecipesPage = ({
     if (
       !loading &&
       Object.keys(error).length === 0 &&
-      (!recipes || recipes.length === 0)
+      (!data || data.length === 0)
     ) {
       return <p aria-label="Empty Recipes"> Start saving recipes!</p>;
     }
 
-    return recipes.map((recipe, index) => {
+    return data.map((recipe, index) => {
       return <RecipeCard recipe={recipe} key={index} />;
     });
   };
