@@ -9,7 +9,7 @@ const { extractRecipeInfo } = require("../utils/recipeUtils");
 const index = async (req, res) => {
   try {
     const recipes = await Recipe.find({ ownerId: req.user_id });
-    res.status(200).json({ recipes: recipes });
+    res.status(200).json({ data : recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -26,7 +26,7 @@ const show = async (req, res) => {
   //Question: Do we need to return user id?
   res
     .status(200)
-    .json({ recipeData: recipeData, user_id: req.user_id, token: newToken });
+    .json({ data : recipeData, user_id: req.user_id, token: newToken });
 };
 
 const create = async (req, res) => {
@@ -92,25 +92,17 @@ const update = async (req, res) => {
       image: req.body.image,
       dateAdded: req.body.dateAdded,
     };
-
+    console.log(recipeUpdateData);
     const updatedRecipe = await Recipe.findOneAndUpdate(
       { _id: recipeId, ownerId: user._id },
       { $set: recipeUpdateData },
       { new: true }
     );
-
     if (!updatedRecipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-    const newToken = generateToken(req.user_id);
     res.status(200).json({
       message: "Recipe updated successfully",
-
-      //TODO:
-      //Question: Do we need to return the updatedRecipe if the data isn't being used?
-      //The SingleRecipePage uses a useEffect to create another Fetch request to get recipe data
-      updatedRecipe,
-      token: newToken,
     });
   } catch (error) {
     console.error(error);
