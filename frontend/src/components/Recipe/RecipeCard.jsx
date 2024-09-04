@@ -21,7 +21,7 @@ const RecipeCard = ({ recipe }) => {
             </figcaption>
           </figure>
         </Link>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full mt-4">
           <div className="flex items-center font-kanit font-bold gap-0.5 text-secondary-500">
             <img
               className="size-8 mr-2"
