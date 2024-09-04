@@ -29,7 +29,6 @@ const RecipeCard = ({ recipe }) => {
   //     fetchData();
   //   }
   // }, [recipe._id]);
-
   return (
     <Link
       to={`/recipes/${recipe._id}`}
@@ -61,7 +60,11 @@ const RecipeCard = ({ recipe }) => {
                 <p> mins</p>
               </div>
 
-              <FavouriteButton recipeId={recipe._id} size={30} />
+              <FavouriteButton
+                recipeId={recipe._id}
+                favourited={recipe.favouritedByOwner}
+                size={30}
+              />
             </div>
           </div>
         </div>

@@ -1,49 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { toggleFavourite } from "../../services/recipes";
+import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-//TODO: Refactoring thoughts
-//isFavourited is passed down as prop to the component
-//When toggleFavourite is successful, it gives back a token
-//setToken would bubble up.
-//Questions:
-//Would the isFavourited prop then be passed down successfully and then rerendered?
-//Does click on favourite require setting token?
-
-export const FavouriteButton = ({ recipeId, token, size }) => {
-  const [favStatus, setFavStatus] = useState(false);
-  // console.log('initialFavStatus', favStatus)
-
-  // useEffect(() => {
-  //   const storedFavStatus = localStorage.getItem(
-  //     `favouritedByOwner_${recipeId}`,
-  //   );
-  //   if (storedFavStatus) {
-  //     setFavStatus(JSON.parse(storedFavStatus));
-  //   }
-  // }, [recipeId]);
-
-  // //Should think about how to handle errors. Is console.error sufficient?
-  // //Testing for it also makes the output ugly
-  // const handleFavouriteButton = async () => {
-  //   try {
-  //     // Call the toggleFavourite function to toggle the favourite status
-  //     await toggleFavourite(recipeId, token);
-  //     // console.log('Toggle favourite successful');
-  //     // Update the local state to reflect if favourited
-  //     setFavStatus((prevStatus) => !prevStatus);
-  //     localStorage.setItem(
-  //       `favouritedByOwner_${recipeId}`,
-  //       JSON.stringify(!favStatus),
-  //     );
-  //   } catch (error) {
-  //     console.error("Failed to toggle Favourite button", error);
-  //   }
-  // };
+export const FavouriteButton = ({ recipeId, favourited, size }) => {
+  const [favStatus, setFavStatus] = useState(favourited);
+  const axiosPrivate = useAxiosPrivate();
+  const handleFavButtonClick = async () => {
+    try {
+      await axiosPrivate.patch(`/recipes/${recipeId}/favourite`);
+      setFavStatus((prevStatus) => !prevStatus);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div>
-      <button aria-label="favourite-button">
+      <button aria-label="favourite-button" onClick={handleFavButtonClick}>
         {favStatus ? (
           <FaHeart
             className="text-primary-500"
