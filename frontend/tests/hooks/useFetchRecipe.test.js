@@ -15,7 +15,7 @@ vi.mock("../../src/hooks/useAxiosPrivate", () => {
 
 describe("useFetchRecipe hook:", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("fetches recipes from DB when token is present", async () => {
@@ -25,34 +25,76 @@ describe("useFetchRecipe hook:", () => {
     ];
 
     const axiosPrivateMock = useAxiosPrivate();
-    axiosPrivateMock.get.mockResolvedValue({ data: { recipes: mockRecipes } });
+    axiosPrivateMock.get.mockResolvedValue({ data: { data: mockRecipes } });
     const { result } = renderHook(() => useFetchRecipes());
 
     await act(async () => {
-      await result.current.fetchRecipes();
+      await result.current.fetchRecipes("/recipes");
     });
 
     await waitFor(() => {
       expect(axiosPrivateMock.get).toHaveBeenCalledWith("/recipes");
       expect(result.current.loading).toBeFalsy();
       expect(result.current.error).toBeFalsy();
-      expect(result.current.recipes).toEqual(mockRecipes);
+      expect(result.current.data).toEqual(mockRecipes);
     });
   });
 
-  it("returns an error", async () => {
+  it("returns an error for 401 status", async () => {
     const axiosPrivateMock = useAxiosPrivate();
-    axiosPrivateMock.get.mockRejectedValue(new Error("test error"));
+    axiosPrivateMock.get.mockRejectedValue({ response: { status: 401 } });
     const { result } = renderHook(() => useFetchRecipes());
 
     await act(async () => {
-      await result.current.fetchRecipes();
+      await result.current.fetchRecipes("/recipes");
     });
 
     await waitFor(() => {
       expect(result.current.loading).toBeFalsy();
-      expect(result.current.error).toEqual(true);
-      expect(result.current.recipes).toEqual([]);
+      expect(result.current.error.type).toBe("auth-error");
+      expect(result.current.error.message).toBe(
+        "Unauthorized access. Please log in again.",
+      );
+      expect(result.current.data).toEqual([]);
+      expect(axiosPrivateMock.get).toHaveBeenCalled();
+    });
+  });
+
+  it("returns an error for 403 status", async () => {
+    const axiosPrivateMock = useAxiosPrivate();
+    axiosPrivateMock.get.mockRejectedValue({ response: { status: 403 } });
+    const { result } = renderHook(() => useFetchRecipes());
+
+    await act(async () => {
+      await result.current.fetchRecipes("/recipes");
+    });
+
+    await waitFor(() => {
+      expect(result.current.loading).toBeFalsy();
+      expect(result.current.error.type).toBe("auth-error");
+      expect(result.current.error.message).toBe(
+        "Unauthorized access. Please log in again.",
+      );
+      expect(result.current.data).toEqual([]);
+      expect(axiosPrivateMock.get).toHaveBeenCalled();
+    });
+  });
+
+  it("returns an error when no response", async () => {
+    const axiosPrivateMock = useAxiosPrivate();
+    const { result } = renderHook(() => useFetchRecipes());
+
+    await act(async () => {
+      await result.current.fetchRecipes("/recipes");
+    });
+
+    await waitFor(() => {
+      expect(result.current.loading).toBeFalsy();
+      expect(result.current.error.type).toBe("no-server-response");
+      expect(result.current.error.message).toBe(
+        "No Server Response. Please check your internet connection or try again later.",
+      );
+      expect(result.current.data).toEqual([]);
       expect(axiosPrivateMock.get).toHaveBeenCalled();
     });
   });
