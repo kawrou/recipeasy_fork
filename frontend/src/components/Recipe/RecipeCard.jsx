@@ -1,4 +1,3 @@
-import {} from "react";
 import { Link } from "react-router-dom";
 import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
 
