@@ -7,19 +7,34 @@ export const useFetchRecipes = () => {
   const [error, setError] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
-  const fetchRecipes = useCallback(async () => {
+  const fetchRecipes = useCallback(async (path) => {
     try {
-      const response = await axiosPrivate.get("/recipes");
+      const response = await axiosPrivate.get(path);
       setRecipes(response.data.recipes);
       setLoading(false);
     } catch (err) {
-      if (!err?.response) {
-        setError("No Server Response");
-      }
       setLoading(false);
-      setError(true);
+      if (!err?.response) {
+        setError({
+          type: "no-server-response",
+          message:
+            "No Server Response. Please check your internet connection or try again later.",
+        });
+        return;
+      }
+      if (err?.response.status === 401 || err?.response.status === 403) {
+        setError({
+          type: "auth-error",
+          message: "Unauthorized access. Please log in again.",
+        });
+        return;
+      }
+      setError({
+        type: "unexpected-error",
+        message: "An unexpected error occurred.",
+      });
     }
-  }, [axiosPrivate]);
+  }, []);
 
   return { recipes, loading, error, fetchRecipes };
 };
