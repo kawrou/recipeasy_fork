@@ -19,8 +19,8 @@ axiosPublic.interceptors.request.use((config) => {
 
 axiosPrivate.interceptors.request.use(
   (config) => {
-    const accessToken = authStore.getAccessToken();
     if (!config.headers["Authorization"]) {
+      const accessToken = authStore.getAccessToken();
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     return config;
