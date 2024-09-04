@@ -95,6 +95,9 @@ export const SingleRecipePage = () => {
     } catch (err) {
       //TODO: Need to figureout appropriate error modal
       console.log(err);
+      if (err?.response.status === 401) {
+        navigate("/login");
+      }
     }
   };
 
