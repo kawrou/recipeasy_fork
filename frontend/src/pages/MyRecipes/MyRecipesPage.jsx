@@ -20,7 +20,7 @@ export const MyRecipesPage = ({
 
   useEffect(() => {
     if (error.type === "auth-error") {
-      console.log(error.message);
+      // console.log(error.message);
       navigate("/login");
     }
   }, [error, navigate]);
