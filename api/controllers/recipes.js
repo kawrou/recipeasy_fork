@@ -6,29 +6,47 @@ const Recipe = require("../models/recipe");
 const User = require("../models/user");
 const { extractRecipeInfo } = require("../utils/recipeUtils");
 
+// @desc Get all recipes
+// @route GET /recipes
+// @access Private
 const index = async (req, res) => {
   try {
-    const recipes = await Recipe.find({ ownerId: req.user_id });
-    res.status(200).json({ data : recipes });
+    const recipes = await Recipe.find({ ownerId: req.user_id }).exec();
+    res.status(200).json({ data: recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-//TODO:
-//Fix: There's no error handling. Use appropriate try/catch block.
 const show = async (req, res) => {
   const recipeId = req.params.recipe_id;
-  const recipeData = await Recipe.findById(recipeId);
-  const newToken = generateToken(req.user_id);
 
-  //TODO:
-  //Question: Do we need to return user id?
-  res
-    .status(200)
-    .json({ data : recipeData, user_id: req.user_id, token: newToken });
+  if (!recipeId) {
+    return res.status(400).json({message: "No recipe id"})
+  }
+
+  try {
+    const recipeData = await Recipe.findById(recipeId).exec();
+
+    if (!recipeData) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ data: recipeData, user_id: req.user_id });
+  }catch(err){
+    if (err instanceof mongoose.Error.CastError){
+      return res.status(401).json({message: "Unauthorized"});
+    }
+
+    return res.status(500).json({message: "Internal Sever Error"});
+  }
 };
 
+// @desc Create new recipe
+// @route POST /recipes
+// @access Private
 const create = async (req, res) => {
   const user = await User.findById(req.user_id);
   if (!user) {
@@ -70,10 +88,13 @@ const create = async (req, res) => {
   }
 };
 
+// @desc Update a recipe
+// @route PATCH /recipes/:recipe_id
+// @access Private
 const update = async (req, res) => {
   try {
     const recipeId = req.params.recipe_id;
-    const user = await User.findById(req.user_id);
+    const user = await User.findById(req.user_id).exec();
     if (!user) {
       console.log("user not found");
       return res.status(404).json({ message: "User not found" });
@@ -97,7 +118,7 @@ const update = async (req, res) => {
       { _id: recipeId, ownerId: user._id },
       { $set: recipeUpdateData },
       { new: true }
-    );
+    ).exec();
     if (!updatedRecipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
@@ -105,11 +126,16 @@ const update = async (req, res) => {
       message: "Recipe updated successfully",
     });
   } catch (error) {
-    console.error(error);
+    if(err instanceof mongoose.Error.CastError){
+      return res.status(401).json({message: "Unauthorized"}); 
+    }
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
+// @desc Mark a recipe as a favourite
+// @route PATCH /recipes/:recipe_id/favourite
+// @access Private
 const markAsFavourite = async (req, res) => {
   try {
     const recipeId = req.params.recipe_id;
@@ -121,7 +147,7 @@ const markAsFavourite = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const recipe = await Recipe.findById(recipeId);
+    const recipe = await Recipe.findById(recipeId).exec();
 
     if (!recipe) {
       console.log("Recipe not found");
@@ -132,16 +158,16 @@ const markAsFavourite = async (req, res) => {
 
     await recipe.save();
 
-    //TODO:
-    //Question: Do we need to return recipe? Is response data going to be used?
-    //Fix: No token returned!
-    res.status(200).json({ message: "Recipe favourited successfully", recipe });
+    res.status(200).json({ message: "Recipe favourited successfully" });
   } catch (error) {
     console.error("Internal server error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
+// @desc Scrape a recipe from a website
+// @route GET /recipe/scrape
+// @access Private
 //This functions runs the main feature of our web app which is scraping recipe data from websites.
 const scrapeRecipeFromWebsite = async (req, res) => {
   const url = req.query.url; // assigns url to a variable
