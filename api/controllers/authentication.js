@@ -40,7 +40,7 @@ const createToken = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ token: accessToken, message: "Login successful." });
+    return res.status(201).json({ token: accessToken, message: "Login successful." });
   } catch (err) {
     return res.status(500).json({ message: "Internal server error." });
   }
@@ -59,7 +59,7 @@ const refresh = async (req, res) => {
     const user = await User.findById(payload.user_id).exec();
 
     const accessToken = generateToken(user.id);
-    res
+    return res
       .status(201)
       .json({ token: accessToken, message: "Access token issued." });
   } catch (err) {

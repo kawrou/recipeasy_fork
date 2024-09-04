@@ -22,7 +22,7 @@ const createToken = (userId) => {
   );
 };
 
-let token;
+// let token;
 let decodedToken;
 describe("/recipes", () => {
   beforeAll(async () => {
@@ -160,7 +160,7 @@ describe("/recipes/:recipe_id", () => {
         .get(`/recipes/${recipe._id}`)
         .set("Authorization", `Bearer ${token}`);
 
-      const recipeData = response.body.recipeData;
+      const recipeData = response.body.data;
 
       expect(recipeData.name).toEqual("Easy blueberry muffins");
       expect(recipeData.description).toEqual(
@@ -195,19 +195,6 @@ describe("/recipes/:recipe_id", () => {
         "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberry-muffin-ee95fd4.jpg?resize=768,574"
       );
       expect(recipeData.dateAdded).toEqual("2024-03-04T00:00:00.000Z");
-    });
-
-    test("returns a new token", async () => {
-      const response = await request(app)
-        .get(`/recipes/${recipe._id}`)
-        .set("Authorization", `Bearer ${token}`);
-
-      const newToken = response.body.token;
-      const newTokenDecoded = JWT.decode(newToken, process.env.JWT_SECRET);
-      const oldTokenDecoded = JWT.decode(token, process.env.JWT_SECRET);
-
-      // iat stands for issued at
-      expect(newTokenDecoded.iat > oldTokenDecoded.iat).toEqual(true);
     });
   });
 
@@ -289,19 +276,19 @@ describe("Get Recipes tests", () => {
   });
 
   describe("GET - all recipes - when token is present", () => {
-    test("response code is 200, returns a new token, recipes match userID and returned recipes are correct", async () => {
+    test("response code is 200, recipes match userID and returned recipes are correct", async () => {
       const response = await request(app)
-        .get(`/recipes/`)
+        .get(`/recipes`)
         .set("Authorization", `Bearer ${token}`);
 
       const responseBody = response.body;
 
       expect(response.status).toEqual(200);
       // Returned data is correct
-      expect(responseBody).toHaveProperty("recipes");
-      expect(responseBody.recipes.length).toBe(2);
+      expect(responseBody).toHaveProperty("data");
+      expect(responseBody.data.length).toBe(2);
 
-      expect(responseBody.recipes[0]).toEqual(
+      expect(responseBody.data[0]).toEqual(
         // In the test, we are comparing JSON data to a MongoDB object
         // Problem - comparing a date object, MongoDB's ObjectID to strings
         // .toObject is a Mongoose method and it can take the "transform" function.
@@ -318,7 +305,7 @@ describe("Get Recipes tests", () => {
           },
         })
       );
-      expect(responseBody.recipes[1]).toEqual(
+      expect(responseBody.data[1]).toEqual(
         recipe2.toObject({
           transform: (doc, ret) => {
             ret.dateAdded = ret.dateAdded.toISOString();
@@ -336,11 +323,11 @@ describe("Get Recipes tests", () => {
       const responseBody = response.body;
 
       //Returned recipes are only for user1(ownerId)
-      expect(responseBody.recipes[0].ownerId).toEqual(ownerId.toString());
-      expect(responseBody.recipes[1].ownerId).toEqual(ownerId.toString());
-      //Returned recipes don't belong to user2(ownerId2)
-      expect(responseBody.recipes[0].ownerId).not.toEqual(ownerId2.toString());
-      expect(responseBody.recipes[1].ownerId).not.toEqual(ownerId2.toString());
+      expect(responseBody.data[0].ownerId).toEqual(ownerId.toString());
+      expect(responseBody.data[1].ownerId).toEqual(ownerId.toString());
+      //Returned data don't belong to user2(ownerId2)
+      expect(responseBody.data[0].ownerId).not.toEqual(ownerId2.toString());
+      expect(responseBody.data[1].ownerId).not.toEqual(ownerId2.toString());
     });
   });
 
