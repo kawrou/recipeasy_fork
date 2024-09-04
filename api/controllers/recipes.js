@@ -92,7 +92,7 @@ const update = async (req, res) => {
       image: req.body.image,
       dateAdded: req.body.dateAdded,
     };
-    console.log(recipeUpdateData);
+
     const updatedRecipe = await Recipe.findOneAndUpdate(
       { _id: recipeId, ownerId: user._id },
       { $set: recipeUpdateData },
