@@ -15,21 +15,33 @@ export const MyRecipesPage = ({
   const { recipes, loading, error, fetchRecipes } = useFetchRecipes();
 
   useEffect(() => {
-    fetchRecipes();
+    fetchRecipes("/recipes");
   }, [fetchRecipes]);
+
+  useEffect(() => {
+    if (error.type === "auth-error") {
+      console.log(error.message);
+      navigate("/login");
+    }
+  }, [error, navigate]);
 
   const renderPageContent = () => {
     if (loading) {
       return <p aria-label="Loading message">Loading ...</p>;
     }
 
-    if (error) {
-      console.log("Error occured whilst retrieving recipe");
-      // return <p>Error: {error.message}</p>;
-      navigate("/login");
+    if (
+      error.type === "no-server-response" ||
+      error.type === "unexpected-error"
+    ) {
+      return <p aria-label="error message">{`${error.message}`}</p>;
     }
 
-    if ((!loading && !error && recipes === undefined) || recipes.length === 0) {
+    if (
+      !loading &&
+      Object.keys(error).length === 0 &&
+      (!recipes || recipes.length === 0)
+    ) {
       return <p aria-label="Empty Recipes"> Start saving recipes!</p>;
     }
 
