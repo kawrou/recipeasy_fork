@@ -8,6 +8,11 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
   const handleClick = async (manually) => {
     try {
       if (!manually) {
+        if (url === "") {
+          console.error("Please input url to scrape recipe");
+          return;
+        }
+
         const scrapedData = await axiosPrivate.get(
           `/recipes/scrape?url=${encodeURIComponent(url)}`,
         );
