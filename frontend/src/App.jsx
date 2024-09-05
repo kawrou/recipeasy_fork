@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import useAxiosPrivate from "./hooks/useAxiosPrivate";
 import "./App.css";
 import HomePage from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
@@ -9,24 +8,10 @@ import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
 import { useState } from "react";
-import useAuth from "./hooks/useAuth";
 
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
-  const { auth } = useAuth();
-  const axiosPrivate = useAxiosPrivate();
-
-  const handleScrapeRecipe = async () => {
-    try {
-      const scrapedData = await axiosPrivate.get(
-        `/recipes/scrape?url=${encodeURIComponent(url)}`,
-      );
-      setRecipeData(scrapedData.data.recipe_data);
-    } catch (err) {
-      console.error("Failed to scrape recipe");
-    }
-  };
 
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
@@ -41,7 +26,6 @@ const App = () => {
             path="/"
             element={
               <HomePage
-                handleScrapeRecipe={handleScrapeRecipe}
                 url={url}
                 setUrl={setUrl}
                 handleUrlChange={handleUrlChange}
@@ -74,7 +58,6 @@ const App = () => {
             path="/myrecipes"
             element={
               <MyRecipesPage
-                handleScrapeRecipe={handleScrapeRecipe}
                 url={url}
                 setUrl={setUrl}
                 handleUrlChange={handleUrlChange}

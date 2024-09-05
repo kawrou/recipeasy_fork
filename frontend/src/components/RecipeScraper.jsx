@@ -1,22 +1,17 @@
-// import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { checkToken } from "../services/authentication";
-import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-const RecipeScraper = ({
-  url,
-  setUrl,
-  handleUrlChange,
-  handleScrapeRecipe,
-  setRecipeData,
-}) => {
-  const { auth } = useAuth();
+const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
   const navigate = useNavigate();
-  // What is this 'manual' parameter?
-  const handleClick = async (manual) => {
+  const axiosPrivate = useAxiosPrivate();
+
+  const handleClick = async (manually) => {
     try {
-      if (!manual) {
-        await handleScrapeRecipe();
+      if (!manually) {
+        const scrapedData = await axiosPrivate.get(
+          `/recipes/scrape?url=${encodeURIComponent(url)}`,
+        );
+        setRecipeData(scrapedData.data.recipe_data);
       } else {
         setRecipeData(undefined);
         setUrl(undefined);

@@ -88,6 +88,7 @@ export const CreateRecipePage = ({
     try {
       const response = await axiosPrivate.post("/recipes", data);
       //setRecipeData is set to null so that upon revisit, the page will be empty
+      //Same for setUrl
       setRecipeData(null);
       setUrl("");
       navigate(`/recipes/${response.data.recipeId}`);
