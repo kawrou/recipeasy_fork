@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { scrapeRecipe } from "./services/recipes";
-
+import useAxiosPrivate from "./hooks/useAxiosPrivate";
 import "./App.css";
 import HomePage from "./pages/Home/HomePage";
 import { LoginPage } from "./pages/Login/LoginPage";
@@ -16,13 +15,16 @@ const App = () => {
   const [recipeData, setRecipeData] = useState(null);
   const [url, setUrl] = useState("");
   const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleScrapeRecipe = async () => {
     try {
-      const scrapedData = await scrapeRecipe(url, auth.token);
-      setRecipeData(scrapedData.recipe_data);
-    } catch (error) {
-      console.error("Error fetching recipe:", error);
+      const scrapedData = await axiosPrivate.get(
+        `/recipes/scrape?url=${encodeURIComponent(url)}`,
+      );
+      setRecipeData(scrapedData.data.recipe_data);
+    } catch (err) {
+      console.error("Failed to scrape recipe");
     }
   };
 

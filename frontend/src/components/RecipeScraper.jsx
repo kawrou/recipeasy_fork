@@ -23,7 +23,6 @@ const RecipeScraper = ({
       }
       navigate("/recipes/create");
     } catch (error) {
-      console.log('error', error)
       if (error.response && error.response.status === 401) {
         navigate("/login");
       } else {
