@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { createRecipe } from "../../services/recipes";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
@@ -19,12 +18,11 @@ import { EditButton } from "../../components/RecipePage/EditButton";
 export const CreateRecipePage = ({
   recipeData,
   setRecipeData,
-  token,
-  setToken,
   url,
+  setUrl,
 }) => {
   const navigate = useNavigate();
-
+  const axiosPrivate = useAxiosPrivate();
   const [editMode, setEditMode] = useState(true);
 
   const [recipeName, setRecipeName] = useState("");
@@ -69,24 +67,32 @@ export const CreateRecipePage = ({
       instructions.some((instruction) => instruction === "")
     ) {
       alert("Please fill out all the required fields");
-    } else {
-      //Do we need a Try/Catch block here?
-      let data = await createRecipe(
-        token,
-        recipeName,
-        recipeDescription,
-        recipeTags,
-        recipeTotalTime,
-        yieldAmount,
-        ingredients,
-        instructions,
-        url,
-        imageUrl
-      );
-      setToken(data.token);
+      return;
+    }
+
+    //Do we need a Try/Catch block here?
+    const data = {
+      name: recipeName,
+      description: recipeDescription,
+      tags: recipeTags,
+      favouritedByOwner: false,
+      totalTime: recipeTotalTime,
+      recipeYield: yieldAmount,
+      recipeIngredient: ingredients,
+      recipeInstructions: instructions,
+      url: url,
+      image: imageUrl,
+      dateAdded: new Date().toISOString(),
+    };
+
+    try {
+      const response = await axiosPrivate.post("/recipes", data);
       //setRecipeData is set to null so that upon revisit, the page will be empty
       setRecipeData(null);
-      navigate(`/recipes/${data.recipe._id}`);
+      setUrl("");
+      navigate(`/recipes/${response.data.recipeId}`);
+    } catch (err) {
+      console.log("Problem saving recipe.");
     }
   };
 

@@ -67,25 +67,28 @@ const create = async (req, res) => {
       recipeInstructions: req.body.recipeInstructions,
       url: req.body.url,
       image: req.body.image,
-
-      //TODO: There are 2 dateAdded?
-      dateAdded: req.body.dateAdded,
       dateAdded: req.body.dateAdded,
     });
     await newRecipe.save();
 
-    const newToken = generateToken(req.user_id);
-
-    //TODO:
-    //Question: Do we need to return the whole newRecipe data? Or is newRecipe._id enough?
-    res.status(201).json({
+    return res.status(201).json({
       message: "Recipe created successfully",
-      recipe: newRecipe,
-      token: newToken,
+      recipeId: newRecipe._id,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ message: "Missing or invalid recipe data.", errors: error.errors });
+    };
+
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Duplicate key error", details: error.keyValue });
+    };
+
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
