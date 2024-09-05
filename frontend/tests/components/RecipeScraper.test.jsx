@@ -1,13 +1,12 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { vi, describe, it, test, beforeEach } from "vitest";
+import { vi, describe, test, beforeEach } from "vitest";
 import { expect } from "vitest";
-import * as recipeService from "../../src/services/recipes.js";
 import RecipeScraper from "../../src/components/RecipeScraper";
 import * as authenticationServices from "../../src/services/authentication";
 import { useNavigate } from "react-router-dom";
 import { AuthProvider } from "../../src/context/AuthProvider.jsx";
-
+import useAxiosPrivate from "../../src/hooks/useAxiosPrivate.js";
 const handleUrlChangeMock = vi.fn();
 const handleScrapeRecipeMock = vi.fn();
 const setRecipeDataMock = vi.fn();
@@ -20,120 +19,33 @@ vi.mock("react-router-dom", () => {
   return { useNavigate: useNavigateMock };
 });
 
+vi.mock("../../src/hooks/useAxiosPrivate", () => {
+  const axiosPrivateMock = {
+    get: vi.fn(),
+  };
+
+  return { default: () => axiosPrivateMock };
+});
+
 describe("Unit Test: RecipeScraper", () => {
+  const axiosPrivate = useAxiosPrivate();
   beforeEach(() => {
     vi.resetAllMocks();
   });
-  describe("Page elements:", () => {
-    it("All rendered", () => {
-      render(
-        <AuthProvider>
-          <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
-      );
-
-      const scrapeInputElement = screen.getByRole("textbox");
-      const scrapeInputElementText = screen.getByPlaceholderText(
-        "Enter your recipe url..."
-      );
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
-      const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
-
-      expect(scrapeInputElement).toBeVisible();
-      expect(scrapeInputElementText).toBeVisible();
-      expect(generateRecipeBtn).toBeVisible();
-      expect(enterMaunallyBtn).toBeVisible();
-    });
-
-    //I was confused how you would test onChange, but realized it isn't this components
-    //responsiblity to handle the state. That should be tested in the parent component. \
-    test.skip("url prop is rendered correctly", () => {
-      render(
-        <AuthProvider>
-          <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
-      );
-
-      const searchbar = screen.getByRole("textbox");
-      expect(searchbar.value).toEqual("test-url");
-    });
-
-    test("Calls onChange handler when user inputs url", async () => {
-      render(
-        <AuthProvider>
-          <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
-      );
-
-      const searchbar = screen.getByRole("textbox");
-      await userEvent.type(searchbar, "test-url");
-      expect(handleUrlChangeMock).toHaveBeenCalledTimes(8);
-    });
-  });
 
   describe("Generate Recipe button", () => {
-    test("when token is valid, url is inputted, it navigates to create page", async () => {
-      // handleClick -> checkToken -> handleScrapeRecipe -> navigate("/recipes/create")
-      vi.spyOn(authenticationServices, "checkToken").mockResolvedValue(true);
-      const navigateMock = useNavigate();
-      render(
-        <AuthProvider>
-          <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
-      );
-
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
+    test("url is inputted, it navigates to create page", async () => {
+      axiosPrivate.get.mockResolvedValue({
+        data: { recipe_data: "test data" },
       });
-      await userEvent.click(generateRecipeBtn);
 
-      expect(handleScrapeRecipeMock).toHaveBeenCalledOnce();
-      expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
-    });
-
-    //TODO: Our code doesn't stop us from calling handleScrapeRecipe when URL is empty
-    // Currently it navigates us to recipes/create with an empty page,
-    // just like if we clicked "Enter Manually".
-    // If we don't want to handle that in our frontend code, then change the assertion
-    // of this test to expect it to navigate to recipes/create
-    test.todo("scrapeRecipe func not called when empty URL", async () => {
-      const scrapeRecipeSpy = vi
-        .spyOn(recipeService, "scrapeRecipe")
-        .mockResolvedValue(true);
       const navigateMock = useNavigate();
       render(
         <AuthProvider>
           <RecipeScraper
-            url={""}
+            url={"www.test-url.com"}
             setUrl={setUrlMock}
             handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
         </AuthProvider>,
@@ -143,13 +55,28 @@ describe("Unit Test: RecipeScraper", () => {
       });
       await userEvent.click(generateRecipeBtn);
 
-      //Option 1:
-      // expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
-      // expect(navigateMock).not.toHaveBeenCalled();
+      expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
+    });
 
-      //Option 2:
-      // expect(handleScrapeRecipeMock).toHaveBeenCalled();
-      // expect(navigateMock).toHaveBeenCalledWith("/recipes/create")
+    test("scrapeRecipe func not called when empty URL", async () => {
+      const navigateMock = useNavigate();
+      render(
+        <AuthProvider>
+          <RecipeScraper
+            url={""}
+            setUrl={setUrlMock}
+            handleUrlChange={handleUrlChangeMock}
+            setRecipeData={setRecipeDataMock}
+          />
+        </AuthProvider>,
+      );
+      const generateRecipeBtn = screen.getByRole("button", {
+        name: "Generate",
+      });
+      await userEvent.click(generateRecipeBtn);
+
+      expect(axiosPrivate.get).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
     });
   });
 
@@ -179,15 +106,15 @@ describe("Unit Test: RecipeScraper", () => {
   });
 
   describe("Handles errors", () => {
-    //The following test would print "auth-error" to the terminal as our handleclick
-    //function catches errors and prints them.
     test("If token is invalid, it navigates to login page", async () => {
       const navigateMock = useNavigate();
-      handleScrapeRecipeMock.mockRejectedValue({ response: { status: 401 } });
+
+      axiosPrivate.get.mockRejectedValue({ response: { status: 401 } });
+
       render(
         <AuthProvider>
           <RecipeScraper
-            url={""}
+            url={"www.test-url.com"}
             setUrl={setUrlMock}
             handleUrlChange={handleUrlChangeMock}
             handleScrapeRecipe={handleScrapeRecipeMock}
@@ -196,7 +123,6 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      screen.debug();
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
       });

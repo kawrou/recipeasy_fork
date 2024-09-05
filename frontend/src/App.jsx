@@ -46,10 +46,7 @@ const App = () => {
               />
             }
           />
-          <Route
-            path="/recipes/:recipe_id"
-            element={<SingleRecipePage url={url} />}
-          />
+          <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
           {/* <Route
             path="/recipes/favouritedByOwner/:recipe_id"
             element={<SingleRecipePage  />}
