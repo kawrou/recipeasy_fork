@@ -4,6 +4,7 @@ const puppeteer = require("puppeteer");
 const { generateToken } = require("../lib/token");
 const Recipe = require("../models/recipe");
 const User = require("../models/user");
+const { default: mongoose } = require("mongoose");
 const { extractRecipeInfo } = require("../utils/recipeUtils");
 
 // @desc Get all recipes
