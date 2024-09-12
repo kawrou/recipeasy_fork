@@ -9,6 +9,18 @@ As we created the app as a proof of concept in a short period, there were a lot 
 
 Apart from fixing tests which I started on the original repo, you can see what enhancements I've worked on by checking out the closed issues above. I'm currently trying to enhance authentication and fix how JWT is handled on the frontend. 
 
+## Features
+
+- [x] Authentication and authorization through JWT access and refresh tokens.
+- [x] Sign up page
+- [x] Login page
+- [x] Users can scrape recipes by pasting in a URL.
+- [x] Users recipes are saved to a database (MongoDB)
+- [x] Users can create a new recipe from scratch (not from scraped reciped data)
+- [x] Users can view all their saved recipes
+- [x] Users can favourite a recipe
+- [ ] Login with 3rd party authentication (Google, Facebook, etc.)       
+
 ## Description
 Over the course of 2 weeks (8 or 9 days), we are building a recipe
 manager web application. 
