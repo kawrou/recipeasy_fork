@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .docker.env  # This file contains Docker-specific environment variables
+    depends_on:
+      - mongo
+    command: npm start
+
+  mongo:
+    image: mongo:6  # Use the official MongoDB image
+    ports:
+      - "27017:27017"  # Expose MongoDB to host machine (optional)
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB data
+
+volumes:
+  mongo-data:
