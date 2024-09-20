@@ -10,11 +10,17 @@ const connectToDatabase = async () => {
     throw new Error("No connection string provided");
   }
 
-  await mongoose.connect(mongoDbUrl);
-
-  if (process.env.NODE_ENV !== "test") {
-    console.log("Successfully connected to MongoDB");
+  try {
+    await mongoose.connect(mongoDbUrl);
+    console.log("Successfully connected to MongoDb");
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err);
+    throw err;
   }
+
+  // if (process.env.NODE_ENV !== "test") {
+  //   console.log("Successfully connected to MongoDB");
+  // }
 };
 
 module.exports = { connectToDatabase };
