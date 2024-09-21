@@ -1,6 +1,6 @@
 const { generateToken } = require("../lib/token");
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // @desc Create new user
 // @route POST /users
