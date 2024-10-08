@@ -1,3 +1,22 @@
+# Node modules (to prevent copying in local node_modules and create a clean build)
 node_modules
+
+# Log files
 npm-debug.log
+
+# Environment variables
+.env
+.env.dev
+.env.production
+.env.test
+
+# Test-related files
+jest.config.js
+tests/
+coverage/
+
+# Editor and OS files
+.vccode/
+.DS_Store
+.idea/
 
