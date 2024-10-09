@@ -13,15 +13,29 @@ const app = express();
 // Allow requests from any client
 // docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 // docs: https://expressjs.com/en/resources/middleware/cors.html
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
+
+const whitelist =
+  process.env.NODE_ENV === "production"
+    ? process.env.ALLOWED_ORIGINS.split(",")
+    : ["http://localhost:5173"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // Parse JSON request bodies, made available on `req.body`
 app.use(bodyParser.json());
 
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 // API Routes
 app.use("/users", usersRouter);
