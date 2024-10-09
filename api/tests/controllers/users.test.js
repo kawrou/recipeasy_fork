@@ -1,7 +1,7 @@
 const request = require("supertest");
-const bcrypt = require("bcrypt");
-const app = require("../../app");
-const User = require("../../models/user");
+const bcrypt = require("bcryptjs");
+const app = require("../../src/app");
+const User = require("../../src/models/user");
 
 require("../mongodb_helper");
 

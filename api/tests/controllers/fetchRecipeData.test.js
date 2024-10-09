@@ -1,7 +1,7 @@
 const axios = require("axios");
 const puppeteer = require("puppeteer");
 
-const RecipesController = require("../../controllers/recipes");
+const RecipesController = require("../../src/controllers/recipes");
 
 // const app = require("../../app");
 

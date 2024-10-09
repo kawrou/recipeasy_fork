@@ -1,5 +1,5 @@
 require("../mongodb_helper");
-const User = require("../../models/user");
+const User = require("../../src/models/user");
 
 describe("User model", () => {
   beforeEach(async () => {
