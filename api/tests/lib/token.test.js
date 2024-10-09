@@ -2,7 +2,7 @@ const {
   generateToken,
   generateRefreshToken,
   decodeToken,
-} = require("../../lib/token");
+} = require("../../src/lib/token");
 
 describe("TokenGenerator", () => {
   describe("generateToken:", () => {

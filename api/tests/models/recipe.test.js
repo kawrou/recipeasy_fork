@@ -1,4 +1,4 @@
-const Recipe = require("../../models/recipe");
+const Recipe = require("../../src/models/recipe");
 
 require("../mongodb_helper");
 const mongoose = require("mongoose");

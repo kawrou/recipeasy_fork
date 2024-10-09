@@ -1,10 +1,10 @@
-const app = require("../../app");
+const app = require("../../src/app");
 const supertest = require("supertest");
 require("../mongodb_helper");
-const User = require("../../models/user");
+const User = require("../../src/models/user");
 const JWT = require("jsonwebtoken");
-const { decodeToken } = require("../../lib/token");
-const bcrypt = require("bcrypt");
+const { decodeToken } = require("../../src/lib/token");
+const bcrypt = require("bcryptjs");
 
 const testApp = supertest(app);
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { extractRecipeInfo } = require("../../utils/recipeUtils");
+const { extractRecipeInfo } = require("../../src/utils/recipeUtils");
 
 const mockDataFolderPath = path.join(__dirname, 'data', 'mock');
 const expectedDataFolderPath = path.join(__dirname, 'data', 'expected');
