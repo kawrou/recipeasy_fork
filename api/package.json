@@ -4,8 +4,8 @@
   "description": "Backend api for the Recipeasy web app",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch -r dotenv/config index.js",
+    "start": "node src/index.js",
+    "dev": "node --watch -r dotenv/config src/index.js",
     "test": "jest"
   },
   "author": "Makers Academy",
