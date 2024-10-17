@@ -7,26 +7,21 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
   const axiosPrivate = useAxiosPrivate();
   const [errMsg, setErrMsg] = useState("");
 
-  const handleClick = async (manually) => {
-    // Maybe can re-arrange this as clicking "Enter Manually" shouldn't require a try/catch
-    // It might be possible to remove the URL state by having the server return the URL.
-    // That would simplify state management.
+  // It might be possible to remove the URL state by having the server return the URL.
+  // That would simplify state management.
+
+  const handleScrapeRecipe = async () => {
+    if (url === "") {
+      setErrMsg("Please enter a valid URL.");
+      return;
+    }
 
     try {
-      if (!manually) {
-        if (url === "") {
-          setErrMsg("Please enter a valid URL.");
-          return;
-        }
+      const scrapedData = await axiosPrivate.get(
+        `/recipes/scrape?url=${encodeURIComponent(url)}`,
+      );
 
-        const scrapedData = await axiosPrivate.get(
-          `/recipes/scrape?url=${encodeURIComponent(url)}`,
-        );
-        setRecipeData(scrapedData.data.recipe_data);
-      } else {
-        setRecipeData(undefined);
-        setUrl(undefined);
-      }
+      setRecipeData(scrapedData.data.recipe_data);
       navigate("/recipes/create");
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -35,6 +30,12 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
         setErrMsg(error.response.data.message);
       }
     }
+  };
+
+  const handleCreateRecipe = () => {
+    setRecipeData(undefined);
+    setUrl(undefined);
+    navigate("/recipes/create");
   };
 
   return (
@@ -53,7 +54,7 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
         <button
           aria-label="Generate"
           onClick={async () => {
-            handleClick(false);
+            handleScrapeRecipe(false);
           }}
           type="button"
           className="shadow-md font-kanit font-bold text-lg text-white bg-secondary-500 hover:bg-blue-900 bg- rounded-lg px-5 py-2"
@@ -64,7 +65,7 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
           aria-label="Manually"
           type="button"
           onClick={async () => {
-            handleClick(true);
+            handleCreateRecipe(true);
           }}
           className="shadow-md font-kanit font-bold text-lg text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white rounded-lg px-5 py-2"
         >
