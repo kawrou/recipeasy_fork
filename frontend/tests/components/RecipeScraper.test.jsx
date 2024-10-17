@@ -130,28 +130,61 @@ describe("Unit Test: RecipeScraper", () => {
 
       expect(navigateMock).toHaveBeenCalledWith("/login");
     });
-  });
+    test("Displays validation message for empty URL field", async () => {
+      const navigateMock = useNavigate();
+      render(
+        <AuthProvider>
+          <RecipeScraper
+            url={""}
+            setUrl={setUrlMock}
+            handleUrlChange={handleUrlChangeMock}
+            handleScrapeRecipe={handleScrapeRecipeMock}
+            setRecipeData={setRecipeDataMock}
+          />
+        </AuthProvider>,
+      );
 
-  test("Displays validation message for empty URL field", async () => {
-    const navigateMock = useNavigate();
-    render(
-      <AuthProvider>
-        <RecipeScraper
-          url={""}
-          setUrl={setUrlMock}
-          handleUrlChange={handleUrlChangeMock}
-          handleScrapeRecipe={handleScrapeRecipeMock}
-          setRecipeData={setRecipeDataMock}
-        />
-      </AuthProvider>,
-    );
+      const generateRecipeBtn = screen.getByRole("button", {
+        name: "Generate",
+      });
+      await userEvent.click(generateRecipeBtn);
 
-    const generateRecipeBtn = screen.getByRole("button", { name: "Generate" });
-    await userEvent.click(generateRecipeBtn);
+      expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
+      //How about having a red ring around it?
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(axiosPrivate.get).not.toHaveBeenCalled();
+    });
 
-    expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
-    //How about having a red ring around it?
-    expect(navigateMock).not.toHaveBeenCalled();
-    expect(axiosPrivate.get).not.toHaveBeenCalled();
+    test("Displays error message from API request", async () => {
+      axiosPrivate.get.mockRejectedValue({
+        response: {
+          status: 500,
+          data: { message: "There was a problem getting the recipe." },
+        },
+      });
+
+      const navigateMock = useNavigate();
+      render(
+        <AuthProvider>
+          <RecipeScraper
+            url={"some-url"}
+            setUrl={setUrlMock}
+            handleUrlChange={handleUrlChangeMock}
+            handleScrapeRecipe={handleScrapeRecipeMock}
+            setRecipeData={setRecipeDataMock}
+          />
+        </AuthProvider>,
+      );
+
+      const generateRecipeBtn = screen.getByRole("button", {
+        name: "Generate",
+      });
+      await userEvent.click(generateRecipeBtn);
+
+      expect(
+        screen.getByText("There was a problem getting the recipe.")
+      ).toBeVisible();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
   });
 });

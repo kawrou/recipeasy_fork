@@ -32,7 +32,7 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
       if (error.response && error.response.status === 401) {
         navigate("/login");
       } else {
-        console.error(error);
+        setErrMsg(error.response.data.message);
       }
     }
   };
