@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const [errMsg, setErrMsg] = useState("");
 
   const handleClick = async (manually) => {
+    // Maybe can re-arrange this as clicking "Enter Manually" shouldn't require a try/catch
+    // It might be possible to remove the URL state by having the server return the URL.
+    // That would simplify state management.
+
     try {
       if (!manually) {
         if (url === "") {
-          console.error("Please input url to scrape recipe");
+          setErrMsg("Please enter a valid URL.");
           return;
         }
 
@@ -40,6 +46,9 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
         className="shadow-md font-poppins font-light w-full border rounded-lg py-2 px-2 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 outline-none"
         placeholder="Enter your recipe url..."
       />
+
+      {errMsg && <p className="text-red-500">{errMsg}</p>}
+
       <div className="flex items-center justify-center py-5 gap-5">
         <button
           aria-label="Generate"

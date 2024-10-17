@@ -88,7 +88,7 @@ export const SignupPage = () => {
                     onChange={handleUsernameChange}
                   />
                   {formErrors.username && (
-                    <div className="text-red-500">{formErrors.username}</div>
+                    <p className="text-red-500">{formErrors.username}</p>
                   )}
                 </div>
 
