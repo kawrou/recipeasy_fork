@@ -69,7 +69,9 @@ export const SingleRecipePage = () => {
       yieldAmount === 0 ||
       recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
-      instructions.some((instruction) => instruction === "")
+      !ingredients.length ||
+      instructions.some((instruction) => instruction === "") ||
+      !instructions.length
     ) {
       //TODO:This should really be some Modal.
       alert("Please fill out all the required fields");

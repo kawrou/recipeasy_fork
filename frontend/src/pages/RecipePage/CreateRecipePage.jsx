@@ -64,7 +64,9 @@ export const CreateRecipePage = ({
       yieldAmount === 0 ||
       recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
-      instructions.some((instruction) => instruction === "")
+      ingredients.length === 0 ||
+      instructions.some((instruction) => instruction === "") ||
+      instructions.length === 0
     ) {
       alert("Please fill out all the required fields");
       return;
