@@ -159,7 +159,7 @@ describe("Unit Test: RecipeScraper", () => {
       axiosPrivate.get.mockRejectedValue({
         response: {
           status: 500,
-          data: { message: "There was a problem getting the recipe." },
+          message: "There was a problem getting the recipe.",
         },
       });
 
@@ -182,7 +182,9 @@ describe("Unit Test: RecipeScraper", () => {
       await userEvent.click(generateRecipeBtn);
 
       expect(
-        screen.getByText("There was a problem getting the recipe.")
+        screen.getByText(
+          "There was a problem getting the recipe. Please try again or try a different URL.",
+        ),
       ).toBeVisible();
       expect(navigateMock).not.toHaveBeenCalled();
     });

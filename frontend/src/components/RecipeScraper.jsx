@@ -11,7 +11,7 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
   // That would simplify state management.
 
   const handleScrapeRecipe = async () => {
-    if (url === "") {
+    if (!url) {
       setErrMsg("Please enter a valid URL.");
       return;
     }
@@ -27,14 +27,16 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
       if (error.response && error.response.status === 401) {
         navigate("/login");
       } else {
-        setErrMsg(error.response.data.message);
+        setErrMsg(
+          "There was a problem getting the recipe. Please try again or try a different URL.",
+        );
       }
     }
   };
 
   const handleCreateRecipe = () => {
-    setRecipeData(undefined);
-    setUrl(undefined);
+    setRecipeData(null);
+    setUrl("");
     navigate("/recipes/create");
   };
 
