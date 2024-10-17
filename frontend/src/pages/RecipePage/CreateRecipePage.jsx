@@ -18,8 +18,8 @@ import { EditButton } from "../../components/RecipePage/EditButton";
 export const CreateRecipePage = ({
   recipeData,
   setRecipeData,
-  url,
-  setUrl,
+  // url,
+  // setUrl,
 }) => {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
@@ -33,6 +33,7 @@ export const CreateRecipePage = ({
   const [instructions, setInstructions] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     if (recipeData) {
@@ -45,6 +46,7 @@ export const CreateRecipePage = ({
         recipeIngredient = [],
         recipeInstructions = [],
         image = "",
+        url = "",
       } = recipeData;
 
       setRecipeName(name);
@@ -55,6 +57,7 @@ export const CreateRecipePage = ({
       setInstructions(recipeInstructions);
       setImageUrl(image);
       setRecipeTags(tags);
+      setUrl(url);
     }
   }, [recipeData]);
 

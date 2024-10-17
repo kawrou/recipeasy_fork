@@ -9,6 +9,9 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
 
   // It might be possible to remove the URL state by having the server return the URL.
   // That would simplify state management.
+  // It's also probably necessary as otherwise I'd need to left the error message state to App.jsx rather than keeping it in the component.
+  // This makes it messy in my opinion.
+  // By keeping it in here, I can control the URL state which shouldn't really be handled by a different component.
 
   const handleScrapeRecipe = async () => {
     if (!url) {
@@ -20,7 +23,7 @@ const RecipeScraper = ({ url, setUrl, handleUrlChange, setRecipeData }) => {
       const scrapedData = await axiosPrivate.get(
         `/recipes/scrape?url=${encodeURIComponent(url)}`,
       );
-
+      // console.log(scrapedData.data.recipe_data.url);
       setRecipeData(scrapedData.data.recipe_data);
       navigate("/recipes/create");
     } catch (error) {
