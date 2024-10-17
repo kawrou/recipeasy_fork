@@ -48,7 +48,7 @@ describe("Unit Test: RecipeScraper", () => {
             handleUrlChange={handleUrlChangeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>,
+        </AuthProvider>
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -68,7 +68,7 @@ describe("Unit Test: RecipeScraper", () => {
             handleUrlChange={handleUrlChangeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>,
+        </AuthProvider>
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -82,7 +82,7 @@ describe("Unit Test: RecipeScraper", () => {
 
   describe("Enter Manually button", () => {
     test("Enter Manually button navigates to create recipe page", async () => {
-      vi.spyOn(authenticationServices, "checkToken").mockResolvedValue(true);
+      vi.spyOn(authenticationServices, "checkToken").mockResolvedValue(true); //Unecessary?
       const navigateMock = useNavigate();
 
       render(
@@ -94,7 +94,7 @@ describe("Unit Test: RecipeScraper", () => {
             handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>,
+        </AuthProvider>
       );
 
       const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
@@ -120,7 +120,7 @@ describe("Unit Test: RecipeScraper", () => {
             handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>,
+        </AuthProvider>
       );
 
       const generateRecipeBtn = screen.getByRole("button", {
@@ -130,5 +130,28 @@ describe("Unit Test: RecipeScraper", () => {
 
       expect(navigateMock).toHaveBeenCalledWith("/login");
     });
+  });
+
+  test("Displays validation message for empty URL field", async () => {
+    const navigateMock = useNavigate();
+    render(
+      <AuthProvider>
+        <RecipeScraper
+          url={""}
+          setUrl={setUrlMock}
+          handleUrlChange={handleUrlChangeMock}
+          handleScrapeRecipe={handleScrapeRecipeMock}
+          setRecipeData={setRecipeDataMock}
+        />
+      </AuthProvider>,
+    );
+
+    const generateRecipeBtn = screen.getByRole("button", { name: "Generate" });
+    await userEvent.click(generateRecipeBtn);
+
+    expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
+    //How about having a red ring around it?
+    expect(navigateMock).not.toHaveBeenCalled();
+    expect(axiosPrivate.get).not.toHaveBeenCalled();
   });
 });
