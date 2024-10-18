@@ -7,17 +7,7 @@ const RecipeScraper = ({ setRecipeData }) => {
   const axiosPrivate = useAxiosPrivate();
   const [errMsg, setErrMsg] = useState("");
   const [url, setUrl] = useState("");
-  // It might be possible to remove the URL state by having the server return the URL.
-  // That would simplify state management.
-  // It's also probably necessary as otherwise I'd need to left the error message state to App.jsx rather than keeping it in the component.
-  // This makes it messy in my opinion.
-  // By keeping it in here, I can control the URL state which shouldn't really be handled by a different component.
 
-  //TODO:
-  // I've already made the returned data include url
-  // Need to update tests
-  // Remove url & setURL from App.jsx, HomePage, CreateRecipePage and MyRecipesPage
-  // Need to handle errMsg state in RecipeScraper
   const handleUrlChange = (e) => {
     setUrl(e.target.value);
     setErrMsg("");
@@ -42,17 +32,18 @@ const RecipeScraper = ({ setRecipeData }) => {
 
     try {
       const scrapedData = await axiosPrivate.get(
-        `/recipes/scrape?url=${encodeURIComponent(url)}`
+        `/recipes/scrape?url=${encodeURIComponent(url)}`,
       );
       // console.log(scrapedData.data.recipe_data.url);
       setRecipeData(scrapedData.data.recipe_data);
+      setUrl("");
       navigate("/recipes/create");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         navigate("/login");
       } else {
         setErrMsg(
-          "There was a problem getting the recipe. Please try again or try a different URL."
+          "There was a problem getting the recipe. Please try again or try a different URL.",
         );
       }
     }
