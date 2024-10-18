@@ -4,13 +4,7 @@ import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import RecipeCard from "../../components/Recipe/RecipeCard";
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const MyRecipesPage = ({
-  handleScrapeRecipe,
-  url,
-  setUrl,
-  handleUrlChange,
-  setRecipeData,
-}) => {
+export const MyRecipesPage = ({ setRecipeData }) => {
   const navigate = useNavigate();
   const { data, loading, error, fetchRecipes } = useFetchRecipes();
 
@@ -71,13 +65,7 @@ export const MyRecipesPage = ({
             generates neatly organised recipes for you to store and access
             anytime, anywhere.
           </p>
-          <RecipeScraper
-            url={url}
-            setUrl={setUrl}
-            handleUrlChange={handleUrlChange}
-            handleScrapeRecipe={handleScrapeRecipe}
-            setRecipeData={setRecipeData}
-          />
+          <RecipeScraper setRecipeData={setRecipeData} />
         </div>
       </div>
 
