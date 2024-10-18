@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { vi, describe, test, beforeEach } from "vitest";
+import { vi, describe, test, beforeEach, it } from "vitest";
 import { expect } from "vitest";
 import RecipeScraper from "../../src/components/RecipeScraper";
 import * as authenticationServices from "../../src/services/authentication";
 import { useNavigate } from "react-router-dom";
 import { AuthProvider } from "../../src/context/AuthProvider.jsx";
 import useAxiosPrivate from "../../src/hooks/useAxiosPrivate.js";
+import Recipe from "../../../api/src/models/recipe.js";
 const handleUrlChangeMock = vi.fn();
 const handleScrapeRecipeMock = vi.fn();
 const setRecipeDataMock = vi.fn();
@@ -43,9 +44,9 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={"www.test-url.com"}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
+            // url={"www.test-url.com"}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
             setRecipeData={setRecipeDataMock}
           />
         </AuthProvider>
@@ -53,9 +54,14 @@ describe("Unit Test: RecipeScraper", () => {
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
       });
+      const urlInput = screen.getByRole("textbox");
+      await userEvent.type(urlInput, "https://www.test-url.com");
       await userEvent.click(generateRecipeBtn);
-
       expect(navigateMock).toHaveBeenCalledWith("/recipes/create");
+      expect(axiosPrivate.get).toHaveBeenCalled();
+      expect(axiosPrivate.get).toHaveBeenCalledWith(
+        "/recipes/scrape?url=https%3A%2F%2Fwww.test-url.com",
+      );
     });
 
     test("scrapeRecipe func not called when empty URL", async () => {
@@ -63,9 +69,9 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
+            // url={""}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
             setRecipeData={setRecipeDataMock}
           />
         </AuthProvider>
@@ -75,6 +81,26 @@ describe("Unit Test: RecipeScraper", () => {
       });
       await userEvent.click(generateRecipeBtn);
 
+      expect(axiosPrivate.get).not.toHaveBeenCalled();
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it("Doesn't work with invalid URL strings", async () => {
+      const navigateMock = useNavigate();
+      render(
+        <AuthProvider>
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
+        </AuthProvider>,
+      );
+      const generateRecipeBtn = screen.getByRole("button", {
+        name: "Generate",
+      });
+      const urlInput = screen.getByRole("textbox");
+
+      await userEvent.type(urlInput, "invalid url");
+      await userEvent.click(generateRecipeBtn);
+
+      expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
       expect(axiosPrivate.get).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
@@ -88,13 +114,13 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
+            // url={""}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
+            // handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>
+        </AuthProvider>,
       );
 
       const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
@@ -114,18 +140,21 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={"www.test-url.com"}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
+            // url={"www.test-url.com"}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
+            // handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
-        </AuthProvider>
+        </AuthProvider>,
       );
 
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
       });
+      const urlInput = screen.getByRole("textbox");
+      await userEvent.type(urlInput, "https://www.test-url.com");
+
       await userEvent.click(generateRecipeBtn);
 
       expect(navigateMock).toHaveBeenCalledWith("/login");
@@ -135,10 +164,10 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={""}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
+            // url={""}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
+            // handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
         </AuthProvider>,
@@ -155,6 +184,34 @@ describe("Unit Test: RecipeScraper", () => {
       expect(axiosPrivate.get).not.toHaveBeenCalled();
     });
 
+    test("validation message disappears after entering URL", async () => {
+      render(
+        <AuthProvider>
+          <RecipeScraper
+            // url={""}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
+            // handleScrapeRecipe={handleScrapeRecipeMock}
+            setRecipeData={setRecipeDataMock}
+          />
+        </AuthProvider>,
+      );
+
+      const generateRecipeBtn = screen.getByRole("button", {
+        name: "Generate",
+      });
+      const urlInput = screen.getByRole("textbox");
+
+      await userEvent.click(generateRecipeBtn);
+
+      expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
+
+      await userEvent.type(urlInput, "test-url.com");
+      expect(
+        screen.queryByText("Please enter a valid URL."),
+      ).not.toBeInTheDocument();
+    });
+
     test("Displays error message from API request", async () => {
       axiosPrivate.get.mockRejectedValue({
         response: {
@@ -167,10 +224,10 @@ describe("Unit Test: RecipeScraper", () => {
       render(
         <AuthProvider>
           <RecipeScraper
-            url={"some-url"}
-            setUrl={setUrlMock}
-            handleUrlChange={handleUrlChangeMock}
-            handleScrapeRecipe={handleScrapeRecipeMock}
+            // url={"some-url"}
+            // setUrl={setUrlMock}
+            // handleUrlChange={handleUrlChangeMock}
+            // handleScrapeRecipe={handleScrapeRecipeMock}
             setRecipeData={setRecipeDataMock}
           />
         </AuthProvider>,
@@ -179,6 +236,9 @@ describe("Unit Test: RecipeScraper", () => {
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
       });
+      const urlInput = screen.getByRole("textbox");
+      await userEvent.type(urlInput, "https://www.test-url.com");
+
       await userEvent.click(generateRecipeBtn);
 
       expect(
