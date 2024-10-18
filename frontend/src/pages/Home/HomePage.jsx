@@ -1,13 +1,6 @@
 import RecipeScraper from "../../components/RecipeScraper";
 
-export const HomePage = ({
-  handleScrapeRecipe,
-  token,
-  url,
-  setUrl,
-  handleUrlChange,
-  setRecipeData,
-}) => {
+export const HomePage = ({ setRecipeData }) => {
   return (
     <div className="flex flex-col justify-center items-center flex-auto">
       <div className="flex justify-center items-center">
@@ -30,14 +23,7 @@ export const HomePage = ({
               generates neatly organised recipes for you to store and access
               anytime, anywhere.
             </p>
-            <RecipeScraper
-              token={token}
-              url={url}
-              setUrl={setUrl}
-              handleUrlChange={handleUrlChange}
-              handleScrapeRecipe={handleScrapeRecipe}
-              setRecipeData={setRecipeData}
-            />
+            <RecipeScraper setRecipeData={setRecipeData} />
           </div>
         </div>
         <div>
