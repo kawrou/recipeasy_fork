@@ -11,11 +11,6 @@ import { useState } from "react";
 
 const App = () => {
   const [recipeData, setRecipeData] = useState(null);
-  const [url, setUrl] = useState("");
-
-  const handleUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
 
   return (
     <div className="flex flex-col w-screen min-h-screen">
@@ -24,14 +19,7 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={
-              <HomePage
-                url={url}
-                setUrl={setUrl}
-                handleUrlChange={handleUrlChange}
-                setRecipeData={setRecipeData}
-              />
-            }
+            element={<HomePage setRecipeData={setRecipeData} />}
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -41,8 +29,6 @@ const App = () => {
               <CreateRecipePage
                 recipeData={recipeData}
                 setRecipeData={setRecipeData}
-                url={url}
-                setUrl={setUrl}
               />
             }
           />
@@ -53,14 +39,7 @@ const App = () => {
           /> */}
           <Route
             path="/myrecipes"
-            element={
-              <MyRecipesPage
-                url={url}
-                setUrl={setUrl}
-                handleUrlChange={handleUrlChange}
-                setRecipeData={setRecipeData}
-              />
-            }
+            element={<MyRecipesPage setRecipeData={setRecipeData} />}
           />
         </Routes>
       </BrowserRouter>

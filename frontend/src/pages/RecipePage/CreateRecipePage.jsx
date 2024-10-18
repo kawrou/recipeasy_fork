@@ -15,12 +15,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
-export const CreateRecipePage = ({
-  recipeData,
-  setRecipeData,
-  // url,
-  // setUrl,
-}) => {
+export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const [editMode, setEditMode] = useState(true);
@@ -93,9 +88,7 @@ export const CreateRecipePage = ({
     try {
       const response = await axiosPrivate.post("/recipes", data);
       //setRecipeData is set to null so that upon revisit, the page will be empty
-      //Same for setUrl
       setRecipeData(null);
-      setUrl("");
       navigate(`/recipes/${response.data.recipeId}`);
     } catch (err) {
       console.log("Problem saving recipe.");
