@@ -12,11 +12,7 @@ vi.mock("../../../src/services/recipes");
 vi.mock("../../../src/services/authentication");
 vi.mock("../../../src/api/axios");
 
-const setTokenMock = vi.fn();
-const handleScrapeRecipeMock = vi.fn();
 const setRecipeDataMock = vi.fn();
-const setUrlMock = vi.fn();
-const testToken = "testToken";
 const user = userEvent.setup();
 
 describe("When My Recipes Page is first rendered", () => {
@@ -37,13 +33,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    token={testToken}
-                    setToken={setTokenMock}
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                  />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
             </Routes>
           </AuthProvider>
@@ -72,9 +62,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage handleScrapeRecipe={handleScrapeRecipeMock} />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
             </Routes>
           </AuthProvider>
@@ -100,13 +88,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    token={testToken}
-                    setToken={setTokenMock}
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                  />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
             </Routes>
           </AuthProvider>
@@ -118,7 +100,7 @@ describe("When My Recipes Page is first rendered", () => {
     expect(recipeMsg).toBeVisible();
   });
 
-  test("navigates to login if error during HTTP request", async () => {
+  test("navigates to login if auth error", async () => {
     axiosPrivate.get.mockRejectedValue({
       response: {
         status: 401,
@@ -132,13 +114,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    token={testToken}
-                    setToken={setTokenMock}
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                  />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
               <Route path="/login" element={<LoginPage />} />
             </Routes>
@@ -152,12 +128,15 @@ describe("When My Recipes Page is first rendered", () => {
     });
     expect(myRecipesH2El).not.toBeInTheDocument();
 
-    const loginPageH1El = screen.getByRole("heading", { level: 1 });
+    const loginPageH1El = screen.getByRole("heading", {
+      level: 1,
+      name: "Log in to your account",
+    });
     expect(loginPageH1El).toBeVisible();
   });
 
-  test.skip("shows loading message if loading", async () => {
-    axiosPrivate.post.mockImplementation(() => {
+  test("shows loading message if loading", async () => {
+    axiosPrivate.get.mockImplementation(() => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({
@@ -176,13 +155,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    token={testToken}
-                    setToken={setTokenMock}
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                  />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
               <Route path="/login" element={<LoginPage />} />
             </Routes>
@@ -196,8 +169,10 @@ describe("When My Recipes Page is first rendered", () => {
     expect(loadingMsg).toHaveTextContent("Loading ...");
   });
 
-  test("navigates to /login when there is an error", async () => {
-    axiosPrivate.mockRejectedValue(new Error("Error retrieving recipe"));
+  test("Displays error message when no server response.", async () => {
+    axiosPrivate.get.mockRejectedValueOnce(
+      new Error("Error retrieving recipe"),
+    );
 
     await act(async () => {
       render(
@@ -206,9 +181,7 @@ describe("When My Recipes Page is first rendered", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage handleScrapeRecipe={handleScrapeRecipeMock} />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
               <Route path="/login" element={<LoginPage />} />
             </Routes>
@@ -217,14 +190,46 @@ describe("When My Recipes Page is first rendered", () => {
       );
     });
 
-    const myRecipesH2El = screen.queryByRole("heading", {
+    const myRecipesH2EL = screen.getByRole("heading", {
       level: 2,
       name: "My Recipes",
     });
-    expect(myRecipesH2El).not.toBeInTheDocument();
 
-    const loginPageH1El = screen.getByRole("heading", { level: 1 });
-    expect(loginPageH1El).toBeVisible();
+    const errMsg = screen.getByText(
+      "No Server Response. Please check your internet connection or try again later.",
+    );
+
+    expect(myRecipesH2EL).toBeVisible();
+    expect(errMsg).toBeVisible();
+  });
+
+  test("Displays error message when http status is 500.", async () => {
+    axiosPrivate.get.mockRejectedValue({ response: { status: 500 } });
+
+    await act(async () => {
+      render(
+        <MemoryRouter initialEntries={["/myrecipes"]}>
+          <AuthProvider>
+            <Routes>
+              <Route
+                path="/myrecipes"
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
+              />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </AuthProvider>
+        </MemoryRouter>,
+      );
+    });
+
+    const myRecipesH2EL = screen.getByRole("heading", {
+      level: 2,
+      name: "My Recipes",
+    });
+    const errMsg = screen.getByText("An unexpected error occurred.");
+
+    expect(myRecipesH2EL).toBeVisible();
+    expect(errMsg).toBeVisible();
   });
 });
 
@@ -306,11 +311,13 @@ describe("When a user clicks on:", () => {
   //   expect(recipeSaveBtn).toBeVisible();
   // });
 
-  //TODO: Research how to check URL, otherwise I'll need to mock getRecipeById. Or there might be a way to check if the Link was called with the correct URL
-  test.todo("a recipe card, it navigates to that recipe's page", async () => {
+  test("a recipe card, it navigates to that recipe's page", async () => {
     axiosPrivate.get.mockResolvedValue({
       data: {
-        recipes: [{ _id: 1, name: "test recipe", totalTime: 60 }],
+        data: [
+          { _id: 1, name: "test recipe 1", totalTime: 45, image: "test_url" },
+          { _id: 2, name: "test recipe 2", totalTime: 30, image: "test_url" },
+        ],
       },
     });
 
@@ -321,13 +328,7 @@ describe("When a user clicks on:", () => {
             <Routes>
               <Route
                 path="/myrecipes"
-                element={
-                  <MyRecipesPage
-                    handleScrapeRecipe={handleScrapeRecipeMock}
-                    setRecipeData={setRecipeDataMock}
-                    setUrl={setUrlMock}
-                  />
-                }
+                element={<MyRecipesPage setRecipeData={setRecipeDataMock} />}
               />
               <Route
                 path="/recipes/:recipe_id"
@@ -341,6 +342,9 @@ describe("When a user clicks on:", () => {
 
     const recipeCardLink = screen.getAllByRole("link");
     await user.click(recipeCardLink[0]);
-    // screen.debug();
+    expect(screen.getByText("Serves")).toBeVisible();
+    expect(screen.getByText("Ingredients")).toBeVisible();
+    expect(screen.getByText("Method")).toBeVisible();
+    expect(screen.getByText("Tags:")).toBeVisible();
   });
 });
