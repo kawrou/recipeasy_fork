@@ -7,11 +7,8 @@ import * as authenticationServices from "../../src/services/authentication";
 import { useNavigate } from "react-router-dom";
 import { AuthProvider } from "../../src/context/AuthProvider.jsx";
 import useAxiosPrivate from "../../src/hooks/useAxiosPrivate.js";
-import Recipe from "../../../api/src/models/recipe.js";
-const handleUrlChangeMock = vi.fn();
 const handleScrapeRecipeMock = vi.fn();
 const setRecipeDataMock = vi.fn();
-const setUrlMock = vi.fn();
 
 // Mocking React Router's useNavigate function
 vi.mock("react-router-dom", () => {
@@ -43,13 +40,8 @@ describe("Unit Test: RecipeScraper", () => {
       const navigateMock = useNavigate();
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={"www.test-url.com"}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
+        </AuthProvider>,
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -68,13 +60,8 @@ describe("Unit Test: RecipeScraper", () => {
       const navigateMock = useNavigate();
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={""}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            setRecipeData={setRecipeDataMock}
-          />
-        </AuthProvider>
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
+        </AuthProvider>,
       );
       const generateRecipeBtn = screen.getByRole("button", {
         name: "Generate",
@@ -113,13 +100,7 @@ describe("Unit Test: RecipeScraper", () => {
 
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={""}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            // handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
 
@@ -139,13 +120,7 @@ describe("Unit Test: RecipeScraper", () => {
 
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={"www.test-url.com"}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            // handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
 
@@ -163,13 +138,7 @@ describe("Unit Test: RecipeScraper", () => {
       const navigateMock = useNavigate();
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={""}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            // handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
 
@@ -187,13 +156,7 @@ describe("Unit Test: RecipeScraper", () => {
     test("validation message disappears after entering URL", async () => {
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={""}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            // handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
 
@@ -223,13 +186,7 @@ describe("Unit Test: RecipeScraper", () => {
       const navigateMock = useNavigate();
       render(
         <AuthProvider>
-          <RecipeScraper
-            // url={"some-url"}
-            // setUrl={setUrlMock}
-            // handleUrlChange={handleUrlChangeMock}
-            // handleScrapeRecipe={handleScrapeRecipeMock}
-            setRecipeData={setRecipeDataMock}
-          />
+          <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
 
