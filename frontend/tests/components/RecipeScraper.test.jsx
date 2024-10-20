@@ -95,7 +95,6 @@ describe("Unit Test: RecipeScraper", () => {
 
   describe("Enter Manually button", () => {
     test("Enter Manually button navigates to create recipe page", async () => {
-      vi.spyOn(authenticationServices, "checkToken").mockResolvedValue(true); //Unecessary?
       const navigateMock = useNavigate();
 
       render(
