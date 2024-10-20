@@ -31,7 +31,7 @@ export const LoginPage = () => {
     const result = await logIn(username, password);
 
     if (!result.success) {
-      setError(`${result.error.message}`);
+      setError(`${result.error?.message}`);
       return;
     }
 
