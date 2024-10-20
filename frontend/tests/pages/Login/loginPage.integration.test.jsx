@@ -40,6 +40,16 @@ const typePasswordInput = async (value) => {
   await user.type(pwInputEl, value);
 };
 
+const successfulLogin = {
+  success: true,
+  response: { data: { token: "jwt-token" } },
+};
+
+const unsuccessfulLogin = {
+  success: false,
+  error: { message: "Please check your login details." },
+};
+
 describe("Login Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -61,7 +71,7 @@ describe("Login Page", () => {
 
   describe("Login interactions:", () => {
     test("navigates to home page on successful login", async () => {
-      logIn.mockResolvedValue("secrettoken123");
+      logIn.mockResolvedValue(successfulLogin);
 
       await completeLoginForm();
 
@@ -69,24 +79,12 @@ describe("Login Page", () => {
       expect(heading).toBeVisible();
     });
 
-    test("doesn't navigate if username cannot be found", async () => {
-      logIn.mockRejectedValue(new Error("username not found"));
+    test("doesn't navigate if login unsuccesful", async () => {
+      logIn.mockResolvedValue(unsuccessfulLogin);
 
       await completeLoginForm();
 
-      const errorMsg = screen.getByText("username not found");
-      expect(errorMsg).toBeVisible();
-
-      const heading = screen.queryByRole("heading", { name: "Recipeasy" });
-      expect(heading).not.toBeInTheDocument();
-    });
-
-    test("doesn't navigate if username is incorrect", async () => {
-      logIn.mockRejectedValue(new Error("Password is incorrect"));
-
-      await completeLoginForm();
-
-      const errorMsg = screen.getByText("Password is incorrect");
+      const errorMsg = screen.getByText("Please check your login details.");
       expect(errorMsg).toBeVisible();
 
       const heading = screen.queryByRole("heading", { name: "Recipeasy" });
@@ -101,7 +99,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "Username address is required."
+        "Username address is required.",
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -131,7 +129,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "Username address is required."
+        "Username address is required.",
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -156,7 +154,7 @@ describe("Login Page", () => {
       await expect(passwordValidationMsg).not.toBeVisible();
     });
     test("validation messages should disappear and navigate to Home Page", async () => {
-      logIn.mockResolvedValue("secrettoken123");
+      logIn.mockResolvedValue(successfulLogin);
 
       const submitButtonEl = screen.getByRole("button");
       await user.click(submitButtonEl);
@@ -196,148 +194,3 @@ describe("Login Page", () => {
     });
   });
 });
-
-//TODO: Maybe these could be used for SignupPage instead.
-// All these tests aren't applicable anymore
-//This is an integration test
-//   test("If a user's username doesn't have an '@'", async () => {
-//     validateForm.mockReturnValue({
-//       username: "username is invalid. Please include an @",
-//     });
-
-//     await typeusernameInput("test");
-
-//     const usernameValidationMsg = screen.getByText(
-//       "username is invalid. Please include an @."
-//     );
-
-//     expect(usernameValidationMsg).toBeVisible();
-
-//     // await waitFor(() => {
-//     //   const usernameValidationMsg = screen.getByText(
-//     //     "username is invalid. Please include an @."
-//     //   );
-
-//     //   expect(usernameValidationMsg).toBeVisible();
-//     // });
-//   });
-//   //This is an integration test
-//   test("If a user's username doesn't have a domain extentension", async () => {
-//     validateForm.mockReturnValue({
-//       username: "username is invalid. Please include a domain name in your username",
-//     });
-
-//     await typeusernameInput("test@");
-
-//     const usernameValidationMsg = screen.getByText(
-//       "username is invalid. Please include a domain name in your username."
-//     );
-
-//     expect(usernameValidationMsg).toBeVisible();
-
-//     // await waitFor(() => {
-//     //   const usernameValidationMsg = screen.getByText(
-//     //     "username is invalid. Please include a domain name in your username."
-//     //   );
-
-//     //   expect(usernameValidationMsg).toBeVisible();
-//     // });
-//   });
-
-//   test("If a user's username is invalid, it shouldn't navigate", async () => {
-//     validateForm.mockReturnValue({ username: "invalid" });
-
-//     await typeusernameInput("test");
-//     const submitButtonEl = screen.getByRole("button");
-//     await user.click(submitButtonEl);
-
-//     expect(login).not.toHaveBeenCalled();
-//     expect(navigateMock).not.toHaveBeenCalled();
-//   });
-
-//   //This is an integration test
-//   test("If a user's password doesn't have a capital letter", async () => {
-//     validateForm.mockReturnValue({
-//       password: "Password must contain a capital letter",
-//     });
-
-//     await typePasswordInput("password");
-
-//     await waitFor(() => {
-//       const passwordValidationMsg = screen.getByText(
-//         "Password must contain a capital letter."
-//       );
-
-//       expect(passwordValidationMsg).toBeVisible();
-//     });
-//   });
-
-//   //This is an integration test
-//   test.each([
-//     ["a"],
-//     ["aa"],
-//     ["aaa"],
-//     ["aaaa"],
-//     ["aaaaa"],
-//     ["aaaaaa"],
-//     ["aaaaaaa"],
-//   ])("If a user's password isn't 8 chars long: '%s'", async (input) => {
-//     validateForm.mockReturnValue({
-//       password: "Password must be atleast 8 characters long",
-//     });
-
-//     await typePasswordInput(input);
-
-//     await waitFor(() => {
-//       const passwordValidationMsg = screen.getByText(
-//         "Password must be atleast 8 characters long."
-//       );
-
-//       expect(passwordValidationMsg).toBeVisible();
-//     });
-//   });
-
-//   //this is an integration test
-//   test("If a user's password doens't contain special characters", async () => {
-//     validateForm.mockReturnValue({
-//       password: "Password must contain atleast one special character",
-//     });
-
-//     await typePasswordInput("password");
-
-//     await waitFor(() => {
-//       const passwordValidationMsg = screen.getByText(
-//         "Password must contain atleast one special character."
-//       );
-
-//       expect(passwordValidationMsg).toBeVisible();
-//     });
-//   });
-
-//   //this is an integration test
-//   test("If a user's password doens't contain a number", async () => {
-//     validateForm.mockReturnValue({
-//       password: "Password must contain atleast one number",
-//     });
-
-//     await typePasswordInput("password");
-
-//     await waitFor(() => {
-//       const passwordValidationMsg = screen.getByText(
-//         "Password must contain atleast one number."
-//       );
-
-//       expect(passwordValidationMsg).toBeVisible();
-//     });
-//   });
-
-//   test("If a user's password is invalid, it shouldn't navigate", async () => {
-//     validateForm.mockReturnValue({ username: "invalid" });
-
-//     await typeusernameInput("test");
-//     const submitButtonEl = screen.getByRole("button");
-//     await user.click(submitButtonEl);
-
-//     expect(login).not.toHaveBeenCalled();
-//     expect(navigateMock).not.toHaveBeenCalled();
-//   });
