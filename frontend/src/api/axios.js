@@ -3,6 +3,8 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const axiosPublic = axios.create({
   baseURL: BACKEND_URL || "https://localhost:3000",
+  headers: { "Content-Type": "application/json" },
+  // withCredentials: true,
 });
 
 export const axiosPrivate = axios.create({
@@ -11,7 +13,7 @@ export const axiosPrivate = axios.create({
   withCredentials: true,
 });
 
-axiosPublic.interceptors.request.use((config) => {
-  console.log(config.baseURL, config.url);
-  return config;
-});
+// axiosPublic.interceptors.request.use((config) => {
+//   console.log(config.baseURL, config.url);
+//   return config;
+// });

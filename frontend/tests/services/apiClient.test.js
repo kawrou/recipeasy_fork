@@ -1,14 +1,14 @@
 import createFetchMock from "vitest-fetch-mock";
 import { describe, vi, expect, test, it, beforeEach } from "vitest";
 import apiClient from "../../src/services/apiClient";
-import { errorHandler } from "../../src/services/errorHandler";
+import { promiseHandler } from "../../src/services/promiseHandler";
 
 createFetchMock(vi).enableMocks();
 
-vi.mock("../../src/services/errorHandler", () => {
-  const errorHandlerMock = vi.fn();
+vi.mock("../../src/services/promiseHandler", () => {
+  const promiseHandlerMock = vi.fn();
   return {
-    errorHandler: errorHandlerMock,
+    promiseHandler: promiseHandlerMock,
   };
 });
 
@@ -80,8 +80,8 @@ describe("apiClient tests", () => {
   });
 
   it("handles authentication", async () => {
-    const errorHandlerMock = errorHandler;
-    errorHandlerMock
+    const promiseHandlerMock = promiseHandler;
+    promiseHandlerMock
       .mockResolvedValueOnce({
         success: true,
         data: {
