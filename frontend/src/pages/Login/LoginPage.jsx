@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { logIn } from "../../services/authentication";
 import { validateLoginForm } from "../../validators/validation";
@@ -28,13 +28,15 @@ export const LoginPage = () => {
       return;
     }
 
-    try {
-      const accessToken = await logIn(username, password);
-      setAuth({ token: accessToken });
-      navigate("/");
-    } catch (err) {
-      setError(`${err.message}`);
+    const result = await logIn(username, password);
+
+    if (!result.success) {
+      setError(`${result.error.message}`);
+      return;
     }
+
+    setAuth({ token: result.response.data.token });
+    navigate("/");
   };
 
   const handleusernameChange = (e) => {

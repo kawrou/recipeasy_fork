@@ -1,71 +1,22 @@
 import { axiosPublic } from "../api/axios";
+import { promiseHandler } from "./promiseHandler";
 
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const LOGIN_URL = "/tokens";
 
 export const logIn = async (username, password) => {
+  // if (!username || !password) {
+  //   throw new Error("Username and password are required.");
+  // }
   if (!username || !password) {
-    throw new Error("Username and password are required.");
+    return { success: false, err: "Username and password are required." };
   }
-
   const data = { username, password };
 
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true,
-  };
-
-  try {
-    const response = await axiosPublic.post(`${LOGIN_URL}`, data, config);
-    return response?.data?.token;
-  } catch (err) {
-    if (!err?.response) {
-      throw new Error("No Server Response");
-    }
-
-    if (err?.response.status === 401 || err?.response.status === 400) {
-      throw new Error(err.response.data.message);
-    }
-    throw err;
-  }
+  const res = await promiseHandler(axiosPublic.post(`${LOGIN_URL}`, data));
+  return res;
 };
-
-// export const login = async (username, password) => {
-//   if (!username || !password) {
-//     throw new Error("Username and password are required.");
-//   }
-
-//   const payload = {
-//     username: username,
-//     password: password,
-//   };
-
-//   const requestOptions = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(payload),
-//   };
-
-//   try {
-//     const response = await fetch(`${BACKEND_URL}/tokens`, requestOptions);
-
-//     if (!response.ok) {
-//       const error = await response.json();
-//       throw new Error(error.message);
-//     }
-
-//     const data = await response.json();
-//     return { token: data.token };
-//   } catch (error) {
-//     if (error instanceof SyntaxError) {
-//       throw new Error("Server error. Please try again later.");
-//     }
-//     throw new Error(error.message);
-//   }
-// };
 
 export const refresh = async () => {
   const requestOptions = {
@@ -76,7 +27,7 @@ export const refresh = async () => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/tokens/refresh`,
-      requestOptions
+      requestOptions,
     );
 
     if (!response.ok) {
@@ -99,7 +50,7 @@ export const logOut = async () => {
   try {
     const response = await fetch(
       `${BACKEND_URL}/tokens/logout`,
-      requestOptions
+      requestOptions,
     );
 
     if (!response.ok) {
