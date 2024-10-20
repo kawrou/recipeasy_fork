@@ -29,20 +29,16 @@ export const logIn = async (username, password) => {
   }
   const data = { username, password };
 
-  const res = await promiseHandler(axiosPublic.post(`${LOGIN_URL}`, data));
+  const res = await promiseHandler(axiosPublic.post("/tokens", data));
   return res;
 };
 
 export const refresh = async () => {
-  const res = await promiseHandler(
-    axiosPrivate.post(`${BACKEND_URL}/tokens/refresh`),
-  );
+  const res = await promiseHandler(axiosPrivate.post("/tokens/refresh"));
   return res;
 };
 
 export const logOut = async () => {
-  const res = await promiseHandler(
-    axiosPrivate.post(`${BACKEND_URL}/tokens/logout`),
-  );
+  const res = await promiseHandler(axiosPrivate.post("/tokens/logout"));
   return res;
 };
