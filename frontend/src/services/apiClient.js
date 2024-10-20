@@ -1,4 +1,4 @@
-import { errorHandler } from "./errorHandler";
+import { promiseHandler } from "./promiseHandler";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const apiClient = async (url, options = {}) => {
@@ -11,7 +11,7 @@ const apiClient = async (url, options = {}) => {
     }
 
     if (response.status === 401) {
-      const refreshResponse = await errorHandler(
+      const refreshResponse = await promiseHandler(
         fetch(`${BACKEND_URL}/tokens/refresh`, {
           method: "POST",
           credentials: "include",
@@ -28,7 +28,7 @@ const apiClient = async (url, options = {}) => {
         ...options.headers,
         Authorization: `Bearer ${token}`,
       };
-      response = await errorHandler(fetch(url, options));
+      response = await promiseHandler(fetch(url, options));
 
       if (response.success === false) {
         throw new Error(response.error);
