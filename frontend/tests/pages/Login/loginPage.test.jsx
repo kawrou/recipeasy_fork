@@ -32,6 +32,16 @@ vi.mock("../../../src/validators/validation", () => {
   return { validateLoginForm: validateLoginFormMock };
 });
 
+const successfulLogin = {
+  success: true,
+  response: { data: { token: "jwt-token" } },
+};
+
+const unsuccessfulLogin = {
+  success: false,
+  error: { message: "Please check your login details." },
+};
+
 // Reusable function for filling out login form
 const user = userEvent.setup();
 
@@ -50,17 +60,18 @@ describe("Login Page", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
-  describe("When a user clicks login button", () => {
+  describe("When a user clicks the login button", () => {
     beforeEach(() => {
       render(
         <AuthProvider>
           <LoginPage handleLogin={handleLoginMock} />
-        </AuthProvider>
+        </AuthProvider>,
       );
     });
 
     test("a login request is made", async () => {
       validateLoginForm.mockReturnValue({});
+      logIn.mockResolvedValue(successfulLogin);
 
       await completeLoginForm();
 
@@ -69,7 +80,7 @@ describe("Login Page", () => {
 
     it("navigates to home page on successful login", async () => {
       validateLoginForm.mockReturnValue({});
-      logIn.mockResolvedValue("secrettoken123");
+      logIn.mockResolvedValue(successfulLogin);
 
       await completeLoginForm();
 
@@ -79,20 +90,20 @@ describe("Login Page", () => {
     it("doens't navigate if error logging in", async () => {
       validateLoginForm.mockReturnValue({});
 
-      logIn.mockRejectedValue(new Error("Login failed. Please try again"));
+      logIn.mockResolvedValue(unsuccessfulLogin);
 
       await completeLoginForm();
 
       expect(navigateMock).not.toHaveBeenCalled();
     });
 
-    test("error messages is handled correctly", async () => {
+    test("error messages are handled correctly", async () => {
       validateLoginForm.mockReturnValue({});
-      logIn.mockRejectedValue(new Error("Login failed. Please try again"));
+      logIn.mockResolvedValue(unsuccessfulLogin);
 
       await completeLoginForm();
 
-      const errMsg = screen.getByText("Login failed. Please try again");
+      const errMsg = screen.getByText("Please check your login details.");
 
       expect(errMsg).toBeVisible();
     });
@@ -103,7 +114,7 @@ describe("Login Page", () => {
       render(
         <AuthProvider>
           <LoginPage handleLogin={handleLoginMock} />
-        </AuthProvider>
+        </AuthProvider>,
       );
     });
 
@@ -118,7 +129,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const usernameValidationMsg = screen.getByText(
-        "username address field was empty. Please enter an username address."
+        "username address field was empty. Please enter an username address.",
       );
 
       expect(usernameValidationMsg).toBeVisible();
@@ -134,7 +145,7 @@ describe("Login Page", () => {
       await user.click(submitButtonEl);
 
       const passwordValidationMsg = screen.getByText(
-        "Password field was empty. Please enter your password."
+        "Password field was empty. Please enter your password.",
       );
 
       expect(passwordValidationMsg).toBeVisible();
