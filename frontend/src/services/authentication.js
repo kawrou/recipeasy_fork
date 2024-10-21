@@ -14,8 +14,7 @@ const LOGIN_URL = "/tokens";
  */
 
 /**
- * @description - Takes a username and password param and makes a fetch request.
- * @async
+ * @description Takes a username and password param and makes a fetch request.
  * @param {string} username - The username of the user.
  * @param {string} password - The password of the user.
  * @returns {Promise<PromiseResponse>} A promise that resolves to an object indicating the success status and user authentication or error information.
@@ -33,8 +32,12 @@ export const logIn = async (username, password) => {
   return res;
 };
 
+/**
+ * @description Uses the http-only cookie to retrieve a JWT access token.
+ * @returns {Promise<PromiseResponse>}
+ */
 export const refresh = async () => {
-  const res = await promiseHandler(axiosPrivate.post("/tokens/refresh"));
+  const res = await promiseHandler(axiosPublic.post("/tokens/refresh"));
   return res;
 };
 
