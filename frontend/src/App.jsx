@@ -7,10 +7,29 @@ import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { refresh } from "./services/authentication";
+import useAuth from "./hooks/useAuth";
 const App = () => {
+  const { setAuth } = useAuth();
   const [recipeData, setRecipeData] = useState(null);
+
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      const result = await refresh();
+
+      if (!result.success) {
+        setAuth({});
+        return;
+      }
+
+      setAuth((prev) => {
+        return { ...prev, token: result.response.data.token };
+      });
+    };
+
+    refreshAccessToken();
+  }, [setAuth]);
 
   return (
     <div className="flex flex-col w-screen min-h-screen">
