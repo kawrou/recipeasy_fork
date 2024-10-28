@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AutoHeightTextArea } from "../AutoHeightTextArea";
 
-export const RecipeName = ({ name, setName, editMode, error }) => {
+export const RecipeName = ({ name, setName, editMode, error, setErrors }) => {
   const [height, setHeight] = useState("auto");
 
   return (
@@ -16,6 +16,9 @@ export const RecipeName = ({ name, setName, editMode, error }) => {
             height={height}
             setHeight={setHeight}
             error={error}
+            setErrors={setErrors}
+            name={"recipeName"}
+            ariaLabel={"recipe-name"}
           />
           {error && (
             <p className="text-red-500 text-base font-normal mt-1">{error}</p>
