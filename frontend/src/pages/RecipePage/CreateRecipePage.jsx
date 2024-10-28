@@ -15,6 +15,8 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
+import ToastList from "../../components/ToastList/ToastList";
+
 export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
@@ -29,6 +31,39 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
   const [url, setUrl] = useState("");
+
+  const [errors, setErrors] = useState({});
+
+  //----------------------------
+  const [toasts, setToasts] = useState([]);
+  const [autoClose, setAutoClose] = useState(true);
+  const [autoCloseDuration, setAutoCloseDuration] = useState(5);
+  const [position, setPosition] = useState("bottom-right");
+
+  const removeToast = (id) => {
+    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  };
+
+  const removeAllToasts = () => {
+    setToasts([]);
+  };
+
+  const showToast = (message, type) => {
+    const toast = {
+      id: Date.now(),
+      message,
+      type,
+    };
+
+    setToasts((prevToasts) => [...prevToasts, toast]);
+
+    if (autoClose) {
+      setTimeout(() => {
+        removeToast(toast.id);
+      }, autoCloseDuration * 1000);
+    }
+  };
+  //--------------------------
 
   useEffect(() => {
     if (recipeData) {
@@ -56,9 +91,22 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
     }
   }, [recipeData]);
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!recipeName) newErrors.recipeName = "Please enter a recipe name.";
+    return newErrors;
+  };
+
   const handleSaveRecipe = async () => {
+    const validationErrors = validateForm();
+    console.log(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     if (
-      recipeName === "" ||
+      // recipeName === "" ||
       yieldAmount === 0 ||
       recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
@@ -104,6 +152,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
             name={recipeName}
             setName={setRecipeName}
             editMode={editMode}
+            error={errors.recipeName}
           />
           {/* description */}
           <RecipeDescription
