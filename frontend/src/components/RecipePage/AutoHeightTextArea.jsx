@@ -7,8 +7,8 @@ export const AutoHeightTextArea = ({
   placeholder,
   height,
   setHeight,
-  error,
-  setErrors,
+  error = null,
+  setErrors = () => {},
   name,
   ariaLabel,
 }) => {
