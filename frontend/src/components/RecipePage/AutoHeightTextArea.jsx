@@ -7,6 +7,7 @@ export const AutoHeightTextArea = ({
   placeholder,
   height,
   setHeight,
+  error,
 }) => {
   const textareaRef = useRef(null);
 
@@ -50,7 +51,7 @@ export const AutoHeightTextArea = ({
   return (
     <textarea
       ref={textareaRef}
-      className="resize-none overflow-hidden placeholder:text-wrap focus:outline-none bg-transparent w-full "
+      className={`resize-none overflow-hidden placeholder:text-wrap focus:outline-none bg-transparent w-full p-2 ${error ? "border rounded-md border-red-500" : ""}`}
       value={text}
       rows={rows}
       onChange={handleTextAreaHeightChange}
