@@ -19,7 +19,6 @@ describe("Validation errors", () => {
         error={errors.recipeName}
       />,
     );
-    screen.debug();
     expect(screen.getByText("Please enter a recipe name.")).toBeVisible();
   });
 });
