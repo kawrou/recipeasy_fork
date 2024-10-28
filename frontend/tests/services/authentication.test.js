@@ -78,8 +78,8 @@ describe("authentication service", () => {
 
       await refresh();
 
-      expect(axiosPrivate.post).toHaveBeenCalledOnce();
-      expect(axiosPrivate.post).toHaveBeenCalledWith("/tokens/refresh");
+      expect(axiosPublic.post).toHaveBeenCalledOnce();
+      expect(axiosPublic.post).toHaveBeenCalledWith("/tokens/refresh");
       // This is an array of the arguments that were last passed to fetch
       // const fetchArguments = fetch.mock.lastCall;
       // const url = fetchArguments[0];
@@ -91,7 +91,7 @@ describe("authentication service", () => {
     });
 
     it("returns a success object with an access token if the request was successful", async () => {
-      axiosPrivate.post.mockResolvedValue({
+      axiosPublic.post.mockResolvedValue({
         data: { token: "jwt-token", message: "Access token issued." },
       });
 
@@ -106,7 +106,7 @@ describe("authentication service", () => {
     });
 
     it("returns an error object if the request failed", async () => {
-      axiosPrivate.post.mockRejectedValue({
+      axiosPublic.post.mockRejectedValue({
         response: {
           data: { message: "Unauthorised" },
         },
@@ -152,7 +152,7 @@ describe("authentication service", () => {
         success: false,
         error: {
           message:
-            "An unexpected error occured. Please check internet connection or try again later.",
+            "An unexpected error occurred. Please check your internet connection or try again later.",
         },
       });
     });
