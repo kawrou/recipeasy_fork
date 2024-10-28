@@ -153,6 +153,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
             setName={setRecipeName}
             editMode={editMode}
             error={errors.recipeName}
+            setErrors={setErrors}
           />
           {/* description */}
           <RecipeDescription

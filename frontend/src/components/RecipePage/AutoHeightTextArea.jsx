@@ -8,6 +8,9 @@ export const AutoHeightTextArea = ({
   height,
   setHeight,
   error,
+  setErrors,
+  name,
+  ariaLabel,
 }) => {
   const textareaRef = useRef(null);
 
@@ -38,6 +41,7 @@ export const AutoHeightTextArea = ({
   }, [setHeight, text]); // Depend on text for changes in textarea content
 
   const handleTextAreaHeightChange = (event) => {
+    if (error) setErrors((prevErrors) => ({ ...prevErrors, [name]: null }));
     const { value, style } = event.target;
     setText(value);
     style.height = "auto"; // Reset the height to auto to properly calculate the scrollHeight
@@ -57,6 +61,8 @@ export const AutoHeightTextArea = ({
       onChange={handleTextAreaHeightChange}
       style={{ height: height }}
       placeholder={placeholder}
+      name={ariaLabel}
+      aria-label={ariaLabel}
     />
   );
 };
