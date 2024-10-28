@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, setHeight }) => {
+export const AutoHeightTextArea = ({
+  text,
+  setText,
+  rows,
+  placeholder,
+  height,
+  setHeight,
+}) => {
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -11,23 +18,23 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, s
         textareaRef.current.style.height = "auto";
         textareaRef.current.style.height = `${Math.max(
           parseFloat(style.fontSize),
-          textareaRef.current.scrollHeight
+          textareaRef.current.scrollHeight,
         )}px`;
         setHeight(textareaRef.current.style.height);
       }
     };
-  
+
     // Add event listener for resize
-    window.addEventListener('resize', handleResize);
-  
+    window.addEventListener("resize", handleResize);
+
     // Call handleResize initially to calculate height
     handleResize();
-  
+
     // Cleanup the event listener
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [text]); // Depend on text for changes in textarea content
+  }, [setHeight, text]); // Depend on text for changes in textarea content
 
   const handleTextAreaHeightChange = (event) => {
     const { value, style } = event.target;
@@ -35,7 +42,7 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, s
     style.height = "auto"; // Reset the height to auto to properly calculate the scrollHeight
     style.height = `${Math.max(
       parseFloat(window.getComputedStyle(event.target).fontSize),
-      event.target.scrollHeight
+      event.target.scrollHeight,
     )}px`;
     setHeight(style.height);
   };
