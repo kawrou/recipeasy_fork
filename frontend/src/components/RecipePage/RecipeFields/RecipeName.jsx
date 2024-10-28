@@ -15,6 +15,7 @@ export const RecipeName = ({ name, setName, editMode, error }) => {
             placeholder={"Enter your title..."}
             height={height}
             setHeight={setHeight}
+            error={error}
           />
           {error && (
             <p className="text-red-500 text-base font-normal mt-1">{error}</p>
