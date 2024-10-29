@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa"; // Import icons from FontAwesome
 
 export const IngredientList = ({
@@ -6,7 +6,7 @@ export const IngredientList = ({
   setRecipeIngredients,
   editMode,
   error,
-  setErrors,
+  updateErrors,
 }) => {
   const [localError, setLocalError] = useState("");
 
@@ -27,7 +27,7 @@ export const IngredientList = ({
   const handleAddIngredientField = () => {
     if (hasEmptyField(recipeIngredients)) {
       setLocalError(
-        "Please fill in all previous fields before adding a new ingredient."
+        "Please fill in all previous fields before adding a new ingredient.",
       );
       return;
     }
@@ -39,9 +39,10 @@ export const IngredientList = ({
     const updatedIngredients = [...recipeIngredients];
     updatedIngredients.splice(index, 1);
 
-    if (!hasEmptyField(updatedIngredients)) setLocalError("");
-
-    if (updatedIngredients.length === 0) setLocalError("");
+    if (!hasEmptyField(updatedIngredients) || updatedIngredients.length === 0) {
+      setLocalError("");
+      updateErrors("ingredients", false);
+    }
 
     setRecipeIngredients(updatedIngredients);
   };
@@ -51,7 +52,10 @@ export const IngredientList = ({
     updatedIngredients[index] = e.target.value;
     setRecipeIngredients(updatedIngredients);
 
-    if (!hasEmptyField(updatedIngredients)) setLocalError("");
+    if (!hasEmptyField(updatedIngredients)) {
+      setLocalError("");
+      updateErrors("ingredients", false);
+    }
   };
 
   return (
@@ -83,6 +87,7 @@ export const IngredientList = ({
                 <button
                   className="px-2 py-1 rounded text-white"
                   onClick={() => handleRemoveIngredientField(index)}
+                  aria-label="Remove-ingredient-field"
                 >
                   <FaTimes className="text-secondary-500" />{" "}
                   {/* Change color to gray */}
@@ -99,16 +104,23 @@ export const IngredientList = ({
         {/* Input for new ingredient */}
         {editMode && (
           <div className="flex justify-center items-center">
-            <div className="w-1/2 border border-tertiary-500" />{" "}
+            <hr
+              className="w-1/2 border border-tertiary-500"
+              aria-hidden="true"
+            />{" "}
             {/* Horizontal divider */}
             <button
-              className="px-2 py-1 rounded text-white"
+              className="px-2 py-1"
               onClick={handleAddIngredientField}
+              aria-label="Add-new-ingredient-field"
             >
-              <FaPlus className="text-secondary-500" />{" "}
+              <FaPlus className="text-secondary-500" aria-hidden="true" />{" "}
               {/* Change color to gray */}
             </button>
-            <div className="w-1/2 border border-tertiary-500" />{" "}
+            <hr
+              className="w-1/2 border border-tertiary-500"
+              aria-hidden="true"
+            />{" "}
             {/* Horizontal divider */}
           </div>
         )}
