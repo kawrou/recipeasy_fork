@@ -101,6 +101,8 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
     )
       newErrors.recipeInstructions = "Please fill out all the instructions.";
 
+    if (yieldAmount === 0) newErrors.yieldAmount = true;
+
     return newErrors;
   };
 
@@ -114,12 +116,12 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
 
     if (
       // recipeName === "" ||
-      yieldAmount === 0 ||
+      // yieldAmount === 0 ||
       recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
-      ingredients.length === 0 ||
+      ingredients.length === 0
       // instructions.some((instruction) => instruction === "") ||
-      instructions.length === 0
+      // instructions.length === 0
     ) {
       alert("Please fill out all the required fields");
       return;
@@ -174,6 +176,8 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
               recipeYield={yieldAmount}
               setRecipeYield={setYieldAmount}
               editMode={editMode}
+              error={errors.yieldAmount}
+              setErrors={setErrors}
             />
             {/* timeTaken */}
             <RecipeTimeTaken
