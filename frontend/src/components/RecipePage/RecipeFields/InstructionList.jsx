@@ -16,9 +16,6 @@ export const InstructionList = ({
    */
   const handleAddInstruction = () => {
     if (recipeInstructions.some((instruction) => instruction === "")) {
-      // alert(
-      //   "Please fill in all previous fields before adding a new Instruction."
-      // );
       setErrors((prevErrors) => ({
         ...prevErrors,
         ["recipeInstructions"]:
