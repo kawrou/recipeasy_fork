@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -13,6 +14,7 @@ export default {
         tertiary: {
           500: "#EEF9FF",
         },
+        placeholder: "#6b7280",
       },
       fontFamily: {
         kanit: ["Kanit", "sans-serif"],
