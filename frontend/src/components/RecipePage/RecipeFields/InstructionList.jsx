@@ -23,7 +23,7 @@ export const InstructionList = ({
   const handleAddInstructionField = () => {
     if (hasEmptyField(recipeInstructions)) {
       setLocalError(
-        "Please fill in all previous fields before adding a new instruction."
+        "Please fill in all previous fields before adding a new instruction.",
       );
       return;
     }
@@ -67,42 +67,40 @@ export const InstructionList = ({
   };
 
   return (
-    <div className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit">
-      <div className="font-kanit font-extrabold text-primary-500 text-6xl text-left">
-        Method
-      </div>
-      <div className="flex flex-col">
-        <div className="flex flex-col font-poppins font-extralight text-gray-600">
+    <section className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit">
+      <h2 className="font-kanit font-extrabold text-primary-500 text-6xl text-left">
+        Instructions
+      </h2>
+      {error && <p className="text-red-500">{error}</p>}
+      {localError && <p className="text-red-500">{localError}</p>}
 
-          {error && <p className="text-red-500">{error}</p>}
-          {localError && <p className="text-red-500">{localError}</p>}
+      <ul className="flex flex-col font-poppins font-extralight text-gray-600">
+        {recipeInstructions.map((instruction, index) => (
+          <RecipeInstruction
+            key={index}
+            index={index}
+            instruction={instruction}
+            setInstruction={(value) => setInstruction(index, value)}
+            removeInstruction={handleRemoveInstructionField}
+            editMode={editMode}
+            error={error || localError}
+          />
+        ))}
+      </ul>
 
-          {recipeInstructions.map((instruction, index) => (
-            <RecipeInstruction
-              key={index}
-              index={index}
-              instruction={instruction}
-              setInstruction={(value) => setInstruction(index, value)}
-              removeInstruction={handleRemoveInstructionField}
-              editMode={editMode}
-              error={error || localError}
-            />
-          ))}
+      {editMode && (
+        <div className="flex justify-center items-center">
+          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
+          <button
+            className="px-2 py-1 rounded text-white"
+            onClick={handleAddInstructionField}
+            aria-label="add-new-instruction-field"
+          >
+            <FaPlus className="text-secondary-500" aria-hidden="true" />
+          </button>
+          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
         </div>
-
-        {editMode && (
-          <div className="flex justify-center items-center">
-            <div className="w-1/2 border border-tertiary-500" />{" "}
-            <button
-              className="px-2 py-1 rounded text-white"
-              onClick={handleAddInstructionField}
-            >
-              <FaPlus className="text-secondary-500" />
-            </button>
-            <div className="w-1/2 border border-tertiary-500" />{" "}
-          </div>
-        )}
-      </div>
-    </div>
+      )}
+    </section>
   );
 };
