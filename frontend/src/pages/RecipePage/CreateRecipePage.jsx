@@ -135,19 +135,6 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       return;
     }
 
-    // if (
-      // recipeName === "" ||
-      // yieldAmount === 0 ||
-      // recipeTotalTime === 0 ||
-      // ingredients.some((ingredient) => ingredient === "") ||
-      // ingredients.length === 0
-      // instructions.some((instruction) => instruction === "") ||
-      // instructions.length === 0
-    // ) {
-      // alert("Please fill out all the required fields");
-      // return;
-    // }
-
     //Do we need a Try/Catch block here?
     const data = {
       name: recipeName,
