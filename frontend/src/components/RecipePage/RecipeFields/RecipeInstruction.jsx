@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { AutoHeightTextArea } from "../AutoHeightTextArea";
 
-export const Instruction = ({
+export const RecipeInstruction = ({
   index,
   instruction,
   setInstruction,
   removeInstruction,
   editMode,
+  error
 }) => {
   const [height, setHeight] = useState("auto");
 
@@ -18,7 +19,9 @@ export const Instruction = ({
       </div>
       {editMode ? (
         <div className="flex items-center py-4">
-          <div className="w-full p-2.5 focus:outline-none text-md text-gray-600 rounded-xl border border-blue-200">
+          <div
+            className={`w-full p-2.5 focus:outline-none text-md text-gray-600 rounded-xl border ${error && !instruction ? "border-red-500" : "border-blue-200"}`}
+          >
             <AutoHeightTextArea
               text={instruction}
               setText={setInstruction}

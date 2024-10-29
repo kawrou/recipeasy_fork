@@ -94,6 +94,13 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!recipeName) newErrors.recipeName = "Please enter a recipe name.";
+
+    if (
+      instructions.some((instruction) => instruction === "") ||
+      instructions.length === 0
+    )
+      newErrors.recipeInstructions = "Please fill out all the instructions.";
+
     return newErrors;
   };
 
@@ -111,7 +118,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       recipeTotalTime === 0 ||
       ingredients.some((ingredient) => ingredient === "") ||
       ingredients.length === 0 ||
-      instructions.some((instruction) => instruction === "") ||
+      // instructions.some((instruction) => instruction === "") ||
       instructions.length === 0
     ) {
       alert("Please fill out all the required fields");
@@ -195,6 +202,8 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
           recipeInstructions={instructions}
           setRecipeInstructions={setInstructions}
           editMode={editMode}
+          error={errors.recipeInstructions}
+          setErrors={setErrors}
         />
       </div>
 
