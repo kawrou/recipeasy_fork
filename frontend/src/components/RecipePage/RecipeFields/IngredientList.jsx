@@ -46,7 +46,7 @@ export const IngredientList = ({
             editMode ? (
               <div key={index} className="flex items-center py-4">
                 <input
-                  className="resize-none overflow-hidden placeholder:text-wrap w-full p-2.5 focus:outline-none text-md rounded-xl border border-blue-200 "
+                  className={`w-full p-2.5 text-md rounded-xl border ${error && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
                   value={ingredient}
                   onChange={(e) => handleInput(e, index)}
                   placeholder="Enter your ingredient..."
@@ -63,7 +63,7 @@ export const IngredientList = ({
               <div key={index} className="text-left text-md py-2.5">
                 {ingredient}
               </div>
-            ),
+            )
           )}
         </div>
 
