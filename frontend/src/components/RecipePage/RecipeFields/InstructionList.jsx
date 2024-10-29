@@ -76,15 +76,17 @@ export const InstructionList = ({
 
       <ul className="flex flex-col font-poppins font-extralight text-gray-600">
         {recipeInstructions.map((instruction, index) => (
-          <RecipeInstruction
-            key={index}
-            index={index}
-            instruction={instruction}
-            setInstruction={(value) => setInstruction(index, value)}
-            removeInstruction={handleRemoveInstructionField}
-            editMode={editMode}
-            error={error || localError}
-          />
+          <li className="divide-y-2 divide-tertiary-500" key={index}>
+            <RecipeInstruction
+              key={index}
+              index={index}
+              instruction={instruction}
+              setInstruction={(value) => setInstruction(index, value)}
+              removeInstruction={handleRemoveInstructionField}
+              editMode={editMode}
+              error={error || localError}
+            />
+          </li>
         ))}
       </ul>
 
