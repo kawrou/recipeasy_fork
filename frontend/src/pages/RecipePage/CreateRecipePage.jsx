@@ -103,6 +103,8 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
 
     if (yieldAmount === 0) newErrors.yieldAmount = true;
 
+    if (recipeTotalTime === 0) newErrors.totalTime = true;
+
     return newErrors;
   };
 
@@ -184,6 +186,8 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
               timeTaken={recipeTotalTime}
               setTimeTaken={setRecipeTotalTime}
               editMode={editMode}
+              error={errors.totalTime}
+              setErrors={setErrors}
             />
           </div>
           {/* Tags */}

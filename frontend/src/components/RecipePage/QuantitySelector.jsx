@@ -6,7 +6,6 @@ export const QuantitySelector = ({
   error,
   setErrors,
 }) => {
-
   const handleIncrement = () => {
     setQuantity(parseInt(quantity) + 1);
   };
@@ -16,7 +15,7 @@ export const QuantitySelector = ({
       setQuantity(parseInt(quantity) - 1);
     }
   };
-  // ${error && !quantity ? "border border-red-500 rounded-md" : ""}
+
   return (
     <>
       <form className="max-w-xs ">
