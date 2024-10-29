@@ -27,7 +27,7 @@ export const IngredientList = ({
   const handleAddIngredientField = () => {
     if (hasEmptyField(recipeIngredients)) {
       setLocalError(
-        "Please fill in all previous fields before adding a new ingredient.",
+        "Please fill in all previous fields before adding a new ingredient."
       );
       return;
     }
@@ -59,47 +59,65 @@ export const IngredientList = ({
   };
 
   return (
-    <div className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white shadow-md ml-5 mr-2.5 mb-20 h-fit">
-      <div className="font-kanit font-extrabold text-primary-500 text-6xl text-left">
+    <section className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white shadow-md ml-5 mr-2.5 mb-20 h-fit">
+      <h2
+        id="ingredients-heading"
+        className="font-kanit font-extrabold text-primary-500 text-6xl text-left"
+      >
         Ingredients
-      </div>
+      </h2>
       <div className="flex flex-col">
         {localError && (
-          <p className="text-red-500 text-base font-normal mt-1">
+          <p
+            id="local-error"
+            role="alert"
+            className="text-red-500 text-base font-normal mt-1"
+          >
             {localError}
           </p>
         )}
         {error && (
-          <p className="text-red-500 text-base font-normal mt-1">
+          <p
+            id="global=error"
+            role="alert"
+            className="text-red-500 text-base font-normal mt-1"
+          >
             {"Please fill out missing fields."}
           </p>
         )}
-        <div className="flex flex-col divide-y-2 divide-tertiary-500 font-poppins font-extralight text-gray-600">
-          {recipeIngredients.map((ingredient, index) =>
-            editMode ? (
-              <div key={index} className="flex items-center py-4">
+
+        <ul className="flex flex-col divide-y-2 divide-tertiary-500 font-poppins font-light text-gray-600">
+          {recipeIngredients.map((ingredient, index) => (
+            <li key={index} className="flex items-center py-4">
+              {editMode ? (
                 <input
+                  id={`ingredient-${index + 1}`}
                   className={`w-full p-2.5 text-md rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
                   value={ingredient}
                   onChange={(e) => handleInput(e, index)}
                   placeholder="Enter your ingredient..."
+                  aria-label={`ingredient-${index + 1}`}
                 />
-                <button
-                  className="px-2 py-1 rounded text-white"
-                  onClick={() => handleRemoveIngredientField(index)}
-                  aria-label="Remove-ingredient-field"
+              ) : (
+                <span
+                  id={`ingredient-${index + 1}`}
+                  className="text-left text-md py-2.5"
                 >
-                  <FaTimes className="text-secondary-500" />{" "}
-                  {/* Change color to gray */}
+                  {ingredient}
+                </span>
+              )}
+              {editMode && (
+                <button
+                  className="px-2 py-1"
+                  onClick={() => handleRemoveIngredientField(index)}
+                  aria-label={`remove-ingredient-${index + 1}`}
+                >
+                  <FaTimes className="text-secondary-500" aria-hidden="true" />
                 </button>
-              </div>
-            ) : (
-              <div key={index} className="text-left text-md py-2.5">
-                {ingredient}
-              </div>
-            ),
-          )}
-        </div>
+              )}
+            </li>
+          ))}
+        </ul>
 
         {/* Input for new ingredient */}
         {editMode && (
@@ -125,6 +143,6 @@ export const IngredientList = ({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
