@@ -105,29 +105,35 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
 
     if (recipeTotalTime === 0) newErrors.totalTime = true;
 
+    if (
+      ingredients.some((ingredient) => ingredient === "") ||
+      ingredients.length === 0
+    )
+      newErrors.ingredients = true;
+
     return newErrors;
   };
 
   const handleSaveRecipe = async () => {
     const validationErrors = validateForm();
-    console.log(validationErrors);
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    if (
+    // if (
       // recipeName === "" ||
       // yieldAmount === 0 ||
-      recipeTotalTime === 0 ||
-      ingredients.some((ingredient) => ingredient === "") ||
-      ingredients.length === 0
+      // recipeTotalTime === 0 ||
+      // ingredients.some((ingredient) => ingredient === "") ||
+      // ingredients.length === 0
       // instructions.some((instruction) => instruction === "") ||
       // instructions.length === 0
-    ) {
-      alert("Please fill out all the required fields");
-      return;
-    }
+    // ) {
+      // alert("Please fill out all the required fields");
+      // return;
+    // }
 
     //Do we need a Try/Catch block here?
     const data = {
@@ -205,6 +211,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
           recipeIngredients={ingredients}
           setRecipeIngredients={setIngredients}
           editMode={editMode}
+          error={errors.ingredients}
         />
         <InstructionList
           recipeInstructions={instructions}
