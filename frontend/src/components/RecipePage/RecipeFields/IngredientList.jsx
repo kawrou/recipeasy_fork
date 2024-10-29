@@ -91,7 +91,7 @@ export const IngredientList = ({
             {editMode ? (
               <input
                 id={`ingredient-${index + 1}`}
-                className={`w-full p-2.5 text-md rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
+                className={`w-full p-2.5 text-md placeholder:text-placeholder rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
                 value={ingredient}
                 onChange={(e) => handleInput(e, index)}
                 placeholder="Enter your ingredient..."
