@@ -219,7 +219,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
           setRecipeInstructions={setInstructions}
           editMode={editMode}
           error={errors.recipeInstructions}
-          setErrors={setErrors}
+          updateErrors={updateErrors}
         />
       </div>
 

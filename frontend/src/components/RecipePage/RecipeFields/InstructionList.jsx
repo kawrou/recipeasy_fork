@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { RecipeInstruction } from "./RecipeInstruction";
 
@@ -7,20 +7,24 @@ export const InstructionList = ({
   setRecipeInstructions,
   editMode,
   error,
-  setErrors,
+  updateErrors,
 }) => {
+  const [localError, setLocalError] = useState("");
+
+  const hasEmptyField = (instructions) => {
+    return instructions.some((instruction) => instruction === "");
+  };
+
   /**
    * Adds a text area to the UI by adding an empty string element to the recipeInstructions array state
    * which triggers a re-render of the component.
    * @returns Void. Only updates recipeInstructions state.
    */
-  const handleAddInstruction = () => {
-    if (recipeInstructions.some((instruction) => instruction === "")) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        ["recipeInstructions"]:
-          "Please fill in all previous fields before adding a new instruction.",
-      }));
+  const handleAddInstructionField = () => {
+    if (hasEmptyField(recipeInstructions)) {
+      setLocalError(
+        "Please fill in all previous fields before adding a new instruction."
+      );
       return;
     }
     setRecipeInstructions([...recipeInstructions, ""]);
@@ -32,10 +36,18 @@ export const InstructionList = ({
    * @param {number} index - Index of the RecipeInstruction component that was created by mapping over the recipeInstructions array.
    * @returns Void. Only updates recipeInstructions state.
    */
-  const handleRemoveInstruction = (index) => {
+  const handleRemoveInstructionField = (index) => {
     const updatedInstructions = [...recipeInstructions];
     updatedInstructions.splice(index, 1);
     setRecipeInstructions(updatedInstructions);
+
+    if (
+      !hasEmptyField(updatedInstructions) ||
+      updatedInstructions.length === 0
+    ) {
+      setLocalError("");
+      updateErrors("recipeInstructions", false);
+    }
   };
 
   /**
@@ -47,10 +59,11 @@ export const InstructionList = ({
     const updatedInstructions = [...recipeInstructions];
     updatedInstructions[index] = value;
     setRecipeInstructions(updatedInstructions);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      ["recipeInstructions"]: "",
-    }));
+
+    if (!hasEmptyField(updatedInstructions)) {
+      setLocalError("");
+      updateErrors("recipeInstructions", false);
+    }
   };
 
   return (
@@ -60,18 +73,19 @@ export const InstructionList = ({
       </div>
       <div className="flex flex-col">
         <div className="flex flex-col font-poppins font-extralight text-gray-600">
-          {error && (
-            <p className="text-red-500 text-base font-normal mt-1">{error}</p>
-          )}
+
+          {error && <p className="text-red-500">{error}</p>}
+          {localError && <p className="text-red-500">{localError}</p>}
+
           {recipeInstructions.map((instruction, index) => (
             <RecipeInstruction
               key={index}
               index={index}
               instruction={instruction}
               setInstruction={(value) => setInstruction(index, value)}
-              removeInstruction={handleRemoveInstruction}
+              removeInstruction={handleRemoveInstructionField}
               editMode={editMode}
-              error={error}
+              error={error || localError}
             />
           ))}
         </div>
@@ -81,7 +95,7 @@ export const InstructionList = ({
             <div className="w-1/2 border border-tertiary-500" />{" "}
             <button
               className="px-2 py-1 rounded text-white"
-              onClick={handleAddInstruction}
+              onClick={handleAddInstructionField}
             >
               <FaPlus className="text-secondary-500" />
             </button>
