@@ -71,8 +71,24 @@ export const InstructionList = ({
       <h2 className="font-kanit font-extrabold text-primary-500 text-6xl text-left">
         Instructions
       </h2>
-      {error && <p className="text-red-500">{error}</p>}
-      {localError && <p className="text-red-500">{localError}</p>}
+
+      <fieldset aria-labelledby="error-heading" className="flex flex-col gap2">
+        <legend id="error-heading" className="sr-only">
+          Form Errors
+        </legend>
+        <ul>
+          {localError && (
+            <li id="local-error" role="alert" className="text-red-500">
+              {localError}
+            </li>
+          )}
+          {error && (
+            <li id="global-error" role="alert" className="text-red-500">
+              {error}
+            </li>
+          )}
+        </ul>
+      </fieldset>
 
       <ul className="flex flex-col font-poppins font-extralight text-gray-600">
         {recipeInstructions.map((instruction, index) => (
