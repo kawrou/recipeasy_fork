@@ -8,24 +8,41 @@ export const IngredientList = ({
   error,
   setErrors,
 }) => {
-  const [newIngredient, setNewIngredient] = useState("");
+  const [localError, setLocalError] = useState("");
 
-  const handleAddIngredient = () => {
-    if (recipeIngredients.some((ingredient) => ingredient === "")) {
-      alert(
+  /**
+   * Checks a given ingredients array for an empty string.
+   * @param {Array} ingredients
+   * @returns A boolean.
+   */
+  const hasEmptyField = (ingredients) => {
+    return ingredients.some((ingreident) => ingreident === "");
+  };
+
+  /**
+   * Adds a ingredient input field to the UI by updating the recipeIngredient's state.
+   * This component maps over that recipeIngredient array to create a new field.
+   * @returns Void. Updates the recipeIngredients state.
+   */
+  const handleAddIngredientField = () => {
+    if (hasEmptyField(recipeIngredients)) {
+      setLocalError(
         "Please fill in all previous fields before adding a new ingredient."
       );
       return;
     }
-
-    setRecipeIngredients([...recipeIngredients, newIngredient]);
-    setNewIngredient("");
+    setRecipeIngredients([...recipeIngredients, ""]);
   };
 
-  const handleRemoveIngredient = (index) => {
+  const handleRemoveIngredientField = (index) => {
     // Remove the ingredient at the specified index
     const updatedIngredients = [...recipeIngredients];
     updatedIngredients.splice(index, 1);
+
+    if (!hasEmptyField(updatedIngredients)) setLocalError("");
+
+    if (updatedIngredients.length === 0) setLocalError("");
+
     setRecipeIngredients(updatedIngredients);
   };
 
@@ -33,6 +50,8 @@ export const IngredientList = ({
     const updatedIngredients = [...recipeIngredients];
     updatedIngredients[index] = e.target.value;
     setRecipeIngredients(updatedIngredients);
+
+    if (!hasEmptyField(updatedIngredients)) setLocalError("");
   };
 
   return (
@@ -41,19 +60,29 @@ export const IngredientList = ({
         Ingredients
       </div>
       <div className="flex flex-col">
+        {localError && (
+          <p className="text-red-500 text-base font-normal mt-1">
+            {localError}
+          </p>
+        )}
+        {error && (
+          <p className="text-red-500 text-base font-normal mt-1">
+            {"Please fill out missing fields."}
+          </p>
+        )}
         <div className="flex flex-col divide-y-2 divide-tertiary-500 font-poppins font-extralight text-gray-600">
           {recipeIngredients.map((ingredient, index) =>
             editMode ? (
               <div key={index} className="flex items-center py-4">
                 <input
-                  className={`w-full p-2.5 text-md rounded-xl border ${error && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
+                  className={`w-full p-2.5 text-md rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
                   value={ingredient}
                   onChange={(e) => handleInput(e, index)}
                   placeholder="Enter your ingredient..."
                 />
                 <button
                   className="px-2 py-1 rounded text-white"
-                  onClick={() => handleRemoveIngredient(index)}
+                  onClick={() => handleRemoveIngredientField(index)}
                 >
                   <FaTimes className="text-secondary-500" />{" "}
                   {/* Change color to gray */}
@@ -63,7 +92,7 @@ export const IngredientList = ({
               <div key={index} className="text-left text-md py-2.5">
                 {ingredient}
               </div>
-            )
+            ),
           )}
         </div>
 
@@ -74,7 +103,7 @@ export const IngredientList = ({
             {/* Horizontal divider */}
             <button
               className="px-2 py-1 rounded text-white"
-              onClick={handleAddIngredient}
+              onClick={handleAddIngredientField}
             >
               <FaPlus className="text-secondary-500" />{" "}
               {/* Change color to gray */}
