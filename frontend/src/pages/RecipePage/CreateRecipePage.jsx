@@ -114,6 +114,19 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
     return newErrors;
   };
 
+  /**
+   * A callback for child components to update the errors object state in the parent component.
+   * Would generally be used when setting the state for a key to false.
+   * @param {string} key - A key in the error object.
+   * @param {boolean} hasError - The value should generally be false.
+   */
+  const updateErrors = (key, hasError) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: hasError,
+    }));
+  };
+
   const handleSaveRecipe = async () => {
     const validationErrors = validateForm();
 
@@ -212,6 +225,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
           setRecipeIngredients={setIngredients}
           editMode={editMode}
           error={errors.ingredients}
+          updateErrors={updateErrors}
         />
         <InstructionList
           recipeInstructions={instructions}
