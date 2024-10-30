@@ -237,7 +237,7 @@ export const SingleRecipePage = () => {
             recipeIngredients={ingredients}
             setRecipeIngredients={setIngredients}
             editMode={editMode}
-            error={error.ingredients}
+            error={errors.ingredients}
             updateErrors={updateErrors}
           />
           <InstructionList
