@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { promiseHandler } from "../../services/promiseHandler";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
@@ -16,7 +17,6 @@ import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
 import Toast from "../../components/Toast/Toast";
-import ToastList from "../../components/ToastList/ToastList";
 
 export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
   const navigate = useNavigate();
@@ -40,37 +40,6 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
     type: "",
     isVisible: false,
   });
-
-  //----------------------------
-  // const [toasts, setToasts] = useState([]);
-  // const [autoClose, setAutoClose] = useState(true);
-  // const [autoCloseDuration, setAutoCloseDuration] = useState(5);
-  // const [position, setPosition] = useState("bottom-right");
-
-  // const removeToast = (id) => {
-  //   setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
-  // };
-
-  // const removeAllToasts = () => {
-  //   setToasts([]);
-  // };
-
-  // const showToast = (message, type) => {
-  //   const toast = {
-  //     id: Date.now(),
-  //     message,
-  //     type,
-  //   };
-
-  //   setToasts((prevToasts) => [...prevToasts, toast]);
-
-  //   if (autoClose) {
-  //     setTimeout(() => {
-  //       removeToast(toast.id);
-  //     }, autoCloseDuration * 1000);
-  //   }
-  // };
-  //--------------------------
 
   useEffect(() => {
     if (recipeData) {
@@ -162,14 +131,28 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       dateAdded: new Date().toISOString(),
     };
 
-    try {
-      const response = await axiosPrivate.post("/recipes", data);
-      //setRecipeData is set to null so that upon revisit, the page will be empty
-      setRecipeData(null);
-      navigate(`/recipes/${response.data.recipeId}`);
-    } catch (err) {
-      console.log("Problem saving recipe.");
+    const res = await promiseHandler(axiosPrivate.post("/recipes", data));
+
+    if (!res.success) {
+      setToast({
+        message: res.error?.message,
+        type: "failure",
+        isVisible: true,
+      });
+      return;
     }
+
+    setRecipeData(null);
+    navigate(`/recipes/${res.response.data.recipeId}`);
+
+    // try {
+    //   const response = await axiosPrivate.post("/recipes", data);
+    //   //setRecipeData is set to null so that upon revisit, the page will be empty
+    //   setRecipeData(null);
+    //   navigate(`/recipes/${response.data.recipeId}`);
+    // } catch (err) {
+    //   console.log("Problem saving recipe.");
+    // }
   };
 
   return (
