@@ -19,7 +19,7 @@ export async function promiseHandler(promise) {
     const result = await promise;
     return { success: true, response: result };
   } catch (error) {
-    const errStatus = error.response.status;
+    const errStatus = error.response?.status || 0;
     const errMessage = error.response
       ? error.response.data?.message
       : "An unexpected error occurred. Please check your internet connection or try again later.";

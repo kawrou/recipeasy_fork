@@ -126,6 +126,7 @@ export const SingleRecipePage = () => {
       recipeYield: yieldAmount,
       recipeIngredient: ingredients,
       recipeInstructions: instructions,
+      url: recipeUrl,
       image: imageUrl,
       dateAdded: new Date().toISOString(),
     };
