@@ -20,7 +20,7 @@ const successfulLogin = {
 
 const unsuccessfulLogin = {
   success: false,
-  error: { message: "Please check your login details." },
+  error: { message: "Please check your login details.", status: 401 },
 };
 
 describe("authentication service", () => {
@@ -29,7 +29,7 @@ describe("authentication service", () => {
   });
 
   describe("logIn", () => {
-    it("calls the backend API with correct params", async () => {
+    it("calls the backend API with correct params and returns a successful response object with a JWT", async () => {
       axiosPublic.post.mockResolvedValue({
         data: { token: "jwt-token" },
       });
@@ -109,6 +109,7 @@ describe("authentication service", () => {
       axiosPublic.post.mockRejectedValue({
         response: {
           data: { message: "Unauthorised" },
+          status: 401,
         },
       });
 
@@ -116,7 +117,7 @@ describe("authentication service", () => {
 
       expect(response).toEqual({
         success: false,
-        error: { message: "Unauthorised" },
+        error: { message: "Unauthorised", status: 401 },
       });
     });
   });
@@ -153,6 +154,7 @@ describe("authentication service", () => {
         error: {
           message:
             "An unexpected error occurred. Please check your internet connection or try again later.",
+          status: 0,
         },
       });
     });
