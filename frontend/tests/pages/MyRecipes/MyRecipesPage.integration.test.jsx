@@ -344,7 +344,7 @@ describe("When a user clicks on:", () => {
     await user.click(recipeCardLink[0]);
     expect(screen.getByText("Serves")).toBeVisible();
     expect(screen.getByText("Ingredients")).toBeVisible();
-    expect(screen.getByText("Method")).toBeVisible();
+    expect(screen.getByText("Instructions")).toBeVisible();
     expect(screen.getByText("Tags:")).toBeVisible();
   });
 });
