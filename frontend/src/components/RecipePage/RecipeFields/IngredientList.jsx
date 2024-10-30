@@ -79,7 +79,7 @@ export const IngredientList = ({
           )}
           {error && (
             <li id="global-error" role="alert" className="text-red-500">
-              {"Please fill out the missing ingredients."}
+              {error}
             </li>
           )}
         </ul>
