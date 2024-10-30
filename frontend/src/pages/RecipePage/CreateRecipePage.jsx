@@ -15,6 +15,7 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 
+import Toast from "../../components/Toast/Toast";
 import ToastList from "../../components/ToastList/ToastList";
 
 export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
@@ -34,35 +35,41 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
 
   const [errors, setErrors] = useState({});
 
+  const [toast, setToast] = useState({
+    message: "",
+    type: "",
+    isVisible: false,
+  });
+
   //----------------------------
-  const [toasts, setToasts] = useState([]);
-  const [autoClose, setAutoClose] = useState(true);
-  const [autoCloseDuration, setAutoCloseDuration] = useState(5);
-  const [position, setPosition] = useState("bottom-right");
+  // const [toasts, setToasts] = useState([]);
+  // const [autoClose, setAutoClose] = useState(true);
+  // const [autoCloseDuration, setAutoCloseDuration] = useState(5);
+  // const [position, setPosition] = useState("bottom-right");
 
-  const removeToast = (id) => {
-    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
-  };
+  // const removeToast = (id) => {
+  //   setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  // };
 
-  const removeAllToasts = () => {
-    setToasts([]);
-  };
+  // const removeAllToasts = () => {
+  //   setToasts([]);
+  // };
 
-  const showToast = (message, type) => {
-    const toast = {
-      id: Date.now(),
-      message,
-      type,
-    };
+  // const showToast = (message, type) => {
+  //   const toast = {
+  //     id: Date.now(),
+  //     message,
+  //     type,
+  //   };
 
-    setToasts((prevToasts) => [...prevToasts, toast]);
+  //   setToasts((prevToasts) => [...prevToasts, toast]);
 
-    if (autoClose) {
-      setTimeout(() => {
-        removeToast(toast.id);
-      }, autoCloseDuration * 1000);
-    }
-  };
+  //   if (autoClose) {
+  //     setTimeout(() => {
+  //       removeToast(toast.id);
+  //     }, autoCloseDuration * 1000);
+  //   }
+  // };
   //--------------------------
 
   useEffect(() => {
@@ -132,6 +139,11 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setToast({
+        message: "Please fill out all the recipe information.",
+        type: "warning",
+        isVisible: true,
+      });
       return;
     }
 
@@ -227,6 +239,14 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
         <SaveButton handleSaveRecipe={handleSaveRecipe} />
       ) : (
         <EditButton editMode={editMode} setEditMode={setEditMode} />
+      )}
+
+      {toast.isVisible && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, isVisible: false })}
+        />
       )}
     </div>
   );

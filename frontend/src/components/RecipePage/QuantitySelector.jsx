@@ -27,7 +27,7 @@ export const QuantitySelector = ({
             type="button"
             onClick={handleDecrement}
             // className="z-40 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-s-lg p-3 h-11 focus:ring-blue-100 focus:ring-2 focus:outline-none"
-            className={`z-40 hover:bg-blue-200 border rounded-s-lg p-3 h-11  ${error && !quantity ? "border-red-500 bg-red-100" : "border-blue-300  bg-blue-100"}`}
+            className={`hover:bg-blue-200 border rounded-s-lg p-3 h-11  ${error && !quantity ? "border-red-500 bg-red-100" : "border-blue-300  bg-blue-100"}`}
           >
             <svg
               className="w-3 h-3 text-gray-900"
@@ -58,7 +58,7 @@ export const QuantitySelector = ({
             type="button"
             onClick={handleIncrement}
             // className="z-40 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-e-lg p-3 h-11 focus:ring-blue-100 focus:ring-2 focus:outline-none"
-            className={`z-40 hover:bg-blue-200 border rounded-e-lg p-3 h-11  ${error && !quantity ? "border-red-500 bg-red-100" : "border-blue-300  bg-blue-100"}`}
+            className={`hover:bg-blue-200 border rounded-e-lg p-3 h-11  ${error && !quantity ? "border-red-500 bg-red-100" : "border-blue-300  bg-blue-100"}`}
           >
             <svg
               className="w-3 h-3 text-blue-900 "

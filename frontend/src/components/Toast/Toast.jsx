@@ -7,7 +7,7 @@ import {
 
 import { useState, useEffect } from "react";
 
-const Toast = ({ message, type, duration = 5000 }) => {
+const Toast = ({ message, type, duration = 5000, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const iconMap = {
@@ -20,14 +20,14 @@ const Toast = ({ message, type, duration = 5000 }) => {
 
   useEffect(() => {
     setIsVisible(true);
-    const timer = setTimeout(() => setIsVisible(false), duration);
+    const timer = setTimeout(() => onClose(), duration);
     return () => clearTimeout(timer);
-  }, [duration]);
+  }, [duration, onClose]);
 
   if (!isVisible) return null;
 
   const handleCloseToast = () => {
-    setIsVisible(false);
+    onClose();
   };
 
   return (
