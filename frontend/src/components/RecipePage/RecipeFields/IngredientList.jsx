@@ -27,7 +27,7 @@ export const IngredientList = ({
   const handleAddIngredientField = () => {
     if (hasEmptyField(recipeIngredients)) {
       setLocalError(
-        "Please fill in all previous fields before adding a new ingredient."
+        "Please fill in all previous fields before adding a new ingredient.",
       );
       return;
     }
@@ -126,7 +126,7 @@ export const IngredientList = ({
           <button
             className="px-2 py-1"
             onClick={handleAddIngredientField}
-            aria-label="Add-new-ingredient-field"
+            aria-label="add-new-ingredient-field"
           >
             <FaPlus className="text-secondary-500" aria-hidden="true" />
             {/* Change color to gray */}
