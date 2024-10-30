@@ -1,27 +1,55 @@
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { vi, describe, beforeEach, test, expect } from "vitest";
+import { vi, describe, test, expect } from "vitest";
 import { RecipeInstruction } from "../../src/components/RecipePage/RecipeFields/RecipeInstruction";
 
 const setInstructionStub = vi.fn();
+const removeInstructionStub = vi.fn();
 
-const errors = {
-  recipeName: "Please fill in this instruction.",
-};
-
-describe("Validation errors", () => {
-  test("renders validation error message", () => {
+describe("RecipeInstruction component test", () => {
+  test("renders a button if in edit mode", () => {
     render(
       <RecipeInstruction
         index={0}
         instruction={""}
         setInstruction={setInstructionStub}
-        removeInstruction={vi.fn()}
+        removeInstruction={removeInstructionStub}
         editMode={true}
-        error={true}
+        error={null}
       />,
     );
-    screen.debug();
-    expect(screen.getByText("Please enter a recipe name.")).toBeVisible();
+
+    const removeInstructionButton = screen.getByRole("button");
+    expect(removeInstructionButton).toBeVisible();
+  });
+
+  test("renders a text area if in edit mode", () => {
+    render(
+      <RecipeInstruction
+        index={0}
+        instruction={""}
+        setInstruction={setInstructionStub}
+        removeInstruction={removeInstructionStub}
+        editMode={true}
+        error={null}
+      />,
+    );
+    const textArea = screen.getByRole("textbox");
+    expect(textArea).toBeVisible();
+  });
+
+  test("renders the instruction when not in edit mode", () => {
+    render(
+      <RecipeInstruction
+        index={0}
+        instruction={"first instruction"}
+        setInstruction={setInstructionStub}
+        removeInstruction={removeInstructionStub}
+        editMode={false}
+        error={null}
+      />,
+    );
+    const instruction = screen.getByText("first instruction");
+    expect(instruction).toBeVisible();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
 });
