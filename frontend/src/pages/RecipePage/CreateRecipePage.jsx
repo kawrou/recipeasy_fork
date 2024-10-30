@@ -85,7 +85,7 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       ingredients.some((ingredient) => ingredient === "") ||
       ingredients.length === 0
     )
-      newErrors.ingredients = true;
+      newErrors.ingredients = "Please fill out the missing ingredients.";
 
     return newErrors;
   };
@@ -116,7 +116,6 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       return;
     }
 
-    //Do we need a Try/Catch block here?
     const data = {
       name: recipeName,
       description: recipeDescription,
@@ -142,17 +141,9 @@ export const CreateRecipePage = ({ recipeData, setRecipeData }) => {
       return;
     }
 
+    //set recipe data to null so that upon revisit, the page will be empty
     setRecipeData(null);
     navigate(`/recipes/${res.response.data.recipeId}`);
-
-    // try {
-    //   const response = await axiosPrivate.post("/recipes", data);
-    //   //setRecipeData is set to null so that upon revisit, the page will be empty
-    //   setRecipeData(null);
-    //   navigate(`/recipes/${response.data.recipeId}`);
-    // } catch (err) {
-    //   console.log("Problem saving recipe.");
-    // }
   };
 
   return (
