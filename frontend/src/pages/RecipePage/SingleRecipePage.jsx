@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { promiseHandler } from "../../services/promiseHandler";
 
 import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
 import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
@@ -17,6 +18,8 @@ import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
 import { SaveButton } from "../../components/RecipePage/SaveButton";
 import { EditButton } from "../../components/RecipePage/EditButton";
 import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
+
+import Toast from "../../components/Toast/Toast";
 
 export const SingleRecipePage = () => {
   const navigate = useNavigate();
@@ -35,6 +38,14 @@ export const SingleRecipePage = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
   const [recipeUrl, setRecipeUrl] = useState("");
+
+  const [errors, setErrors] = useState({});
+
+  const [toast, setToast] = useState({
+    message: "",
+    type: "",
+    isVisible: false,
+  });
 
   useEffect(() => {
     if (recipe_id) {
@@ -63,44 +74,80 @@ export const SingleRecipePage = () => {
     }
   }, [data, error, navigate]);
 
-  const handleSaveRecipe = async () => {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!recipeName) newErrors.recipeName = "Please enter a recipe name.";
+
     if (
-      recipeName === "" ||
-      yieldAmount === 0 ||
-      recipeTotalTime === 0 ||
-      ingredients.some((ingredient) => ingredient === "") ||
-      !ingredients.length ||
       instructions.some((instruction) => instruction === "") ||
-      !instructions.length
-    ) {
-      //TODO:This should really be some Modal.
-      alert("Please fill out all the required fields");
+      instructions.length === 0
+    )
+      newErrors.recipeInstructions = "Please fill out all the instructions.";
+
+    if (yieldAmount === 0) newErrors.yieldAmount = true;
+
+    if (recipeTotalTime === 0) newErrors.totalTime = true;
+
+    if (
+      ingredients.some((ingredient) => ingredient === "") ||
+      ingredients.length === 0
+    )
+      newErrors.ingredients = "Please fill out the missing ingredients.";
+
+    return newErrors;
+  };
+
+  const updateErrors = (key, hasError) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: hasError,
+    }));
+  };
+
+  const handleSaveRecipe = async () => {
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setToast({
+        message: "Please fill out all the recipe information.",
+        type: "warning",
+        isVisible: true,
+      });
       return;
     }
 
-    try {
-      const data = {
-        name: recipeName,
-        description: recipeDescription,
-        tags: recipeTags,
-        totalTime: recipeTotalTime,
-        recipeYield: yieldAmount,
-        recipeIngredient: ingredients,
-        recipeInstructions: instructions,
-        url: recipeUrl,
-        image: imageUrl,
-        dateAdded: new Date().toISOString(),
-      };
+    const data = {
+      name: recipeName,
+      description: recipeDescription,
+      tags: recipeTags,
+      favouritedByOwner: false,
+      totalTime: recipeTotalTime,
+      recipeYield: yieldAmount,
+      recipeIngredient: ingredients,
+      recipeInstructions: instructions,
+      image: imageUrl,
+      dateAdded: new Date().toISOString(),
+    };
 
-      await axiosPrivate.patch(`/recipes/${recipe_id}`, data);
-      setEditMode(!editMode);
-    } catch (err) {
-      //TODO: Need to figureout appropriate error modal
-      console.log(err);
-      if (err?.response.status === 401) {
-        navigate("/login");
-      }
+    const res = await promiseHandler(
+      axiosPrivate.patch(`/recipes/${recipe_id}`, data),
+    );
+
+    if (!res.success && res.error?.status === 401) {
+      navigate("/login");
     }
+
+    if (!res.success) {
+      setToast({
+        message: res.error?.message,
+        type: "failure",
+        isVisible: true,
+      });
+      return;
+    }
+
+    setEditMode(!editMode);
   };
 
   const renderPageContent = () => {
@@ -132,6 +179,8 @@ export const SingleRecipePage = () => {
               name={recipeName}
               setName={setRecipeName}
               editMode={editMode}
+              error={errors.recipeName}
+              setErrors={setErrors}
             />
             {/* description */}
             <RecipeDescription
@@ -145,12 +194,16 @@ export const SingleRecipePage = () => {
                 recipeYield={yieldAmount}
                 setRecipeYield={setYieldAmount}
                 editMode={editMode}
+                error={errors.yieldAmount}
+                setErrors={setErrors}
               />
               {/* timeTaken */}
               <RecipeTimeTaken
                 timeTaken={recipeTotalTime}
                 setTimeTaken={setRecipeTotalTime}
                 editMode={editMode}
+                error={errors.totalTime}
+                setErrors={setErrors}
               />
             </div>
             {/* Tags */}
@@ -183,11 +236,15 @@ export const SingleRecipePage = () => {
             recipeIngredients={ingredients}
             setRecipeIngredients={setIngredients}
             editMode={editMode}
+            error={error.ingredients}
+            updateErrors={updateErrors}
           />
           <InstructionList
             recipeInstructions={instructions}
             setRecipeInstructions={setInstructions}
             editMode={editMode}
+            error={errors.recipeInstructions}
+            updateErrors={updateErrors}
           />
         </div>
 
@@ -195,6 +252,14 @@ export const SingleRecipePage = () => {
           <SaveButton handleSaveRecipe={handleSaveRecipe} />
         ) : (
           <EditButton editMode={editMode} setEditMode={setEditMode} />
+        )}
+
+        {toast.isVisible && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast({ ...toast, isVisible: false })}
+          />
         )}
       </div>
     );
