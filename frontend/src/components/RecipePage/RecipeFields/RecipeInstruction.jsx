@@ -29,6 +29,7 @@ export const RecipeInstruction = ({
               placeholder="Enter your Instruction..."
               height={height}
               setHeight={setHeight}
+              ariaLabel={`recipe-instruction-${index + 1}`}
             />
           </div>
         ) : (
