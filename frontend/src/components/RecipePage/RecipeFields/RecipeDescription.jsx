@@ -22,7 +22,7 @@ export const RecipeDescription = ({
           />
         </div>
       ) : (
-        description
+        <p>{description}</p>
       )}
     </div>
   );
