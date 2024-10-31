@@ -59,7 +59,10 @@ export const IngredientList = ({
   };
 
   return (
-    <section className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white shadow-md ml-5 mr-2.5 mb-20 h-fit">
+    <section
+      aria-labelledby="ingredients-heading"
+      className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white shadow-md ml-5 mr-2.5 mb-20 h-fit"
+    >
       <h2
         id="ingredients-heading"
         className="font-kanit font-extrabold text-primary-500 text-6xl text-left"
