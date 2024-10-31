@@ -5,21 +5,7 @@ import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { promiseHandler } from "../../services/promiseHandler";
 
-import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
-import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
-import { InstructionList } from "../../components/RecipePage/RecipeFields/InstructionList";
-import { RecipeName } from "../../components/RecipePage/RecipeFields/RecipeName";
-import { RecipeDescription } from "../../components/RecipePage/RecipeFields/RecipeDescription";
-import { RecipeYield } from "../../components/RecipePage/RecipeFields/RecipeYield";
-import { RecipeTimeTaken } from "../../components/RecipePage/RecipeFields/RecipeTimeTaken";
-import { RecipeImage } from "../../components/RecipePage/RecipeFields/RecipeImage";
-import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
-
-import { SaveButton } from "../../components/RecipePage/SaveButton";
-import { EditButton } from "../../components/RecipePage/EditButton";
-import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
-
-import Toast from "../../components/Toast/Toast";
+import RecipePageLayout from "../../components/RecipePage/RecipePageLayout";
 
 export const SingleRecipePage = () => {
   const navigate = useNavigate();
@@ -133,7 +119,7 @@ export const SingleRecipePage = () => {
     };
 
     const res = await promiseHandler(
-      axiosPrivate.patch(`/recipes/${recipe_id}`, data),
+      axiosPrivate.patch(`/recipes/${recipe_id}`, data)
     );
 
     if (!res.success && res.error?.status === 401) {
@@ -173,97 +159,33 @@ export const SingleRecipePage = () => {
     }
 
     return (
-      <div className="bg-tertiary-500">
-        <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white shadow-md rounded-3xl m-5 mb-2 py-20">
-          <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
-            {/* title */}
-            <RecipeName
-              name={recipeName}
-              setName={setRecipeName}
-              editMode={editMode}
-              error={errors.recipeName}
-              setErrors={setErrors}
-            />
-            {/* description */}
-            <RecipeDescription
-              description={recipeDescription}
-              setDescription={setRecipeDescription}
-              editMode={editMode}
-            />
-            <div className="flex flex-wrap gap-2 divide-x">
-              {/* recipeYield */}
-              <RecipeYield
-                recipeYield={yieldAmount}
-                setRecipeYield={setYieldAmount}
-                editMode={editMode}
-                error={errors.yieldAmount}
-                setErrors={setErrors}
-              />
-              {/* timeTaken */}
-              <RecipeTimeTaken
-                timeTaken={recipeTotalTime}
-                setTimeTaken={setRecipeTotalTime}
-                editMode={editMode}
-                error={errors.totalTime}
-                setErrors={setErrors}
-              />
-            </div>
-            {/* Tags */}
-            <div className="flex gap-10 items-center">
-              <Tags
-                tags={recipeTags}
-                setTags={setRecipeTags}
-                editMode={editMode}
-              />
-              {!editMode && (
-                <div className="flex-none self-end">
-                  <FavouriteButton
-                    recipeId={recipe_id}
-                    favourited={data.favouritedByOwner}
-                    size={50}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
-            <RecipeImage imageUrl={imageUrl} />
-            <RecipeUrl recipeUrl={recipeUrl} />
-          </div>
-        </div>
-        <div className="h-4 bg-tertiary-500" />
-        <div className="flex justify-center  pb-0">
-          {/* Loop over recipeIngredients array */}
-          <IngredientList
-            recipeIngredients={ingredients}
-            setRecipeIngredients={setIngredients}
-            editMode={editMode}
-            error={errors.ingredients}
-            updateErrors={updateErrors}
-          />
-          <InstructionList
-            recipeInstructions={instructions}
-            setRecipeInstructions={setInstructions}
-            editMode={editMode}
-            error={errors.recipeInstructions}
-            updateErrors={updateErrors}
-          />
-        </div>
-
-        {editMode ? (
-          <SaveButton handleSaveRecipe={handleSaveRecipe} />
-        ) : (
-          <EditButton editMode={editMode} setEditMode={setEditMode} />
-        )}
-
-        {toast.isVisible && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast({ ...toast, isVisible: false })}
-          />
-        )}
-      </div>
+      <RecipePageLayout
+        recipeName={recipeName}
+        setRecipeName={setRecipeName}
+        recipeDescription={recipeDescription}
+        setRecipeDescription={setRecipeDescription}
+        yieldAmount={yieldAmount}
+        setYieldAmount={setYieldAmount}
+        recipeTotalTime={recipeTotalTime}
+        setRecipeTotalTime={setRecipeTotalTime}
+        imageUrl={imageUrl}
+        recipeUrl={recipeUrl}
+        recipeTags={recipeTags}
+        setRecipeTags={setRecipeTags}
+        hasFavouriteButton={true}
+        favourited={data.favouritedByOwner}
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+        instructions={instructions}
+        setInstructions={setInstructions}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        handleSaveRecipe={handleSaveRecipe}
+        errors={errors}
+        updateErrors={updateErrors}
+        toast={toast}
+        setToast={setToast}
+      />
     );
   };
 
