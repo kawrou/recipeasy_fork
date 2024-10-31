@@ -26,7 +26,7 @@ const RecipePageLayout = ({
   recipeUrl,
   recipeTags,
   setRecipeTags,
-  favouriteButton,
+  hasFavouriteButton,
   favourited,
   ingredients,
   setIngredients,
@@ -83,7 +83,7 @@ const RecipePageLayout = ({
               setTags={setRecipeTags}
               editMode={editMode}
             />
-            {!editMode && favouriteButton && (
+            {!editMode && hasFavouriteButton && (
               <div className="flex-none self-end">
                 <FavouriteButton
                   recipeId={recipe_id}
