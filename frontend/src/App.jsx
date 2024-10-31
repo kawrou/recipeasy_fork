@@ -32,9 +32,9 @@ const App = () => {
   }, [setAuth]);
 
   return (
-    <div className="flex flex-col w-screen min-h-screen">
+    <div className="flex flex-col w-full min-h-screen">
       <BrowserRouter>
-        <header>
+        <header className="w-full">
           <Navbar />
         </header>
         <main>
@@ -55,10 +55,6 @@ const App = () => {
               }
             />
             <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
-            {/* <Route
-            path="/recipes/favouritedByOwner/:recipe_id"
-            element={<SingleRecipePage  />}
-          /> */}
             <Route
               path="/myrecipes"
               element={<MyRecipesPage setRecipeData={setRecipeData} />}
