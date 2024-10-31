@@ -67,8 +67,14 @@ export const InstructionList = ({
   };
 
   return (
-    <section className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit">
-      <h2 className="font-kanit font-extrabold text-primary-500 text-6xl text-left">
+    <section
+      aria-labelledby="instructions-heading"
+      className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit"
+    >
+      <h2
+        id="instructions-heading"
+        className="font-kanit font-extrabold text-primary-500 text-6xl text-left"
+      >
         Instructions
       </h2>
 
