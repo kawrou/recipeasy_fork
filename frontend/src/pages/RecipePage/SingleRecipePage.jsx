@@ -160,6 +160,7 @@ export const SingleRecipePage = () => {
 
     return (
       <RecipePageLayout
+        recipe_id={recipe_id}
         recipeName={recipeName}
         setRecipeName={setRecipeName}
         recipeDescription={recipeDescription}
