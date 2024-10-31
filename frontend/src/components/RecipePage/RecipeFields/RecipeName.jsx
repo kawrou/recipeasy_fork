@@ -11,7 +11,7 @@ export const RecipeName = ({
   const [height, setHeight] = useState("auto");
 
   return (
-    <div className="font-kanit text-6xl font-extrabold text-left text-primary-500 ">
+    <div className="font-kanit text-8xl font-extrabold text-left text-primary-500 ">
       {editMode ? (
         <div>
           <AutoHeightTextArea
@@ -30,7 +30,7 @@ export const RecipeName = ({
           )}
         </div>
       ) : (
-        name
+        <h1 className="text-8xl">{name}</h1>
       )}
     </div>
   );
