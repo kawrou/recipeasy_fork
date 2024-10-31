@@ -41,7 +41,7 @@ export const IngredientList = ({
 
     if (!hasEmptyField(updatedIngredients) || updatedIngredients.length === 0) {
       setLocalError("");
-      updateErrors("ingredients", false);
+      updateErrors("");
     }
 
     setRecipeIngredients(updatedIngredients);
@@ -54,7 +54,7 @@ export const IngredientList = ({
 
     if (!hasEmptyField(updatedIngredients)) {
       setLocalError("");
-      updateErrors("ingredients", false);
+      updateErrors("");
     }
   };
 
