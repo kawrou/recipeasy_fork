@@ -34,7 +34,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="relative flex justify-center items-center h-16 bg-white ">
+    <div className="flex justify-center items-center h-16 bg-white ">
       {/* Clickable logo link to Home Page */}
       <NavLink className="absolute left-4" to="/">
         <img

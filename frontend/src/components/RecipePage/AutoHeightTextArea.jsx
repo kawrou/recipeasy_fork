@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, setHeight }) => {
+export const AutoHeightTextArea = ({
+  text,
+  setText,
+  rows,
+  placeholder,
+  height,
+  setHeight,
+  error = null,
+  updateErrors = () => {},
+  ariaLabel,
+}) => {
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -11,31 +21,32 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, s
         textareaRef.current.style.height = "auto";
         textareaRef.current.style.height = `${Math.max(
           parseFloat(style.fontSize),
-          textareaRef.current.scrollHeight
+          textareaRef.current.scrollHeight,
         )}px`;
         setHeight(textareaRef.current.style.height);
       }
     };
-  
+
     // Add event listener for resize
-    window.addEventListener('resize', handleResize);
-  
+    window.addEventListener("resize", handleResize);
+
     // Call handleResize initially to calculate height
     handleResize();
-  
+
     // Cleanup the event listener
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [text]); // Depend on text for changes in textarea content
+  }, [setHeight, text]); // Depend on text for changes in textarea content
 
   const handleTextAreaHeightChange = (event) => {
+    if (error) updateErrors("");
     const { value, style } = event.target;
     setText(value);
     style.height = "auto"; // Reset the height to auto to properly calculate the scrollHeight
     style.height = `${Math.max(
       parseFloat(window.getComputedStyle(event.target).fontSize),
-      event.target.scrollHeight
+      event.target.scrollHeight,
     )}px`;
     setHeight(style.height);
   };
@@ -43,12 +54,14 @@ export const AutoHeightTextArea = ({ text, setText, rows, placeholder, height, s
   return (
     <textarea
       ref={textareaRef}
-      className="resize-none overflow-hidden placeholder:text-wrap focus:outline-none bg-transparent w-full "
+      className={`resize-none overflow-hidden placeholder:text-placeholder placeholder:text-wrap focus:outline-none bg-transparent w-full p-2 ${error ? "border rounded-md border-red-500" : ""}`}
       value={text}
       rows={rows}
       onChange={handleTextAreaHeightChange}
       style={{ height: height }}
       placeholder={placeholder}
+      name={ariaLabel}
+      aria-label={ariaLabel}
     />
   );
 };

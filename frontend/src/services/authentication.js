@@ -14,11 +14,10 @@ const LOGIN_URL = "/tokens";
  */
 
 /**
- * @description - Takes a username and password param and makes a fetch request.
- * @async
+ * @description Takes a username and password param and makes a fetch request.
  * @param {string} username - The username of the user.
  * @param {string} password - The password of the user.
- * @returns {Promise<PromiseResponse>} A promise that resolves to an object indicating the success status and user authentication or error information.
+ * @returns {Promise<PromiseResponse>} A promise that resolves to an object indicating the success status, and user's access JWT or error information.
  */
 export const logIn = async (username, password) => {
   if (!username || !password) {
@@ -33,11 +32,18 @@ export const logIn = async (username, password) => {
   return res;
 };
 
+/**
+ * @description Uses the http-only cookie to retrieve a JWT access token.
+ * @returns {Promise<PromiseResponse>} A promise that resolves to an object indicating the success status, and a user's access JWT or error information.
+ */
 export const refresh = async () => {
-  const res = await promiseHandler(axiosPrivate.post("/tokens/refresh"));
+  const res = await promiseHandler(axiosPublic.post("/tokens/refresh"));
   return res;
 };
 
+/**
+ * @description Sends a request to the logout endpoint to clear the refresh JWT stored inside the http-only cookie resulting in "logging out".
+ * @returns {Promise<PromiseResponse} A promise that resolves to an object with a message about succesful log out or an error message.*/
 export const logOut = async () => {
   const res = await promiseHandler(axiosPrivate.post("/tokens/logout"));
   return res;

@@ -7,41 +7,60 @@ import { SingleRecipePage } from "./pages/RecipePage/SingleRecipePage";
 import { CreateRecipePage } from "./pages/RecipePage/CreateRecipePage";
 import { MyRecipesPage } from "./pages/MyRecipes/MyRecipesPage";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { refresh } from "./services/authentication";
+import useAuth from "./hooks/useAuth";
 const App = () => {
+  const { setAuth } = useAuth();
   const [recipeData, setRecipeData] = useState(null);
 
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      const result = await refresh();
+
+      if (!result.success) {
+        setAuth({});
+        return;
+      }
+
+      setAuth((prev) => {
+        return { ...prev, token: result.response.data.token };
+      });
+    };
+
+    refreshAccessToken();
+  }, [setAuth]);
+
   return (
-    <div className="flex flex-col w-screen min-h-screen">
+    <div className="flex flex-col w-full min-h-screen">
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage setRecipeData={setRecipeData} />}
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route
-            path="/recipes/create"
-            element={
-              <CreateRecipePage
-                recipeData={recipeData}
-                setRecipeData={setRecipeData}
-              />
-            }
-          />
-          <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
-          {/* <Route
-            path="/recipes/favouritedByOwner/:recipe_id"
-            element={<SingleRecipePage  />}
-          /> */}
-          <Route
-            path="/myrecipes"
-            element={<MyRecipesPage setRecipeData={setRecipeData} />}
-          />
-        </Routes>
+        <header className="w-full">
+          <Navbar />
+        </header>
+        <main>
+          <Routes>
+            <Route
+              path="/"
+              element={<HomePage setRecipeData={setRecipeData} />}
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/recipes/create"
+              element={
+                <CreateRecipePage
+                  recipeData={recipeData}
+                  setRecipeData={setRecipeData}
+                />
+              }
+            />
+            <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
+            <Route
+              path="/myrecipes"
+              element={<MyRecipesPage setRecipeData={setRecipeData} />}
+            />
+          </Routes>
+        </main>
       </BrowserRouter>
     </div>
   );

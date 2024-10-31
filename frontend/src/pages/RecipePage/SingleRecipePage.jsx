@@ -3,20 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useFetchRecipes } from "../../hooks/useFetchRecipe";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { promiseHandler } from "../../services/promiseHandler";
 
-import { Tags } from "../../components/RecipePage/RecipeFields/Tags";
-import { IngredientList } from "../../components/RecipePage/RecipeFields/IngredientList";
-import { InstructionList } from "../../components/RecipePage/RecipeFields/InstructionList";
-import { RecipeName } from "../../components/RecipePage/RecipeFields/RecipeName";
-import { RecipeDescription } from "../../components/RecipePage/RecipeFields/RecipeDescription";
-import { RecipeYield } from "../../components/RecipePage/RecipeFields/RecipeYield";
-import { RecipeTimeTaken } from "../../components/RecipePage/RecipeFields/RecipeTimeTaken";
-import { RecipeImage } from "../../components/RecipePage/RecipeFields/RecipeImage";
-import { RecipeUrl } from "../../components/RecipePage/RecipeFields/RecipeUrl";
-
-import { SaveButton } from "../../components/RecipePage/SaveButton";
-import { EditButton } from "../../components/RecipePage/EditButton";
-import { FavouriteButton } from "../../components/RecipePage/FavouriteButton";
+import RecipePageLayout from "../../components/RecipePage/RecipePageLayout";
 
 export const SingleRecipePage = () => {
   const navigate = useNavigate();
@@ -26,6 +15,7 @@ export const SingleRecipePage = () => {
   const { recipe_id } = useParams();
 
   const [editMode, setEditMode] = useState(false);
+
   const [recipeName, setRecipeName] = useState("");
   const [recipeDescription, setRecipeDescription] = useState("");
   const [yieldAmount, setYieldAmount] = useState(0);
@@ -35,6 +25,14 @@ export const SingleRecipePage = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [recipeTags, setRecipeTags] = useState([]);
   const [recipeUrl, setRecipeUrl] = useState("");
+
+  const [errors, setErrors] = useState({});
+
+  const [toast, setToast] = useState({
+    message: "",
+    type: "",
+    isVisible: false,
+  });
 
   useEffect(() => {
     if (recipe_id) {
@@ -63,44 +61,81 @@ export const SingleRecipePage = () => {
     }
   }, [data, error, navigate]);
 
-  const handleSaveRecipe = async () => {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!recipeName) newErrors.recipeName = "Please enter a recipe name.";
+
     if (
-      recipeName === "" ||
-      yieldAmount === 0 ||
-      recipeTotalTime === 0 ||
-      ingredients.some((ingredient) => ingredient === "") ||
-      !ingredients.length ||
       instructions.some((instruction) => instruction === "") ||
-      !instructions.length
-    ) {
-      //TODO:This should really be some Modal.
-      alert("Please fill out all the required fields");
+      instructions.length === 0
+    )
+      newErrors.recipeInstructions = "Please fill out all the instructions.";
+
+    if (yieldAmount === 0) newErrors.yieldAmount = true;
+
+    if (recipeTotalTime === 0) newErrors.totalTime = true;
+
+    if (
+      ingredients.some((ingredient) => ingredient === "") ||
+      ingredients.length === 0
+    )
+      newErrors.ingredients = "Please fill out the missing ingredients.";
+
+    return newErrors;
+  };
+
+  const updateErrors = (key, hasError) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [key]: hasError,
+    }));
+  };
+
+  const handleSaveRecipe = async () => {
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setToast({
+        message: "Please fill out all the recipe information.",
+        type: "warning",
+        isVisible: true,
+      });
       return;
     }
 
-    try {
-      const data = {
-        name: recipeName,
-        description: recipeDescription,
-        tags: recipeTags,
-        totalTime: recipeTotalTime,
-        recipeYield: yieldAmount,
-        recipeIngredient: ingredients,
-        recipeInstructions: instructions,
-        url: recipeUrl,
-        image: imageUrl,
-        dateAdded: new Date().toISOString(),
-      };
+    const data = {
+      name: recipeName,
+      description: recipeDescription,
+      tags: recipeTags,
+      favouritedByOwner: false,
+      totalTime: recipeTotalTime,
+      recipeYield: yieldAmount,
+      recipeIngredient: ingredients,
+      recipeInstructions: instructions,
+      url: recipeUrl,
+      image: imageUrl,
+      dateAdded: new Date().toISOString(),
+    };
 
-      await axiosPrivate.patch(`/recipes/${recipe_id}`, data);
-      setEditMode(!editMode);
-    } catch (err) {
-      //TODO: Need to figureout appropriate error modal
-      console.log(err);
-      if (err?.response.status === 401) {
-        navigate("/login");
-      }
+    const res = await promiseHandler(
+      axiosPrivate.patch(`/recipes/${recipe_id}`, data)
+    );
+
+    if (!res.success && res.error?.status === 401) {
+      navigate("/login");
     }
+
+    if (!res.success) {
+      setToast({
+        message: res.error?.message,
+        type: "failure",
+        isVisible: true,
+      });
+      return;
+    }
+
+    setEditMode(!editMode);
   };
 
   const renderPageContent = () => {
@@ -124,79 +159,34 @@ export const SingleRecipePage = () => {
     }
 
     return (
-      <div className="bg-tertiary-500">
-        <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white shadow-md rounded-3xl m-5 mb-2 py-20">
-          <div className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
-            {/* title */}
-            <RecipeName
-              name={recipeName}
-              setName={setRecipeName}
-              editMode={editMode}
-            />
-            {/* description */}
-            <RecipeDescription
-              description={recipeDescription}
-              setDescription={setRecipeDescription}
-              editMode={editMode}
-            />
-            <div className="flex flex-wrap gap-2 divide-x">
-              {/* recipeYield */}
-              <RecipeYield
-                recipeYield={yieldAmount}
-                setRecipeYield={setYieldAmount}
-                editMode={editMode}
-              />
-              {/* timeTaken */}
-              <RecipeTimeTaken
-                timeTaken={recipeTotalTime}
-                setTimeTaken={setRecipeTotalTime}
-                editMode={editMode}
-              />
-            </div>
-            {/* Tags */}
-            <div className="flex gap-10 items-center">
-              <Tags
-                tags={recipeTags}
-                setTags={setRecipeTags}
-                editMode={editMode}
-              />
-              {!editMode && (
-                <div className="flex-none self-end">
-                  <FavouriteButton
-                    recipeId={recipe_id}
-                    favourited={data.favouritedByOwner}
-                    size={50}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-10 justify-center px-20 ">
-            <RecipeImage imageUrl={imageUrl} />
-            <RecipeUrl recipeUrl={recipeUrl} />
-          </div>
-        </div>
-        <div className="h-4 bg-tertiary-500" />
-        <div className="flex justify-center  pb-0">
-          {/* Loop over recipeIngredients array */}
-          <IngredientList
-            recipeIngredients={ingredients}
-            setRecipeIngredients={setIngredients}
-            editMode={editMode}
-          />
-          <InstructionList
-            recipeInstructions={instructions}
-            setRecipeInstructions={setInstructions}
-            editMode={editMode}
-          />
-        </div>
-
-        {editMode ? (
-          <SaveButton handleSaveRecipe={handleSaveRecipe} />
-        ) : (
-          <EditButton editMode={editMode} setEditMode={setEditMode} />
-        )}
-      </div>
+      <RecipePageLayout
+        recipe_id={recipe_id}
+        recipeName={recipeName}
+        setRecipeName={setRecipeName}
+        recipeDescription={recipeDescription}
+        setRecipeDescription={setRecipeDescription}
+        yieldAmount={yieldAmount}
+        setYieldAmount={setYieldAmount}
+        recipeTotalTime={recipeTotalTime}
+        setRecipeTotalTime={setRecipeTotalTime}
+        imageUrl={imageUrl}
+        recipeUrl={recipeUrl}
+        recipeTags={recipeTags}
+        setRecipeTags={setRecipeTags}
+        hasFavouriteButton={true}
+        favourited={data.favouritedByOwner}
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+        instructions={instructions}
+        setInstructions={setInstructions}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        handleSaveRecipe={handleSaveRecipe}
+        errors={errors}
+        updateErrors={updateErrors}
+        toast={toast}
+        setToast={setToast}
+      />
     );
   };
 

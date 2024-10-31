@@ -2,12 +2,13 @@ import React from "react";
 
 export const RecipeImage = ({ imageUrl }) => {
   return (
-    <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square">
+    <div className="bg-gray-300 place-self-center w-full rounded-3xl aspect-square overflow-hidden">
       {imageUrl && (
-        <div
-          className="bg-cover bg-center h-full w-full rounded-3xl"
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        ></div>
+        <img
+          className="object-cover bg-center h-full w-full rounded-3xl"
+          src={imageUrl}
+          alt="Recipe photo"
+        ></img>
       )}
     </div>
   );

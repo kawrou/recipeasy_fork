@@ -18,10 +18,11 @@ export const RecipeDescription = ({
             placeholder={"Enter your description..."}
             height={height}
             setHeight={setHeight}
+            ariaLabel={"recipe-description"}
           />
         </div>
       ) : (
-        description
+        <p>{description}</p>
       )}
     </div>
   );
