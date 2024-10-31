@@ -41,7 +41,7 @@ const RecipePageLayout = ({
   setToast,
 }) => {
   return (
-    <article className="bg-tertiary-500">
+    <article className="bg-tertiary-500 overflow-hidden">
       <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white shadow-md rounded-3xl m-5 mb-2 py-20">
         {/* Recipe Introductory Details*/}
         <section className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
