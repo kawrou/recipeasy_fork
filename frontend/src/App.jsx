@@ -34,33 +34,37 @@ const App = () => {
   return (
     <div className="flex flex-col w-screen min-h-screen">
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage setRecipeData={setRecipeData} />}
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route
-            path="/recipes/create"
-            element={
-              <CreateRecipePage
-                recipeData={recipeData}
-                setRecipeData={setRecipeData}
-              />
-            }
-          />
-          <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
-          {/* <Route
+        <header>
+          <Navbar />
+        </header>
+        <main>
+          <Routes>
+            <Route
+              path="/"
+              element={<HomePage setRecipeData={setRecipeData} />}
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/recipes/create"
+              element={
+                <CreateRecipePage
+                  recipeData={recipeData}
+                  setRecipeData={setRecipeData}
+                />
+              }
+            />
+            <Route path="/recipes/:recipe_id" element={<SingleRecipePage />} />
+            {/* <Route
             path="/recipes/favouritedByOwner/:recipe_id"
             element={<SingleRecipePage  />}
           /> */}
-          <Route
-            path="/myrecipes"
-            element={<MyRecipesPage setRecipeData={setRecipeData} />}
-          />
-        </Routes>
+            <Route
+              path="/myrecipes"
+              element={<MyRecipesPage setRecipeData={setRecipeData} />}
+            />
+          </Routes>
+        </main>
       </BrowserRouter>
     </div>
   );
