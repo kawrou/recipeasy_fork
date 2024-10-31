@@ -46,7 +46,7 @@ export const InstructionList = ({
       updatedInstructions.length === 0
     ) {
       setLocalError("");
-      updateErrors("recipeInstructions", false);
+      updateErrors(false);
     }
   };
 
@@ -62,7 +62,7 @@ export const InstructionList = ({
 
     if (!hasEmptyField(updatedInstructions)) {
       setLocalError("");
-      updateErrors("recipeInstructions", false);
+      updateErrors(false);
     }
   };
 

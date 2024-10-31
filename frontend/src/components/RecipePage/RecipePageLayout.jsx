@@ -36,7 +36,6 @@ const RecipePageLayout = ({
   setEditMode,
   handleSaveRecipe,
   errors,
-  setErrors,
   updateErrors,
   toast,
   setToast,
@@ -51,7 +50,7 @@ const RecipePageLayout = ({
             setName={setRecipeName}
             editMode={editMode}
             error={errors.recipeName}
-            setErrors={setErrors}
+            updateErrors={(string) => updateErrors("recipeName", string)}
           />
           {/* description */}
           <RecipeDescription
@@ -66,7 +65,7 @@ const RecipePageLayout = ({
               setRecipeYield={setYieldAmount}
               editMode={editMode}
               error={errors.yieldAmount}
-              setErrors={setErrors}
+              setErrors={(bool) => updateErrors("yieldAmount", bool)}
             />
             {/* timeTaken */}
             <RecipeTimeTaken
@@ -74,7 +73,7 @@ const RecipePageLayout = ({
               setTimeTaken={setRecipeTotalTime}
               editMode={editMode}
               error={errors.totalTime}
-              setErrors={setErrors}
+              setErrors={(bool) => updateErrors("totalTime", bool)}
             />
           </div>
           {/* Tags */}
@@ -108,14 +107,14 @@ const RecipePageLayout = ({
           setRecipeIngredients={setIngredients}
           editMode={editMode}
           error={errors.ingredients}
-          updateErrors={updateErrors}
+          updateErrors={(string) => updateErrors("ingredients", string)}
         />
         <InstructionList
           recipeInstructions={instructions}
           setRecipeInstructions={setInstructions}
           editMode={editMode}
-          error={errors.recipeInstructions}
-          updateErrors={updateErrors}
+          error={errors.instructions}
+          updateErrors={(string) => updateErrors("instructions", string)}
         />
       </div>
 
