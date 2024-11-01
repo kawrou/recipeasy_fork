@@ -4,22 +4,22 @@ export const HomePage = ({ setRecipeData }) => {
   return (
     // <div className="flex flex-col justify-center items-center flex-auto">
     <>
-      <section className="flex flex-col lg:flex-row justify-center items-center p-10">
-        <div className="flex flex-col items-center text-center lg:text-left max-w-lg">
+      <section className="min-h-screen flex flex-col lg:flex-row lg:space-x-52 justify-center items-center p-10">
+        <div className="flex flex-col space-y-6 items-center text-center max-w-lg ">
           <img
             src="/assets/recipeasyLogo.svg"
-            className="w-56 py-4"
+            className="w-1/3 lg:w-1/2 "
             alt="Recipeasy logo"
           />
-          <h1 className="font-kanit font-extrabold text-primary-500 italic text-6xl pb-4">
+          <h1 className="font-kanit font-extrabold text-primary-500 italic text-5xl lg:text-7xl ">
             Recipeasy
           </h1>
-          <h2 className="font-kanit font-medium text-primary-500 text-xl pb-4">
+          <h2 className="font-kanit font-medium text-primary-500 text-lg lg:text-2xl ">
             Your Hassle-Free Recipe Organiser
           </h2>
           <p
             aria-label="Page Instructions"
-            className="font-poppins py-5 font-extralight text-sm text-gray-600"
+            className="font-poppins  font-extralight text-sm lg:text-lg text-gray-600"
           >
             Simply paste the URL of your favourite recipe page, or manually
             input your cherished recipes, and watch as Recipeasy effortlessly
@@ -28,12 +28,12 @@ export const HomePage = ({ setRecipeData }) => {
           </p>
           <RecipeScraper setRecipeData={setRecipeData} />
         </div>
-        <figure className="p-20">
+        <figure className="">
           <img src="/assets/HomepageImage.svg" />
           <figcaption>
             <a
               href="https://www.vecteezy.com/free-vector/cooking"
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 text-sm"
             >
               Cooking Vectors by Vecteezy
             </a>
@@ -41,7 +41,7 @@ export const HomePage = ({ setRecipeData }) => {
         </figure>
       </section>
 
-      <section className="bg-slate-300 w-full flex flex-col items-center">
+      <section className="bg-slate-300 md:-mt-24 lg:-mt-28 flex flex-col items-center">
         <figure>
           <img
             src="/import-recipe.png"
