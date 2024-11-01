@@ -1,4 +1,5 @@
 import RecipeScraper from "../../components/RecipeScraper";
+import FigureImage from "../../components/HomePageFigureImage";
 
 export const HomePage = ({ setRecipeData }) => {
   return (
@@ -42,46 +43,24 @@ export const HomePage = ({ setRecipeData }) => {
         </figure>
       </section>
 
-      <section className="bg-backgroundColour py-20 px-10">
-        <figure className="">
-          <img
-            src="/import-recipe.png"
-            className="lg:w-2/3 mx-auto rounded-xl shadow-xl"
-            alt="Introducing how to import a recipe with url"
-            loading="lazy"
-          />
-          <figcaption className="bg-white m-7 p-4 rounded-xl shadow-xl lg:w-1/3 lg:mx-auto">
-            <h2 className="font-kanit text-lg lg:text-2xl">Import</h2>
-            <p className="font-poppins text-sm lg:text-lg">
-              Just copy and paste the URL of the recipe you want to save and
-              click the "Generate Recipe" button.
-            </p>
-          </figcaption>
-        </figure>
-        {/* <figure className="text-center">
-          <img
-            src="/edit-recipe.png"
-            className="w-2/3 py-4"
-            alt="Introducing how to edit a recipe"
-            loading="lazy"
-          />
-          <figcaption>
-            <h2>Edit</h2>
-            <p>Easily edit the name, ingredients, and instructions.</p>
-          </figcaption>
-        </figure>
-        <figure className="text-center">
-          <img
-            src="/recipe-collection.png"
-            className="w-2/3 py-4"
-            alt="Introducing the recipe collection page"
-            loading="lazy"
-          />
-          <figcaption>
-            <h2>Collect</h2>
-            <p>View all your saved recipe in one place.</p>
-          </figcaption>
-        </figure> */}
+      <section className="bg-backgroundColour py-20 px-10 space-y-28 lg:space-y-44">
+        <FigureImage
+          image={"/import-recipe.png"}
+          title={"Import"}
+          text={
+            "Just copy and paste the URL of the recipe you want to save and click the 'Generate Recipe' button."
+          }
+        />
+        <FigureImage
+          image={"/edit-recipe.png"}
+          title={"Edit"}
+          text={"Easily edit the name, ingredients, and instructions."}
+        />
+        <FigureImage
+          image={"/recipe-collection.png"}
+          title={"Collect"}
+          text={"View all your saved recipes in one place!"}
+        />
       </section>
     </>
   );
