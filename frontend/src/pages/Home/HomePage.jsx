@@ -39,6 +39,32 @@ export const HomePage = ({ setRecipeData }) => {
         </figure>
       </div>
 
+      <section className="bg-slate-300 w-full flex flex-col items-center">
+        <h2>Import</h2>
+        <p>
+          Just copy and paste the URL of the recipe you want to save and click
+          the "Generate Recipe" button.
+        </p>
+        <img
+          src="/import-recipe.png"
+          className="w-2/3 py-4"
+          alt="Introducing how to import a recipe with url"
+        />
+        <h2>Edit</h2>
+        <p>Easily edit the name, ingredients, and instructions.</p>
+        <img
+          src="/edit-recipe.png"
+          className="w-2/3 py-4"
+          alt="Introducing how to edit a recipe"
+        />
+        <h2>Collect</h2>
+        <p>View all your saved recipe in one place.</p>
+        <img
+          src="/recipe-collection.png"
+          className="w-2/3 py-4"
+          alt="Introducing the recipe collection page"
+        />
+      </section>
 
     </div>
   );
