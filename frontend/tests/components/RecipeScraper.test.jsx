@@ -43,9 +43,7 @@ describe("Unit Test: RecipeScraper", () => {
           <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       const urlInput = screen.getByRole("textbox");
       await userEvent.type(urlInput, "https://www.test-url.com");
       await userEvent.click(generateRecipeBtn);
@@ -63,11 +61,8 @@ describe("Unit Test: RecipeScraper", () => {
           <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       await userEvent.click(generateRecipeBtn);
-
       expect(axiosPrivate.get).not.toHaveBeenCalled();
       expect(navigateMock).not.toHaveBeenCalled();
     });
@@ -79,9 +74,7 @@ describe("Unit Test: RecipeScraper", () => {
           <RecipeScraper setRecipeData={setRecipeDataMock} />
         </AuthProvider>,
       );
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       const urlInput = screen.getByRole("textbox");
 
       await userEvent.type(urlInput, "invalid url");
@@ -103,7 +96,7 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      const enterMaunallyBtn = screen.getByRole("button", { name: "Manually" });
+      const enterMaunallyBtn = screen.getByText("Enter Manually");
       await userEvent.click(enterMaunallyBtn);
 
       expect(handleScrapeRecipeMock).not.toHaveBeenCalled();
@@ -123,9 +116,7 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       const urlInput = screen.getByRole("textbox");
       await userEvent.type(urlInput, "https://www.test-url.com");
 
@@ -141,9 +132,7 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       await userEvent.click(generateRecipeBtn);
 
       expect(screen.getByText("Please enter a valid URL.")).toBeVisible();
@@ -159,9 +148,7 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       const urlInput = screen.getByRole("textbox");
 
       await userEvent.click(generateRecipeBtn);
@@ -189,9 +176,7 @@ describe("Unit Test: RecipeScraper", () => {
         </AuthProvider>,
       );
 
-      const generateRecipeBtn = screen.getByRole("button", {
-        name: "Generate",
-      });
+      const generateRecipeBtn = screen.getByText("Generate Recipe");
       const urlInput = screen.getByRole("textbox");
       await userEvent.type(urlInput, "https://www.test-url.com");
 
