@@ -26,14 +26,16 @@ export const HomePage = ({ setRecipeData }) => {
             generates neatly organised recipes for you to store and access
             anytime, anywhere.
           </p>
-          <RecipeScraper setRecipeData={setRecipeData} />
+          <div className="w-full">
+            <RecipeScraper setRecipeData={setRecipeData} />
+          </div>
         </div>
         <figure className="">
           <img src="/assets/HomepageImage.svg" />
           <figcaption>
             <a
               href="https://www.vecteezy.com/free-vector/cooking"
-              className="text-gray-400 hover:text-gray-600 text-sm"
+              className="text-gray-400 hover:text-gray-600 text-sm font-poppins"
             >
               Cooking Vectors by Vecteezy
             </a>
@@ -50,8 +52,8 @@ export const HomePage = ({ setRecipeData }) => {
             loading="lazy"
           />
           <figcaption>
-            <h2>Import</h2>
-            <p>
+            <h2 className="font-kanit">Import</h2>
+            <p className="font-poppins">
               Just copy and paste the URL of the recipe you want to save and
               click the "Generate Recipe" button.
             </p>
