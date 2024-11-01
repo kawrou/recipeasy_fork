@@ -46,6 +46,7 @@ export const HomePage = ({ setRecipeData }) => {
       <section className="bg-backgroundColour py-20 px-10 space-y-28 lg:space-y-44">
         <FigureImage
           image={"/import-recipe.png"}
+          alt={"Introducing how to save a recipe from a URL."}
           title={"Import"}
           text={
             "Just copy and paste the URL of the recipe you want to save and click the 'Generate Recipe' button."
@@ -53,11 +54,13 @@ export const HomePage = ({ setRecipeData }) => {
         />
         <FigureImage
           image={"/edit-recipe.png"}
+          alt={"Introducing how to edit recipe details."}
           title={"Edit"}
           text={"Easily edit the name, ingredients, and instructions."}
         />
         <FigureImage
           image={"/recipe-collection.png"}
+          alt={"Introducing the recipe collection page."}
           title={"Collect"}
           text={"View all your saved recipes in one place!"}
         />
