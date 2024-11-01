@@ -6,7 +6,9 @@ export default {
     extend: {
       colors: {
         primary: {
+          100: "#FFD3CC",
           500: "#FF9A88",
+          700: "#FD8572",
         },
         secondary: {
           500: "#3143C1",
@@ -14,6 +16,7 @@ export default {
         tertiary: {
           500: "#EEF9FF",
         },
+        backgroundColour: "#cbd5e1",
         placeholder: "#6b7280",
       },
       fontFamily: {

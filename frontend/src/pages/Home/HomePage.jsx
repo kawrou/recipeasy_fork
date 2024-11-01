@@ -2,7 +2,6 @@ import RecipeScraper from "../../components/RecipeScraper";
 
 export const HomePage = ({ setRecipeData }) => {
   return (
-    // <div className="flex flex-col justify-center items-center flex-auto">
     <>
       <section className="min-h-screen flex flex-col lg:flex-row lg:space-x-52 justify-center items-center p-10">
         <div className="flex flex-col space-y-6 items-center text-center max-w-lg ">
@@ -43,23 +42,23 @@ export const HomePage = ({ setRecipeData }) => {
         </figure>
       </section>
 
-      <section className="bg-slate-300 md:-mt-24 lg:-mt-28 flex flex-col items-center">
-        <figure>
+      <section className="bg-backgroundColour py-20 px-10">
+        <figure className="">
           <img
             src="/import-recipe.png"
-            className="w-2/3 py-4 rounded-lg"
+            className="lg:w-2/3 mx-auto rounded-xl shadow-xl"
             alt="Introducing how to import a recipe with url"
             loading="lazy"
           />
-          <figcaption>
-            <h2 className="font-kanit">Import</h2>
-            <p className="font-poppins">
+          <figcaption className="bg-white m-7 p-4 rounded-xl shadow-xl lg:w-1/3 lg:mx-auto">
+            <h2 className="font-kanit text-lg lg:text-2xl">Import</h2>
+            <p className="font-poppins text-sm lg:text-lg">
               Just copy and paste the URL of the recipe you want to save and
               click the "Generate Recipe" button.
             </p>
           </figcaption>
         </figure>
-        <figure>
+        {/* <figure className="text-center">
           <img
             src="/edit-recipe.png"
             className="w-2/3 py-4"
@@ -71,7 +70,7 @@ export const HomePage = ({ setRecipeData }) => {
             <p>Easily edit the name, ingredients, and instructions.</p>
           </figcaption>
         </figure>
-        <figure>
+        <figure className="text-center">
           <img
             src="/recipe-collection.png"
             className="w-2/3 py-4"
@@ -82,10 +81,9 @@ export const HomePage = ({ setRecipeData }) => {
             <h2>Collect</h2>
             <p>View all your saved recipe in one place.</p>
           </figcaption>
-        </figure>
+        </figure> */}
       </section>
     </>
-    // </div>
   );
 };
 
