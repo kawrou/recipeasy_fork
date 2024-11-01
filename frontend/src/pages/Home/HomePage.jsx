@@ -26,18 +26,20 @@ export const HomePage = ({ setRecipeData }) => {
             <RecipeScraper setRecipeData={setRecipeData} />
           </div>
         </div>
-        <div>
-          <img src="/assets/HomepageImage.svg" className="p-20" />
-        </div>
+        <figure className="p-20">
+          <img src="/assets/HomepageImage.svg" />
+          <figcaption>
+            <a
+              href="https://www.vecteezy.com/free-vector/cooking"
+              className="text-gray-400 hover:text-gray-600"
+            >
+              Cooking Vectors by Vecteezy
+            </a>
+          </figcaption>
+        </figure>
       </div>
-      <div className="text-xs justify-self-end">
-        <a
-          href="https://www.vecteezy.com/free-vector/cooking"
-          className="text-gray-200"
-        >
-          Cooking Vectors by Vecteezy
-        </a>
-      </div>
+
+
     </div>
   );
 };
