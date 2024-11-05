@@ -70,13 +70,13 @@ export const IngredientList = ({
         Ingredients
       </h2>
 
-      <fieldset aria-labelledby="error-heading" className="flex flex-col gap2">
+      <fieldset aria-labelledby="error-heading" className="text-left">
         <legend id="error-heading" className="sr-only">
           Form Errors
         </legend>
         <ul>
           {localError && (
-            <li id="local-error" role="alert" className="text-red-500">
+            <li id="local-error" role="alert" className="text-red-500 mb-4">
               {localError}
             </li>
           )}

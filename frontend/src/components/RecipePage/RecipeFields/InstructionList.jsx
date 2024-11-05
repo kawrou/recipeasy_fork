@@ -69,22 +69,22 @@ export const InstructionList = ({
   return (
     <section
       aria-labelledby="instructions-heading"
-      className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl shadow-md bg-white mr-5 ml-2.5 mb-20 h-fit"
+      className="flex flex-col text-left px-4 py-6 lg:p-20 lg:gap-7 rounded-3xl bg-white"
     >
       <h2
         id="instructions-heading"
-        className="font-kanit font-extrabold text-primary-500 text-6xl text-left"
+        className="font-kanit font-extrabold text-primary-500 text-4xl lg:text-6xl text-left mb-4 lg:mb-0"
       >
         Instructions
       </h2>
 
-      <fieldset aria-labelledby="error-heading" className="flex flex-col gap2">
+      <fieldset aria-labelledby="error-heading" className="">
         <legend id="error-heading" className="sr-only">
           Form Errors
         </legend>
         <ul>
           {localError && (
-            <li id="local-error" role="alert" className="text-red-500">
+            <li id="local-error" role="alert" className="text-red-500 mb-4">
               {localError}
             </li>
           )}
@@ -96,9 +96,9 @@ export const InstructionList = ({
         </ul>
       </fieldset>
 
-      <ul className="flex flex-col font-poppins font-extralight text-gray-600">
+      <ol className="font-poppins font-light text-gray-800">
         {recipeInstructions.map((instruction, index) => (
-          <li className="divide-y-2 divide-tertiary-500" key={index}>
+          <li className="mb-4 lg:mb-16 divide-y-2 last:mb-0" key={index}>
             <RecipeInstruction
               key={index}
               index={index}
@@ -110,11 +110,11 @@ export const InstructionList = ({
             />
           </li>
         ))}
-      </ul>
+      </ol>
 
       {editMode && (
         <div className="flex justify-center items-center">
-          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
+          <hr className="w-1/2 border border-blue-200" aria-hidden="true" />
           <button
             className="px-2 py-1 rounded text-white"
             onClick={handleAddInstructionField}
@@ -122,7 +122,7 @@ export const InstructionList = ({
           >
             <FaPlus className="text-secondary-500" aria-hidden="true" />
           </button>
-          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
+          <hr className="w-1/2 border border-blue-200" aria-hidden="true" />
         </div>
       )}
     </section>
