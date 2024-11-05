@@ -42,8 +42,9 @@ const RecipePageLayout = ({
 }) => {
   return (
     <article className="bg-neutral-200 py-1">
+      {/* Top Section */}
       <section className="flex flex-col lg:flex-row lg:divide-x-2 bg-white shadow-md rounded-xl lg:rounded-3xl m-5 py-6 lg:py-20 lg:px-10 gap-5 lg:gap-0">
-        {/* Recipe Introductory Details*/}
+        {/* Left- Recipe Introductory Details*/}
         <section className="px-4 lg:pr-16 flex flex-col gap-5 lg:gap-10 justify-center basis-1/2">
           {/* title */}
           <RecipeName
@@ -96,7 +97,7 @@ const RecipePageLayout = ({
           </div>
         </section>
 
-        {/* Recipe Image & Source if exists*/}
+        {/* Right - Recipe Image & Source if exists*/}
         <section className="px-4 lg:pl-8 basis-1/2 flex flex-col items-center justify-center">
           <div className="mb-5">
             <RecipeImage imageUrl={imageUrl} />
@@ -104,22 +105,28 @@ const RecipePageLayout = ({
           <RecipeUrl recipeUrl={recipeUrl} />
         </section>
       </section>
-      <section className="flex flex-col lg:flex-row">
+
+      {/* Bottom Section */}
+      <section className="flex flex-col lg:flex-row m-5 gap-5">
         {/* Loop over recipeIngredients array */}
-        <IngredientList
-          recipeIngredients={ingredients}
-          setRecipeIngredients={setIngredients}
-          editMode={editMode}
-          error={errors.ingredients}
-          updateErrors={(string) => updateErrors("ingredients", string)}
-        />
-        <InstructionList
-          recipeInstructions={instructions}
-          setRecipeInstructions={setInstructions}
-          editMode={editMode}
-          error={errors.instructions}
-          updateErrors={(string) => updateErrors("instructions", string)}
-        />
+        <div className="basis-1/2">
+          <IngredientList
+            recipeIngredients={ingredients}
+            setRecipeIngredients={setIngredients}
+            editMode={editMode}
+            error={errors.ingredients}
+            updateErrors={(string) => updateErrors("ingredients", string)}
+          />
+        </div>
+        <div className="basis-1/2">
+          <InstructionList
+            recipeInstructions={instructions}
+            setRecipeInstructions={setInstructions}
+            editMode={editMode}
+            error={errors.recipeInstructions}
+            updateErrors={(string) => updateErrors("instructions", string)}
+          />
+        </div>
       </section>
 
       {editMode ? (
