@@ -41,10 +41,10 @@ const RecipePageLayout = ({
   setToast,
 }) => {
   return (
-    <article className="bg-tertiary-500 overflow-hidden">
-      <div className="flex divide-x-2 divide-tertiary-500 justify-center bg-white shadow-md rounded-3xl m-5 mb-2 py-20">
+    <article className="bg-neutral-200 py-1">
+      <section className="flex flex-col lg:flex-row lg:divide-x-2 bg-white shadow-md rounded-xl lg:rounded-3xl m-5 py-6 lg:py-20 lg:px-10 gap-5 lg:gap-0">
         {/* Recipe Introductory Details*/}
-        <section className="flex justify-center w-1/2 flex-col pt-18 px-20 gap-10">
+        <section className="px-4 lg:pr-16 flex flex-col gap-5 lg:gap-10 justify-center basis-1/2">
           {/* title */}
           <RecipeName
             name={recipeName}
@@ -78,14 +78,14 @@ const RecipePageLayout = ({
             />
           </div>
           {/* Tags */}
-          <div className="flex gap-10 items-center">
+          <div className="flex flex-row items-center lg:items-start">
             <Tags
               tags={recipeTags}
               setTags={setRecipeTags}
               editMode={editMode}
             />
             {!editMode && hasFavouriteButton && (
-              <div className="flex-none self-end">
+              <div className="">
                 <FavouriteButton
                   recipeId={recipe_id}
                   favourited={favourited}
@@ -97,13 +97,14 @@ const RecipePageLayout = ({
         </section>
 
         {/* Recipe Image & Source if exists*/}
-        <section className="flex flex-1 flex-col gap-10 justify-center px-20 ">
-          <RecipeImage imageUrl={imageUrl} />
+        <section className="px-4 lg:pl-8 basis-1/2 flex flex-col items-center justify-center">
+          <div className="mb-5">
+            <RecipeImage imageUrl={imageUrl} />
+          </div>
           <RecipeUrl recipeUrl={recipeUrl} />
         </section>
-      </div>
-      <div className="h-4 bg-tertiary-500" />
-      <section className="flex justify-center  pb-0">
+      </section>
+      <section className="flex flex-col lg:flex-row">
         {/* Loop over recipeIngredients array */}
         <IngredientList
           recipeIngredients={ingredients}
