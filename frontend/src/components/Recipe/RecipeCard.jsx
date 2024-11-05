@@ -19,7 +19,7 @@ const RecipeCard = ({ recipe }) => {
             <div className="h-40 w-full bg-gray-200"></div>
           )}
           <figcaption className="text-left px-2">
-            <h3 className="font-kanit lg:text-lg text-orange-800 mb-3 hover:text-orange-200">
+            <h3 className="font-kanit font-bold lg:text-lg text-primary-500 mb-3 hover:text-primary-200">
               {recipe.name}
             </h3>
           </figcaption>
