@@ -4,11 +4,11 @@ import FigureImage from "../../components/HomePageFigureImage";
 export const HomePage = ({ setRecipeData }) => {
   return (
     <>
-      <section className="min-h-screen flex flex-col lg:flex-row lg:space-x-52 justify-center items-center p-10">
-        <div className="flex flex-col space-y-6 items-center text-center max-w-lg ">
+      <section className="max-w-screen-2xl mx-auto flex flex-col lg:flex-row lg:space-x-52 justify-center items-center py-10 lg:py-28 px-6">
+        <div className="flex flex-col gap-6 items-center text-center max-w-lg ">
           <img
             src="/assets/recipeasyLogo.svg"
-            className="w-1/3 lg:w-1/2 "
+            className="w-1/4 lg:w-1/2 "
             alt="Recipeasy logo"
           />
           <h1 className="font-kanit font-extrabold text-primary-500 italic text-5xl lg:text-7xl ">
@@ -43,27 +43,30 @@ export const HomePage = ({ setRecipeData }) => {
         </figure>
       </section>
 
-      <section className="bg-backgroundColour py-20 px-10 space-y-28 lg:space-y-44">
-        <FigureImage
-          image={"/import-recipe.png"}
-          alt={"Introducing how to save a recipe from a URL."}
-          title={"Import"}
-          text={
-            "Just copy and paste the URL of the recipe you want to save and click the 'Generate Recipe' button."
-          }
-        />
-        <FigureImage
-          image={"/edit-recipe.png"}
-          alt={"Introducing how to edit recipe details."}
-          title={"Edit"}
-          text={"Easily edit the name, ingredients, and instructions."}
-        />
-        <FigureImage
-          image={"/recipe-collection.png"}
-          alt={"Introducing the recipe collection page."}
-          title={"Collect"}
-          text={"View all your saved recipes in one place!"}
-        />
+      <section className="bg-neutral-100 py-16 lg:py-36 px-6">
+        <div className="max-w-screen-2xl flex flex-col items-center mx-auto gap-16 lg:gap-36">
+          <FigureImage
+            image={"/import-recipe.png"}
+            alt={"Introducing how to save a recipe from a URL."}
+            title={"Import"}
+            text={
+              "Just copy and paste the URL of the recipe you want to save and click the 'Generate Recipe' button."
+            }
+          />
+          <FigureImage
+            image={"/edit-recipe.png"}
+            alt={"Introducing how to edit recipe details."}
+            title={"Edit"}
+            text={"Easily edit the name, ingredients, and instructions."}
+            reverse={true}
+          />
+          <FigureImage
+            image={"/recipe-collection.png"}
+            alt={"Introducing the recipe collection page."}
+            title={"Collect"}
+            text={"View all your saved recipes in one place!"}
+          />
+        </div>
       </section>
     </>
   );

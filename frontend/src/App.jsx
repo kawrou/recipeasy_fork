@@ -34,10 +34,10 @@ const App = () => {
   return (
     <div className="flex flex-col w-full min-h-screen">
       <BrowserRouter>
-        <header className="w-full">
+        <header className="w-full border border-b-slate-400 bg-neutral-50">
           <Navbar />
         </header>
-        <main>
+        <main className="w-full">
           <Routes>
             <Route
               path="/"
@@ -61,6 +61,7 @@ const App = () => {
             />
           </Routes>
         </main>
+        <footer className="w-full bg-gray-800 h-16"></footer>
       </BrowserRouter>
     </div>
   );
