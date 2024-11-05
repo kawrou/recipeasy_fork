@@ -30,7 +30,7 @@ export const RecipeName = ({
           )}
         </div>
       ) : (
-        <h1 className="text-8xl">{name}</h1>
+        <h1 className="text-4xl lg:text-8xl">{name}</h1>
       )}
     </div>
   );
