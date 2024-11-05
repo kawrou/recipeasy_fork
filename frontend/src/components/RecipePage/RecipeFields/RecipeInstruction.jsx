@@ -14,13 +14,13 @@ export const RecipeInstruction = ({
 
   return (
     <>
-      <h3 className="font-kanit font-extrabold text-primary-500 text-2xl text-left pb-3">
+      <h3 className="font-kanit font-extrabold text-primary-500 text-2xl text-left mb-4">
         Step {index + 1}
       </h3>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col lg:flex-row items-center py-4 gap-4">
         {editMode ? (
           <div
-            className={`w-full p-2.5 focus:outline-none text-md text-gray-600 rounded-xl border ${error && !instruction ? "border-red-500" : "border-blue-200"}`}
+            className={`flex-grow w-full text-gray-600 rounded-xl border ${error && !instruction ? "border-red-500" : "border-blue-200"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             <AutoHeightTextArea
               text={instruction}
@@ -33,16 +33,13 @@ export const RecipeInstruction = ({
             />
           </div>
         ) : (
-          <span key={index} className="text-left text-md py-2.5 pb-5">
+          <p key={index} className="pt-3">
             {instruction}
-          </span>
+          </p>
         )}
 
         {editMode && (
-          <button
-            className="transform px-2 py-1"
-            onClick={() => removeInstruction(index)}
-          >
+          <button className="" onClick={() => removeInstruction(index)}>
             <FaTimes className="text-secondary-500" />
           </button>
         )}
