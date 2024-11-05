@@ -66,7 +66,7 @@ const RecipeScraper = ({ setRecipeData }) => {
           type="text"
           value={url}
           onChange={handleUrlChange}
-          className="shadow-md font-poppins font-light text-sm lg:text-lg w-full border rounded-lg py-2 px-2 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 outline-none"
+          className="font-poppins font-light text-sm lg:text-lg w-full border rounded-full py-2 px-4 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 outline-none bg-neutral-100"
           placeholder="Enter your recipe url..."
         />
         {errMsg && (
@@ -76,13 +76,13 @@ const RecipeScraper = ({ setRecipeData }) => {
         )}
       </div>
 
-      <div className="flex items-center justify-center my-5 gap-5">
+      <div className="flex flex-col lg:flex-row items-center justify-center my-5 gap-5">
         <button
           onClick={async () => {
             handleScrapeRecipe(false);
           }}
           type="button"
-          className="shadow-md font-kanit font-bold text-base lg:text-lg text-white bg-secondary-500 hover:bg-blue-900 rounded-lg px-5 py-2"
+          className="shadow-md font-kanit font-bold text-base lg:text-lg text-white bg-primary-500 hover:bg-primary-700 rounded-full px-5 py-2"
         >
           Generate Recipe
         </button>
@@ -91,7 +91,7 @@ const RecipeScraper = ({ setRecipeData }) => {
           onClick={async () => {
             handleCreateRecipe(true);
           }}
-          className="shadow-md font-kanit font-bold text-base lg:text-lg text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white rounded-lg px-5 py-2"
+          className="shadow-md font-kanit font-bold text-base lg:text-lg text-primary-500 border border-primary-500 hover:bg-primary-500 hover:text-white rounded-full px-5 py-2"
         >
           Enter Manually
         </button>

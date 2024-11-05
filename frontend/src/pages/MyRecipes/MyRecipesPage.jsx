@@ -45,10 +45,10 @@ export const MyRecipesPage = ({ setRecipeData }) => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-tertiary-500 pt-4">
-      <div className="flex justify-center bg-white shadow-md">
-        <div className="flex flex-col items-center w-1/2 py-10 px-20">
-          <h1 className="flex items-center mb-6 text-5xl font-kanit font-bold italic text-primary-500">
+    <div className="bg-neutral-100 pb-20">
+      <section className="bg-white px-6 py-10 lg:py-16">
+        <div className="max-w-screen-2xl mx-auto flex flex-col items-center">
+          <h1 className="flex items-center text-5xl font-kanit font-bold italic text-primary-500">
             <img
               className="w-16 mb-1.5 -mr-0.5"
               src="../../assets/recipeasyLogo.svg"
@@ -58,29 +58,30 @@ export const MyRecipesPage = ({ setRecipeData }) => {
           </h1>
           <p
             aria-label="Page Instructions"
-            className="font-poppins py-5 font-extralight text-sm text-gray-600"
+            className="font-poppins py-5 font-light text-sm text-gray-600 max-w-[600px]"
           >
             Simply paste the URL of your favourite recipe page, or manually
             input your cherished recipes, and watch as Recipeasy effortlessly
             generates neatly organised recipes for you to store and access
             anytime, anywhere.
           </p>
-          <RecipeScraper setRecipeData={setRecipeData} />
+          <div className="w-full lg:w-1/2">
+            <RecipeScraper setRecipeData={setRecipeData} />
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="flex flex-col items-center mx-20 my-10">
-        <h2 className="font-kanit font-extrabold text-5xl text-primary-500 bg-white w-fit px-5 py-3 mb-6 rounded-3xl shadow-md">
-          {" "}
+      <section className="max-w-screen-2xl lg:mx-auto px-6 py-10 lg:py-16">
+        <h2 className="font-kanit font-extrabold text-5xl text-primary-500 mb-10 ">
           My Recipes
         </h2>
         <div
-          className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 flex-wrap"
+          className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
           role="feed"
         >
           {renderPageContent()}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
