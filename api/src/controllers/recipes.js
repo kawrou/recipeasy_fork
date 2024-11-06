@@ -253,8 +253,9 @@ const scrapeRecipeFromWebsite = async (req, res) => {
 
     //Once the recipe data has been scraped, we send it to the 'extractRecipeInfo' module to filter out only the data we need.
     const filteredRecipeData = extractRecipeInfo(recipeData);
-    filteredRecipeData.url = url;
-    // console.log(filteredRecipeData);
+    filteredRecipeData.recipeUrl = url;
+    console.log(url);
+    console.log(filteredRecipeData);
     res.status(200).json({ recipe_data: filteredRecipeData, token: newToken });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
