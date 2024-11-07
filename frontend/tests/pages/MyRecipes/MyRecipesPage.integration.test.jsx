@@ -41,11 +41,11 @@ describe("When My Recipes Page is first rendered", () => {
       );
     });
 
-    const recipeTitles = screen.getAllByRole("heading", { level: 2 });
+    const recipeTitles = screen.getAllByRole("heading", { level: 3 });
 
-    expect(recipeTitles.length).toEqual(3);
-    expect(recipeTitles[1]).toHaveTextContent("test recipe 1");
-    expect(recipeTitles[2]).toHaveTextContent("test recipe 2");
+    expect(recipeTitles.length).toEqual(2);
+    expect(recipeTitles[0]).toHaveTextContent("test recipe 1");
+    expect(recipeTitles[1]).toHaveTextContent("test recipe 2");
   });
 
   test("shows a message when recipes is undefined", async () => {

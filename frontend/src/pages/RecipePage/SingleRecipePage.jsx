@@ -44,7 +44,7 @@ export const SingleRecipePage = () => {
 
   useEffect(() => {
     if (error.type === "auth-error") {
-      console.log(error.message);
+      // console.log(error.message);
       navigate("/login");
     }
 
@@ -119,7 +119,7 @@ export const SingleRecipePage = () => {
     };
 
     const res = await promiseHandler(
-      axiosPrivate.patch(`/recipes/${recipe_id}`, data)
+      axiosPrivate.patch(`/recipes/${recipe_id}`, data),
     );
 
     if (!res.success && res.error?.status === 401) {
