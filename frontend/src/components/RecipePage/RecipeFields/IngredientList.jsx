@@ -61,22 +61,22 @@ export const IngredientList = ({
   return (
     <section
       aria-labelledby="ingredients-heading"
-      className="flex w-1/2 flex-col pt-16 p-20 gap-7 rounded-3xl bg-white shadow-md ml-5 mr-2.5 mb-20 h-fit"
+      className="flex flex-col px-4 py-6 lg:p-20 lg:gap-7 rounded-3xl bg-white "
     >
       <h2
         id="ingredients-heading"
-        className="font-kanit font-extrabold text-primary-500 text-6xl text-left"
+        className="font-kanit font-extrabold text-primary-500 text-4xl lg:text-6xl text-left"
       >
         Ingredients
       </h2>
 
-      <fieldset aria-labelledby="error-heading" className="flex flex-col gap2">
+      <fieldset aria-labelledby="error-heading" className="text-left">
         <legend id="error-heading" className="sr-only">
           Form Errors
         </legend>
         <ul>
           {localError && (
-            <li id="local-error" role="alert" className="text-red-500">
+            <li id="local-error" role="alert" className="text-red-500 mb-4">
               {localError}
             </li>
           )}
@@ -88,29 +88,26 @@ export const IngredientList = ({
         </ul>
       </fieldset>
 
-      <ul className="flex flex-col divide-y-2 divide-tertiary-500 font-poppins font-light text-gray-600">
+      <ul className="divide-y-2 font-poppins font-light text-gray-800">
         {recipeIngredients.map((ingredient, index) => (
-          <li key={index} className="flex items-center py-4">
+          <li key={index} className="flex items-center py-4 gap-3">
             {editMode ? (
               <input
                 id={`ingredient-${index + 1}`}
-                className={`w-full p-2.5 text-md placeholder:text-placeholder rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none`}
+                className={`w-full p-2.5 text-md placeholder:text-placeholder rounded-xl border ${(error || localError) && !ingredient ? "border-red-500" : "border-blue-200"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={ingredient}
                 onChange={(e) => handleInput(e, index)}
                 placeholder="Enter your ingredient..."
                 aria-label={`ingredient-${index + 1}`}
               />
             ) : (
-              <span
-                id={`ingredient-${index + 1}`}
-                className="text-left text-md py-2.5"
-              >
+              <p id={`ingredient-${index + 1}`} className="text-left">
                 {ingredient}
-              </span>
+              </p>
             )}
             {editMode && (
               <button
-                className="px-2 py-1"
+                className="mr-1"
                 onClick={() => handleRemoveIngredientField(index)}
                 aria-label={`remove-ingredient-${index + 1}`}
               >
@@ -124,7 +121,7 @@ export const IngredientList = ({
       {/* Input for new ingredient */}
       {editMode && (
         <div className="flex justify-center items-center">
-          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
+          <hr className="w-1/2 border border-blue-200" aria-hidden="true" />
           {/* Horizontal divider */}
           <button
             className="px-2 py-1"
@@ -134,7 +131,7 @@ export const IngredientList = ({
             <FaPlus className="text-secondary-500" aria-hidden="true" />
             {/* Change color to gray */}
           </button>
-          <hr className="w-1/2 border border-tertiary-500" aria-hidden="true" />
+          <hr className="w-1/2 border border-blue-200" aria-hidden="true" />
           {/* Horizontal divider */}
         </div>
       )}
