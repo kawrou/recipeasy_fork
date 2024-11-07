@@ -82,7 +82,7 @@ const RecipeScraper = ({ setRecipeData }) => {
             handleScrapeRecipe(false);
           }}
           type="button"
-          className="shadow-md font-kanit font-bold text-base lg:text-lg text-white bg-primary-500 hover:bg-primary-700 rounded-full px-5 py-2"
+          className="shadow-md font-kanit font-bold text-base lg:text-lg text-white bg-blue-700 hover:bg-blue-900 rounded-full px-5 py-2"
         >
           Generate Recipe
         </button>

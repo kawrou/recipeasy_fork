@@ -1,5 +1,15 @@
 import RecipeScraper from "../../components/RecipeScraper";
 import FigureImage from "../../components/HomePageFigureImage";
+import {
+  heroDescription,
+  heroDescription2,
+  descriptionA1,
+  descriptionA2,
+  descriptionB1,
+  descriptionB2,
+  descriptionC1,
+  descriptionC2,
+} from "../../lib/HomePageText";
 
 export const HomePage = ({ setRecipeData }) => {
   return (
@@ -21,10 +31,7 @@ export const HomePage = ({ setRecipeData }) => {
             aria-label="Page Instructions"
             className="font-poppins  font-extralight text-sm lg:text-lg text-gray-600"
           >
-            Simply paste the URL of your favourite recipe page, or manually
-            input your cherished recipes, and watch as Recipeasy effortlessly
-            generates neatly organised recipes for you to store and access
-            anytime, anywhere.
+            {heroDescription2}
           </p>
           <div className="w-full">
             <RecipeScraper setRecipeData={setRecipeData} />
@@ -46,25 +53,24 @@ export const HomePage = ({ setRecipeData }) => {
       <section className="bg-neutral-100 py-16 lg:py-36 px-6">
         <div className="max-w-screen-2xl flex flex-col items-center mx-auto gap-16 lg:gap-36">
           <FigureImage
+            video={"/recipeasy-scraping-introduction-2024-11-07.webm"}
             image={"/import-recipe.png"}
             alt={"Introducing how to save a recipe from a URL."}
             title={"Import"}
-            text={
-              "Just copy and paste the URL of the recipe you want to save and click the 'Generate Recipe' button."
-            }
+            text={descriptionA2}
           />
           <FigureImage
-            image={"/edit-recipe.png"}
+            video={"/recipeasy-editing-intro-2024-11-07.webm"}
             alt={"Introducing how to edit recipe details."}
             title={"Edit"}
-            text={"Easily edit the name, ingredients, and instructions."}
+            text={descriptionB2}
             reverse={true}
           />
           <FigureImage
-            image={"/recipe-collection.png"}
+            video={"/recipeasy-collection-intro-2024-11-07.webm"}
             alt={"Introducing the recipe collection page."}
             title={"Collect"}
-            text={"View all your saved recipes in one place!"}
+            text={descriptionC2}
           />
         </div>
       </section>
