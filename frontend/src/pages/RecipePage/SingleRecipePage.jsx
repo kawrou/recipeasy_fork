@@ -69,7 +69,7 @@ export const SingleRecipePage = () => {
       instructions.some((instruction) => instruction === "") ||
       instructions.length === 0
     )
-      newErrors.recipeInstructions = "Please fill out all the instructions.";
+      newErrors.instructions = "Please fill out all the instructions.";
 
     if (yieldAmount === 0) newErrors.yieldAmount = true;
 

@@ -123,7 +123,7 @@ const RecipePageLayout = ({
             recipeInstructions={instructions}
             setRecipeInstructions={setInstructions}
             editMode={editMode}
-            error={errors.recipeInstructions}
+            error={errors.instructions}
             updateErrors={(string) => updateErrors("instructions", string)}
           />
         </div>
